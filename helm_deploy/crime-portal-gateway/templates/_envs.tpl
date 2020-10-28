@@ -13,10 +13,10 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "logstash"
 
-  - name: APPLICATION_INSIGHTS_IKEY
+  - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
       secretKeyRef:
-        name: {{ template "app.name" . }}
+        name: crime-portal-gateway-secrets
         key: APPINSIGHTS_INSTRUMENTATIONKEY
 
 {{- end -}}
