@@ -1,12 +1,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: quay.io/hmpps/crime-portal-gateway
   tag: latest
-  port: 8080
+  port: 8081
 
 ingress:
   enabled: true
