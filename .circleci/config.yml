@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   owasp: entur/owasp@0.0.10
   hmpps: ministryofjustice/hmpps@1.1.2
+  slack: circleci/slack@4.1.1
 
 jobs:
   validate:
@@ -23,6 +24,23 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "Build validation failed for crime portal gateway",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: fail
 
 workflows:
   version: 2
