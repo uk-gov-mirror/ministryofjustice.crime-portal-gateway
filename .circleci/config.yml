@@ -4,6 +4,7 @@ orbs:
   owasp: entur/owasp@0.0.10
   hmpps: ministryofjustice/hmpps@1.1.2
   slack: circleci/slack@4.1.1
+  jira: circleci/jira@1.2.2
 
 jobs:
   validate:
@@ -50,6 +51,9 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+          post-steps:
+              - jira/notify:
+                job_type: build
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -58,6 +62,9 @@ workflows:
             branches:
               only:
                 - main
+          post-steps:
+            - jira/notify:
+              job_type: build
       - hmpps/deploy_env:
           name: deploy_dev
           retrieve_secrets: none
@@ -70,6 +77,11 @@ workflows:
             - validate
             - build_docker
             - helm_lint
+          post-steps:
+            - jira/notify:
+              environment: dev
+              environment_type: development
+              job_type: deployment
 #      - request-preprod-approval:
 #          type: approval
 #          requires:
@@ -80,6 +92,11 @@ workflows:
 #          context: crime-portal-gateway-preprod
 #          requires:
 #            - request-preprod-approval
+#          post-steps:
+#            - jira/notify:
+#              environment: preprod
+#              environment_type: testing
+#              job_type: deployment
 #      - request-prod-approval:
 #          type: approval
 #          requires:
@@ -91,6 +108,11 @@ workflows:
 #          context: crime-portal-gateway-prod
 #          requires:
 #            - request-prod-approval
+#          post-steps:
+#            - jira/notify:
+#              environment: prod
+#              environment_type: production
+#              job_type: deployment
 
   scheduled:
     triggers:
