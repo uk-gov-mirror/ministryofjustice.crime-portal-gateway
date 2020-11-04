@@ -14,7 +14,7 @@ ingress:
   hosts:
     - host: crime-portal-gateway-dev.hmpps.service.justice.gov.uk
       cert_secret: crime-portal-gateway-cert
-  path: /
+  path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
 
 env:
   JAVA_OPTS: "-Xmx512m"
