@@ -3,10 +3,7 @@ plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.0.6"
   kotlin("plugin.spring") version "1.4.10"
   id("org.unbroken-dome.xjc") version "2.0.0"
-}
-
-configurations {
-  testImplementation { exclude(group = "org.junit.vintage") }
+  id("org.owasp.dependencycheck") version "6.0.3"
 }
 
 val jaxbVersion by extra { "2.3.1" }
