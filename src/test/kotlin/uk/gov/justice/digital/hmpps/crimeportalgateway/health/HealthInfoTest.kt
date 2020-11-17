@@ -12,5 +12,4 @@ class HealthInfoTest {
     properties.setProperty("version", "somever")
     Assertions.assertThat(HealthInfo(BuildProperties(properties)).health().details).isEqualTo(mapOf("version" to "somever"))
   }
-
 }
