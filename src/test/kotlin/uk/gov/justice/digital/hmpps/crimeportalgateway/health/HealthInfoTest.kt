@@ -10,6 +10,7 @@ class HealthInfoTest {
   fun `should include version info`() {
     val properties = Properties()
     properties.setProperty("version", "somever")
-    Assertions.assertThat(HealthInfo(BuildProperties(properties)).health().details).isEqualTo(mapOf("version" to "somever"))
+    Assertions.assertThat(HealthInfo(BuildProperties(properties)).health().details).isEqualTo(mapOf("version" to "somever1"))
   }
+
 }
