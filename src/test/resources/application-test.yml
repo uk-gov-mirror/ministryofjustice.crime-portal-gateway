@@ -8,3 +8,13 @@ server:
 management.endpoint:
   health.cache.time-to-live: 0
   info.cache.time-to-live: 0
+
+# Localstack settings
+aws:
+  region-name: eu-west-2
+  endpoint-url: "http://localhost:4566"
+  access_key: none
+  secret_access_key: none
+
+soap:
+  xsd-file-path: src/main/resources/xsd/cp/external/ExternalDocumentRequest.xsd

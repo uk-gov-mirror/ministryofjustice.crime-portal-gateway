@@ -1,16 +1,22 @@
-package uk.gov.justice.digital.hmpps.crimeportalgateway.config
+package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
 import org.slf4j.LoggerFactory
+import org.springframework.ws.client.WebServiceClientException
 import org.springframework.ws.context.MessageContext
 import org.springframework.ws.server.EndpointInterceptor
 import org.springframework.ws.soap.saaj.SaajSoapMessage
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.util.*
 import javax.xml.soap.SOAPElement
 import javax.xml.soap.SOAPException
 import javax.xml.soap.SOAPHeader
 import javax.xml.soap.SOAPHeaderElement
 
-class SoapHeaderAddressInterceptor : EndpointInterceptor {
+class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryService) : EndpointInterceptor {
 
     override fun handleRequest(p0: MessageContext?, p1: Any?): Boolean {
         return true
@@ -22,29 +28,32 @@ class SoapHeaderAddressInterceptor : EndpointInterceptor {
 
         val soapResponseHeader = soapResponseMessage.saajMessage?.soapPart?.envelope?.header
         if (soapResponseHeader != null) {
-            val requestHeaders: Map<String, String>? = getHeaderMap(soapRequestMessage.saajMessage?.soapPart?.envelope?.header)
-            addTextNodeToNewElement(soapResponseHeader, "Action", requestHeaders?.get("Action")
+            val requestHeaders: Map<String, String> = getHeaderMap(soapRequestMessage.saajMessage?.soapPart?.envelope?.header)
+            addTextNodeToNewElement(soapResponseHeader, "Action", requestHeaders["Action"]
                     ?: "externalDocument")
             addTextNodeToNewElement(soapResponseHeader, "MessageID", UUID.randomUUID().toString())
-            addTextNodeToNewElement(soapResponseHeader, "To", requestHeaders?.get("From")
+            addTextNodeToNewElement(soapResponseHeader, "To", requestHeaders["From"]
                     ?: "")
-            addTextNodeToNewElement(soapResponseHeader, "RelatesTo", requestHeaders?.get("MessageID")
+            addTextNodeToNewElement(soapResponseHeader, "RelatesTo", requestHeaders["MessageID"]
                     ?: "")
 
             val soapElement = soapResponseHeader.addChildElement("From", "", SOAP_ENV_ADDRESS_NS)
-            addTextNodeToNewElement(soapElement, "Address", requestHeaders?.get("To") ?: "")
+            addTextNodeToNewElement(soapElement, "Address", requestHeaders["To"] ?: "")
         }
 
         return true
     }
 
-    override fun handleFault(messageContext: MessageContext?, p1: Any?): Boolean {
-        TODO("Not yet implemented")
+    override fun handleFault(messageContext: MessageContext, p1: Any?): Boolean {
+        telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_ERROR)
+        val buffer = ByteArrayOutputStream()
+        messageContext.response.writeTo(buffer)
+        log.error(buffer.toString(StandardCharsets.UTF_8.name()))
         return true
     }
 
-    override fun afterCompletion(messageContext: MessageContext?, p1: Any?, p2: Exception?) {
-        TODO("Not yet implemented")
+    override fun afterCompletion(messageContext: MessageContext, p1: Any, p2: Exception?) {
+//        TODO("Not yet implemented")
     }
 
     private fun addTextNodeToNewElement(soapElement: SOAPElement, elementName: String, elementTextNode: String) {
@@ -56,7 +65,7 @@ class SoapHeaderAddressInterceptor : EndpointInterceptor {
         }
     }
 
-    private fun getHeaderMap(soapHeader: SOAPHeader?): Map<String, String>? {
+    private fun getHeaderMap(soapHeader: SOAPHeader?): Map<String, String> {
         val headerMap: MutableMap<String, String> = HashMap()
 
         val headerElements: MutableIterator<SOAPHeaderElement>? =

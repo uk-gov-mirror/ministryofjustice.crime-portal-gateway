@@ -21,7 +21,7 @@
             <source_file_name>5_27022020_2992_B10JQ00_ADULT_COURT_LIST_DAILY</source_file_name>
           </ns35:info>
           <data>
-            <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns42="http://www.justice.gov.uk/magistrates/cp/CrimePortalMgwService" xmlns:ns41="http://www.justice.gov.uk/magistrates/generic/BinaryString" xmlns:ns40="http://www.justice.gov.uk/magistrates/cp/NamedQueries" xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+            <job>
               <printdate>14/11/2016</printdate>
               <username>gl.userone</username>
               <late>N</late>

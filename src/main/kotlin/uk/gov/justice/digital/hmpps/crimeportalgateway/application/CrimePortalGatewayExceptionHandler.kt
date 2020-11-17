@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.crimeportalgateway.config
+package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -17,10 +17,12 @@ class CrimePortalGatewayExceptionHandler {
     log.info("Validation exception: {}", e.message)
     return ResponseEntity
         .status(BAD_REQUEST)
-        .body(ErrorResponse(
+        .body(
+            ErrorResponse(
             status = BAD_REQUEST,
             userMessage = "Validation failure: ${e.message}",
-            developerMessage = e.message))
+            developerMessage = e.message)
+        )
   }
 
 
@@ -29,10 +31,12 @@ class CrimePortalGatewayExceptionHandler {
     log.error("Unexpected exception", e)
     return ResponseEntity
         .status(INTERNAL_SERVER_ERROR)
-        .body(ErrorResponse(
+        .body(
+            ErrorResponse(
             status = INTERNAL_SERVER_ERROR,
             userMessage = "Unexpected error: ${e.message}",
-            developerMessage = e.message))
+            developerMessage = e.message)
+        )
   }
 
   companion object {

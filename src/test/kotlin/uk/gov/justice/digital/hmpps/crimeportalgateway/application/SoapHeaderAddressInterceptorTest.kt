@@ -1,19 +1,27 @@
-package uk.gov.justice.digital.hmpps.crimeportalgateway.config
+package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.ws.context.MessageContext
 import org.springframework.ws.soap.saaj.SaajSoapMessage
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 import javax.xml.soap.*
 import org.mockito.Mockito.`when` as mockitoWhen
 
 @ExtendWith(MockitoExtension::class)
 class SoapHeaderAddressInterceptorTest {
 
-    private val interceptor = SoapHeaderAddressInterceptor()
+    @Mock
+    private lateinit var telemetryService: TelemetryService
+
+    @InjectMocks
+    private lateinit var interceptor: SoapHeaderAddressInterceptor
 
     @Test
     fun `should return true when messageContext is invalid`() {
@@ -49,6 +57,17 @@ class SoapHeaderAddressInterceptorTest {
         verify(toElement).addTextNode(anyString())
         verify(relatesToElement).addTextNode(anyString())
         verify(addressElement).addTextNode(anyString())
+    }
+
+    @Test
+    fun `when fault then telemetry service records`() {
+        val messageContext = mock(MessageContext::class.java)
+        val saajSoapMessage = mock(SaajSoapMessage::class.java)
+        mockitoWhen(messageContext.response).thenReturn(saajSoapMessage)
+
+        assertThat(interceptor.handleFault(messageContext, null)).isTrue
+
+        verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_ERROR)
     }
 
     private fun mockForHeader(messageContext: MessageContext, response: Boolean): Any {

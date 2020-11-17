@@ -8,10 +8,10 @@ services:
     ports:
       - "8081:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
-
+      - KEYSTORE_PASSWORD=changeit
 networks:
   hmpps:

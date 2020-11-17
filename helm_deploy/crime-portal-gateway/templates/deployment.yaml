@@ -39,6 +39,10 @@ spec:
           ports:
             - containerPort: {{ .Values.image.port }}
               protocol: TCP
+          volumeMounts:
+            - name: secrets
+              mountPath: /mnt/secrets
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /health/liveness
@@ -56,3 +60,11 @@ spec:
             timeoutSeconds: 30
             failureThreshold: 15
   {{ include "deployment.envs" . | nindent 10 }}
+
+      volumes:
+        - name: secrets
+          secret:
+            secretName: "crime-portal-gateway-keystore-cert"
+            items:
+              - key: crime-portal-gateway-jks.key
+                path: crime-portal-gateway-jks.key

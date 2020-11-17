@@ -21,6 +21,7 @@ RUN addgroup --gid 2000 --system appgroup && \
     adduser --uid 2000 --system appuser --gid 2000
 
 WORKDIR /app
+COPY --from=builder --chown=appuser:appgroup /app/build/resources/main/xsd/cp/external/ExternalDocumentRequest.xsd /app
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/crime-portal-gateway*.jar /app/app.jar
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
 COPY --from=builder --chown=appuser:appgroup /app/AI-Agent.xml /app
@@ -28,3 +29,5 @@ COPY --from=builder --chown=appuser:appgroup /app/AI-Agent.xml /app
 USER 2000
 
 ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-jar", "/app/app.jar"]
+
+EXPOSE 8080

@@ -22,7 +22,7 @@
 	<xs:element name="ExternalDocumentRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="documents" type="tns:documents" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="documents" type="tns:documents" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -82,12 +82,9 @@
 			<xs:documentation>Represents a message acknowledgement response</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="MessageStatus" minOccurs="1" maxOccurs="1">
+			<xs:element name="MessageStatus">
 				<xs:annotation>
 					<xs:documentation>Acknowledgement Status - The status will represent the detail of the responce depending on the request </xs:documentation>
-					<xs:documentation>Acknowledgement Status "DELIVERED" - confirmation of receipt when sending the request</xs:documentation>
-					<xs:documentation>Acknowledgement Status "PREVIEW RENDERED" - confirmation of an action required as a response to the request</xs:documentation>
-					<xs:documentation>Acknowledgement Status "PRINT RENDERED" - confirmation of an action required as a response to the request</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">

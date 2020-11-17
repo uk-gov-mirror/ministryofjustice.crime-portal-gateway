@@ -15,9 +15,13 @@ dependencies {
   compileOnly("org.projectlombok:lombok:$lombokVersion")
   annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
+  implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("org.springframework.ws:spring-ws-security")
   implementation("org.springframework.boot:spring-boot-devtools")
   implementation("org.springframework.boot:spring-boot-starter-web-services")
+  implementation("com.microsoft.azure:applicationinsights-spring-boot-starter")
+  implementation("com.amazonaws:aws-java-sdk-sqs:1.11.899")
   implementation("wsdl4j:wsdl4j")
   implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
 
@@ -26,7 +30,6 @@ dependencies {
 
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
   testImplementation("org.springframework.ws:spring-ws-test")
-  testImplementation("junit:junit:4.12")
   testImplementation("org.mockito:mockito-core")
 }
 

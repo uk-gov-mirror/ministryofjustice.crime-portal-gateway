@@ -1,0 +1,16 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+  xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+  <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <wsa:Action>externalDocument</wsa:Action>
+    <wsa:From>
+      <wsa:Address>CP_NPS_ML</wsa:Address>
+    </wsa:From>
+    <wsa:MessageID>09233523-345b-4351-b623-5dsf35sgs5d6</wsa:MessageID>
+    <wsa:RelatesTo>RelatesToValue</wsa:RelatesTo>
+    <wsa:To>CP_NPS</wsa:To>
+  </soap:Header>
+  <soap:Body>
+    <ns35:ExternalDocumentRequest>
+    </ns35:ExternalDocumentRequest>
+  </soap:Body>
+</soap:Envelope>

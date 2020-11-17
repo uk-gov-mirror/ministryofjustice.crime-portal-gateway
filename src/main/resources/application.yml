@@ -7,7 +7,11 @@ spring:
     name: crime-portal-gateway
   codec:
     max-in-memory-size: 10MB
-
+  webservices:
+    wsdl-locations=classpath:/xsd
+  logging:
+    level:
+      org.springframework.web: INFO
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:
@@ -44,3 +48,12 @@ management:
     info:
       cache:
         time-to-live: 2000ms
+
+aws:
+  region-name: eu-west-2
+
+soap:
+  ws-location-uri: /crime-portal-gateway/ws/
+  target-namespace: http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest
+  xsd-file-path: /app/ExternalDocumentRequest.xsd
+  keystore-file-path: /mnt/secrets/crime-portal-gateway-jks.key
