@@ -17,5 +17,4 @@ class WebServiceConfigTest : WsConfigurerAdapter() {
     override fun addInterceptors(interceptors: MutableList<EndpointInterceptor>) {
         interceptors.add(SoapHeaderAddressInterceptor(telemetryService))
     }
-
 }

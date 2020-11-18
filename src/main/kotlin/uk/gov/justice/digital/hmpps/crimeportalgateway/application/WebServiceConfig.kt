@@ -29,11 +29,12 @@ import javax.xml.validation.SchemaFactory
 
 @EnableWs
 @Configuration
-class WebServiceConfig(@Value("\${soap.ws-location-uri}") private val wsLocationUri: String,
-                       @Value("\${soap.target-namespace}") private val targetNamespace : String,
-                       @Value("\${soap.xsd-file-path}") private val xsdFilePath : String,
-                       @Autowired private val telemetryService: TelemetryService)
-    : WsConfigurerAdapter() {
+class WebServiceConfig(
+    @Value("\${soap.ws-location-uri}") private val wsLocationUri: String,
+    @Value("\${soap.target-namespace}") private val targetNamespace: String,
+    @Value("\${soap.xsd-file-path}") private val xsdFilePath: String,
+    @Autowired private val telemetryService: TelemetryService
+) : WsConfigurerAdapter() {
 
     override fun addInterceptors(interceptors: MutableList<EndpointInterceptor>) {
         interceptors.add(SoapHeaderAddressInterceptor(telemetryService))
@@ -51,10 +52,13 @@ class WebServiceConfig(@Value("\${soap.ws-location-uri}") private val wsLocation
 
     @Bean
     fun messageDispatcherServlet(applicationContext: ApplicationContext): ServletRegistrationBean<*>? {
-        return ServletRegistrationBean(MessageDispatcherServlet(applicationContext as WebApplicationContext).apply {
-            setApplicationContext(applicationContext)
-            isTransformWsdlLocations = true
-        }, "$wsLocationUri*")
+        return ServletRegistrationBean(
+            MessageDispatcherServlet(applicationContext as WebApplicationContext).apply {
+                setApplicationContext(applicationContext)
+                isTransformWsdlLocations = true
+            },
+            "$wsLocationUri*"
+        )
     }
 
     @Bean
@@ -89,5 +93,4 @@ class WebServiceConfig(@Value("\${soap.ws-location-uri}") private val wsLocation
     fun jaxbContext(): JAXBContext {
         return JAXBContext.newInstance(ExternalDocumentRequest::class.java)
     }
-
 }

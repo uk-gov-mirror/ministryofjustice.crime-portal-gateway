@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class TelemetryService (@Autowired private val telemetryClient: TelemetryClient) {
+class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) {
 
     fun trackEvent(eventType: TelemetryEventType) {
         telemetryClient.trackEvent(eventType.eventName)

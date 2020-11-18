@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.application.healthchecks
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -9,9 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.Status
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
-import java.lang.Boolean.FALSE
-import java.lang.Boolean.TRUE
-import org.mockito.Mockito.`when` as mockitoWhen
 
 @ExtendWith(MockitoExtension::class)
 internal class SqsCheckTest {
@@ -25,7 +23,7 @@ internal class SqsCheckTest {
     @Test
     fun `should give UP status when queue is available`() {
 
-        mockitoWhen(sqsService.isQueueAvailable()).thenReturn(TRUE)
+        whenever(sqsService.isQueueAvailable()).thenReturn(true)
 
         val health: Health = sqsCheck.health().block()
 
@@ -35,7 +33,7 @@ internal class SqsCheckTest {
     @Test
     fun `should give DOWN status when queue is available`() {
 
-        mockitoWhen(sqsService.isQueueAvailable()).thenReturn(FALSE)
+        whenever(sqsService.isQueueAvailable()).thenReturn(false)
 
         val health: Health = sqsCheck.health().block()
 

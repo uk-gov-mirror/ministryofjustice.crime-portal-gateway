@@ -1,18 +1,25 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.ws.context.MessageContext
 import org.springframework.ws.soap.saaj.SaajSoapMessage
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
-import javax.xml.soap.*
-import org.mockito.Mockito.`when` as mockitoWhen
+import javax.xml.soap.SOAPElement
+import javax.xml.soap.SOAPEnvelope
+import javax.xml.soap.SOAPHeader
+import javax.xml.soap.SOAPMessage
+import javax.xml.soap.SOAPPart
 
 @ExtendWith(MockitoExtension::class)
 class SoapHeaderAddressInterceptorTest {
@@ -29,8 +36,8 @@ class SoapHeaderAddressInterceptorTest {
         val saajSoapResponse = mock(SaajSoapMessage::class.java)
         val saajSoapRequest = mock(SaajSoapMessage::class.java)
 
-        mockitoWhen(messageContext.response).thenReturn(saajSoapResponse)
-        mockitoWhen(messageContext.request).thenReturn(saajSoapRequest)
+        whenever(messageContext.response).thenReturn(saajSoapResponse)
+        whenever(messageContext.request).thenReturn(saajSoapRequest)
 
         assertThat(interceptor.handleResponse(messageContext, null)).isTrue
     }
@@ -46,8 +53,8 @@ class SoapHeaderAddressInterceptorTest {
         val toElement: SOAPElement = mockHeaderChild(responseHeader, "To")
         val relatesToElement: SOAPElement = mockHeaderChild(responseHeader, "RelatesTo")
         val fromElement: SOAPElement = mock(SOAPElement::class.java)
-        mockitoWhen(responseHeader.addChildElement("From", "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
-                .thenReturn(fromElement)
+        `when`(responseHeader.addChildElement("From", "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
+            .thenReturn(fromElement)
         val addressElement: SOAPElement = mockElementChild(fromElement, "Address")
 
         assertThat(interceptor.handleResponse(messageContext, null)).isTrue
@@ -63,7 +70,7 @@ class SoapHeaderAddressInterceptorTest {
     fun `when fault then telemetry service records`() {
         val messageContext = mock(MessageContext::class.java)
         val saajSoapMessage = mock(SaajSoapMessage::class.java)
-        mockitoWhen(messageContext.response).thenReturn(saajSoapMessage)
+        `when`(messageContext.response).thenReturn(saajSoapMessage)
 
         assertThat(interceptor.handleFault(messageContext, null)).isTrue
 
@@ -74,24 +81,25 @@ class SoapHeaderAddressInterceptorTest {
         val saajSoapMessage = mock(SaajSoapMessage::class.java)
         val header: SOAPHeader = mock(SOAPHeader::class.java)
         if (response)
-            mockitoWhen(messageContext.response).thenReturn(saajSoapMessage)
+            whenever(messageContext.response).thenReturn(saajSoapMessage)
         else
-            mockitoWhen(messageContext.request).thenReturn(saajSoapMessage)
+            whenever(messageContext.request).thenReturn(saajSoapMessage)
+
         mockMessageContext(saajSoapMessage, header)
         return header
     }
 
     private fun mockHeaderChild(responseHeader: SOAPHeader, elementName: String): SOAPElement {
         val childElement: SOAPElement = mock(SOAPElement::class.java)
-        mockitoWhen(responseHeader.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
-                .thenReturn(childElement)
+        `when`(responseHeader.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
+            .thenReturn(childElement)
         return childElement
     }
 
     private fun mockElementChild(soapElement: SOAPElement, elementName: String): SOAPElement {
         val childElement: SOAPElement = mock(SOAPElement::class.java)
-        mockitoWhen(soapElement.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
-                .thenReturn(childElement)
+        `when`(soapElement.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
+            .thenReturn(childElement)
         return childElement
     }
 
@@ -100,10 +108,9 @@ class SoapHeaderAddressInterceptorTest {
         val soapPart = mock(SOAPPart::class.java)
         val soapEnv = mock(SOAPEnvelope::class.java)
 
-        mockitoWhen(saajSoapMessage.saajMessage).thenReturn(soapMessage)
-        mockitoWhen(soapMessage.soapPart).thenReturn(soapPart)
-        mockitoWhen(soapPart.envelope).thenReturn(soapEnv)
-        mockitoWhen(soapEnv.header).thenReturn(soapHeader)
+        `when`(saajSoapMessage.saajMessage).thenReturn(soapMessage)
+        `when`(soapMessage.soapPart).thenReturn(soapPart)
+        `when`(soapPart.envelope).thenReturn(soapEnv)
+        `when`(soapEnv.header).thenReturn(soapHeader)
     }
-
 }

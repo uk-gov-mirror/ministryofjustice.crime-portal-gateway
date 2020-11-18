@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
+						xmlns:scl="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
            targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData" schemaLocation="StandardCourtList.xsd"/>
 	<xs:annotation>
 		<xs:documentation xml:lang="en">
 
@@ -54,9 +56,10 @@
 	</xs:complexType>
 	<xs:complexType name="document">
 		<xs:all>
-			<xs:element ref="tns:info" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="data" type="tns:data"/>
-			<xs:element name="jsonData" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="tns:info" minOccurs="0" />
+			<!-- xs:element name="data" type="tns:data"/ -->
+			<xs:element name="data" type="scl:data" minOccurs="0" />
+			<xs:element name="jsonData" type="xs:string" minOccurs="0" />
 		</xs:all>
 	</xs:complexType>
 	<xs:element name="info">

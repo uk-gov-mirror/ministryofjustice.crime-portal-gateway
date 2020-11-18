@@ -11,7 +11,6 @@ internal class LocalDateTimeAdapterTest {
 
     @Test
     fun `should create string from date time`() {
-
         val time = LocalDateTime.of(1969, Month.AUGUST, 26, 13, 10, 10)
         val timeStr = adapter.marshal(time)
         assertThat(timeStr).isEqualTo("1969-08-26T13:10:10")
@@ -19,7 +18,6 @@ internal class LocalDateTimeAdapterTest {
 
     @Test
     fun `should create datetime from string`() {
-
         val timeStr = "1969-08-26T09:11:11"
         val expectedTime = LocalDateTime.of(1969, Month.AUGUST, 26, 9, 11, 11)
 

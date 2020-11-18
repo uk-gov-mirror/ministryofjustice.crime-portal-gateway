@@ -14,7 +14,10 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.ws.test.server.MockWebServiceClient
 import org.springframework.ws.test.server.RequestCreators
-import org.springframework.ws.test.server.ResponseMatchers.*
+import org.springframework.ws.test.server.ResponseMatchers.noFault
+import org.springframework.ws.test.server.ResponseMatchers.serverOrReceiverFault
+import org.springframework.ws.test.server.ResponseMatchers.validPayload
+import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
 import uk.gov.justice.digital.hmpps.crimeportalgateway.application.MessagingConfigTest
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
@@ -22,7 +25,6 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 import javax.xml.transform.Source
-import org.mockito.Mockito.`when` as mockitoWhen
 
 @Import(MessagingConfigTest::class)
 class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
@@ -47,14 +49,18 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun `should enqueue message and return successful acknowledgement`() {
         val requestEnvelope: Source = StringSource(externalDocRequest)
 
-        mockitoWhen(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
+        Mockito.`when`(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
 
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
-            .andExpect(xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
-                .evaluatesTo("Message successfully enqueued with id $sqsMessageId"))
-            .andExpect(xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
-                .evaluatesTo("Success"))
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                    .evaluatesTo("Message successfully enqueued with id $sqsMessageId")
+            )
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                    .evaluatesTo("Success")
+            )
             .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
@@ -79,7 +85,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
         private const val sqsMessageId = "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02"
 
-        private const val externalDocRequest: String = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">\n>
+        private const val externalDocRequest: String =
+            """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">\n>
                 <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">\n
                    <wsa:Action>externalDocument</wsa:Action>\n 
                    <wsa:From>\n
@@ -103,5 +110,4 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             xsdResource = resourceLoader.getResource("xsd/cp/external/ExternalDocumentRequest.xsd")
         }
     }
-
 }

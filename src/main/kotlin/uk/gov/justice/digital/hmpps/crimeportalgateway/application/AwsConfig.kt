@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Profile
 
 @Profile("!test")
 @Configuration
-class MessagingConfig(@Value("\${aws.region-name}") private val regionName: String,
-                      @Value("\${aws.endpoint-url}") private val endpointUrl: String) {
-
+class AwsConfig(@Value("\${aws.region-name}") private val regionName: String, @Value("\${aws.sqs-endpoint-url}") private val endpointUrl: String) {
     @Bean
     fun amazonSqs(): AmazonSQS {
         val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(endpointUrl, regionName)
@@ -23,5 +21,4 @@ class MessagingConfig(@Value("\${aws.region-name}") private val regionName: Stri
             .withEndpointConfiguration(endpointConfiguration)
             .build()
     }
-
 }

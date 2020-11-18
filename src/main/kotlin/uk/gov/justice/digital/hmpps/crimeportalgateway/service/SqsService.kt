@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SqsService(@Value("\${aws_sqs_queue_name:crime-portal-gateway-queue}") private val queueName: String,
-                 @Autowired private val amazonSqs: AmazonSQS) {
+class SqsService(
+    @Value("\${aws_sqs_queue_name:crime-portal-gateway-queue}") private val queueName: String,
+    @Autowired private val amazonSqs: AmazonSQS
+) {
 
     fun enqueueMessage(externalDocumentRequest: String): String {
         val msgRequest = SendMessageRequest()
@@ -26,9 +28,9 @@ class SqsService(@Value("\${aws_sqs_queue_name:crime-portal-gateway-queue}") pri
 
     fun isQueueAvailable(): Boolean {
 
-        try{
+        try {
             return getQueueUrl().isNotEmpty()
-        } catch(exception: Exception){
+        } catch (exception: Exception) {
             log.error("Unable to find the required queue for {}", queueName, exception)
         }
         return false

@@ -4,13 +4,13 @@ import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.model.GetQueueUrlResult
 import com.amazonaws.services.sqs.model.SendMessageRequest
 import com.amazonaws.services.sqs.model.SendMessageResult
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.Mockito.`when` as mockitoWhen
 
 @ExtendWith(MockitoExtension::class)
 internal class SqsServiceTest {
@@ -27,27 +27,27 @@ internal class SqsServiceTest {
 
     @Test
     fun `should give queue as available`() {
-        mockitoWhen(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult().withQueueUrl(queueUrl))
+        whenever(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult().withQueueUrl(queueUrl))
 
         assertThat(sqsService.isQueueAvailable()).isTrue
     }
 
     @Test
     fun `should not give queue as available when not`() {
-        mockitoWhen(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult())
+        whenever(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult())
 
         assertThat(sqsService.isQueueAvailable()).isFalse
     }
 
     @Test
     fun `should enqueue a message`() {
-        mockitoWhen(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult().withQueueUrl(queueUrl))
+        whenever(amazonSQS.getQueueUrl(queueName)).thenReturn(GetQueueUrlResult().withQueueUrl(queueUrl))
 
         val msgRequest = SendMessageRequest()
             .withQueueUrl(queueUrl)
             .withMessageBody("Hello World")
 
-        mockitoWhen(amazonSQS.sendMessage(msgRequest)).thenReturn(SendMessageResult().withMessageId("ID"))
+        whenever(amazonSQS.sendMessage(msgRequest)).thenReturn(SendMessageResult().withMessageId("ID"))
 
         val id = sqsService.enqueueMessage("Hello World")
 

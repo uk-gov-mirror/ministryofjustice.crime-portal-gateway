@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.health
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,7 +16,6 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTe
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
-import org.mockito.Mockito.`when` as mockitoWhen
 
 @MockBean(SqsCheck::class)
 @Import(MessagingConfigTest::class)
@@ -26,7 +26,7 @@ class HealthCheckTest : IntegrationTestBase() {
 
     @BeforeEach
     fun beforeEach() {
-        mockitoWhen(sqsCheck.getHealth(anyBoolean())).thenReturn(Mono.just(Health.Builder().up().build()))
+        whenever(sqsCheck.getHealth(anyBoolean())).thenReturn(Mono.just(Health.Builder().up().build()))
     }
 
     @Test
@@ -46,9 +46,13 @@ class HealthCheckTest : IntegrationTestBase() {
         webTestClient.get().uri("/health")
             .exchange()
             .expectStatus().isOk
-            .expectBody().jsonPath("components.healthInfo.details.version").value(Consumer<String> {
-                assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
-            })
+            .expectBody()
+            .jsonPath("components.healthInfo.details.version")
+            .value(
+                Consumer<String> {
+                    assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
+                }
+            )
     }
 
     @Test
@@ -83,5 +87,4 @@ class HealthCheckTest : IntegrationTestBase() {
             .expectBody()
             .jsonPath("status").isEqualTo("UP")
     }
-
 }

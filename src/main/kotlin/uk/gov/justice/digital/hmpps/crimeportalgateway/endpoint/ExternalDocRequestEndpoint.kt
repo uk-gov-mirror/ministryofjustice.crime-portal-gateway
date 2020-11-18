@@ -18,12 +18,13 @@ import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import javax.xml.validation.Schema
 
-
 @Endpoint
-class ExternalDocRequestEndpoint(@Autowired val telemetryService: TelemetryService,
-                                 @Autowired val sqsService: SqsService,
-                                 @Autowired val jaxbContext: JAXBContext,
-                                 @Autowired val validationSchema: Schema) {
+class ExternalDocRequestEndpoint(
+    @Autowired val telemetryService: TelemetryService,
+    @Autowired val sqsService: SqsService,
+    @Autowired val jaxbContext: JAXBContext,
+    @Autowired val validationSchema: Schema
+) {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
     @ResponsePayload

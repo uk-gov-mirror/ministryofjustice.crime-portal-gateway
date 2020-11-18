@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +22,6 @@ import javax.xml.XMLConstants
 import javax.xml.bind.JAXBContext
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
-import org.mockito.Mockito.`when` as mockitoWhen
 
 @ExtendWith(MockitoExtension::class)
 internal class ExternalDocRequestEndpointTest {
@@ -45,7 +45,7 @@ internal class ExternalDocRequestEndpointTest {
         val documents = Documents()
         request.documents = documents
 
-        mockitoWhen(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
+        whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
             .thenReturn("a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02")
 
         val ack = endpoint.processRequest(request)

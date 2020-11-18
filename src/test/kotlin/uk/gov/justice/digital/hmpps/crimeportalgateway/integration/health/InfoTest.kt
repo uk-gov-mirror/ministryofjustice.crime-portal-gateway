@@ -31,5 +31,4 @@ class InfoTest : IntegrationTestBase() {
                 assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
             }
     }
-
 }

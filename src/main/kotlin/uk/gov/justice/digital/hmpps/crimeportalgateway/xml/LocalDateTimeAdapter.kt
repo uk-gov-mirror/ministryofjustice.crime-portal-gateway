@@ -15,5 +15,4 @@ class LocalDateTimeAdapter : XmlAdapter<String, LocalDateTime>() {
     override fun marshal(value: LocalDateTime?): String? {
         return value?.format(this.dateTimeFormatter)
     }
-
 }

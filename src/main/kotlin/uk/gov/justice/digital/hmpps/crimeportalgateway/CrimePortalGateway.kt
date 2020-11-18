@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class CrimePortalGateway
 
 fun main(args: Array<String>) {
-  runApplication<CrimePortalGateway>(*args)
+    runApplication<CrimePortalGateway>(*args)
 }

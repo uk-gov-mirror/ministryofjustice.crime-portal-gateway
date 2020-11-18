@@ -17,5 +17,4 @@ class MessagingConfigTest {
 
     @MockBean
     private lateinit var sqsService: SqsService
-
 }
