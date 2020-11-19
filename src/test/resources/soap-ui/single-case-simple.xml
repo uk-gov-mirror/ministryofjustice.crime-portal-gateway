@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="bf679201-7918-445d-ac69-dc8fd18431b0" activeEnvironment="Default" name="CRIME-PORTAL-GATEWAY" resourceRoot="" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="a9e7e57e-cef8-4af0-be8e-702522f58fc2" wsaVersion="NONE" name="WebServicePortSoap11" type="wsdl" bindingName="{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}WebServicePortSoap11" soapVersion="1_2" anonymous="optional" definition="http://localhost:8080/crime-portal-gateway/ws/ExternalDocumentRequest.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/crime-portal-gateway/ws/ExternalDocumentRequest.wsdl"><con:part><con:url>http://localhost:8080/crime-portal-gateway/ws/ExternalDocumentRequest.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:annotation>
+        <xs:documentation xml:lang="en"></xs:documentation>
+      </xs:annotation>
+      <xs:element name="ExternalDocumentRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="documents" type="tns:documents"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Acknowledgement">
+        <xs:annotation>
+          <xs:documentation>Acknowledgement response</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ackType" type="AckType">
+              <xs:annotation>
+                <xs:documentation>Represents a link to the Acknowledgement</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="documents">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="document" type="tns:document"/>
+        </xs:sequence>
+        <xs:attribute name="job_number" use="optional">
+          <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:complexType>
+      <xs:complexType name="document">
+        <xs:all>
+          <xs:element maxOccurs="1" minOccurs="0" ref="tns:info"/>
+          <xs:element name="data" type="tns:data"/>
+          <xs:element maxOccurs="1" minOccurs="0" name="jsonData" type="xs:string"/>
+        </xs:all>
+      </xs:complexType>
+      <xs:element name="info">
+        <xs:complexType>
+          <xs:all>
+            <xs:element maxOccurs="1" minOccurs="0" name="contentType" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="dateOfHearing" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="courtHouse" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="area" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="source_file_name" type="xs:string"/>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="data">
+        <xs:sequence>
+          <xs:any processContents="skip"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AckType">
+        <xs:annotation>
+          <xs:documentation>Represents a message acknowledgement response</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element maxOccurs="1" minOccurs="1" name="MessageStatus">
+            <xs:annotation></xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1"/>
+                <xs:maxLength value="22"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="MessageComment" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Acknowledgement Comment</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="TimeStamp" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>Acknowledgement time stamp</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ExternalDocumentRequest">
+    <wsdl:part element="tns:ExternalDocumentRequest" name="ExternalDocumentRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="WebServicePort">
+    <wsdl:operation name="ExternalDocument">
+      <wsdl:input message="tns:ExternalDocumentRequest" name="ExternalDocumentRequest"></wsdl:input>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServicePortSoap11" type="tns:WebServicePort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ExternalDocument">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ExternalDocumentRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebServicePortService">
+    <wsdl:port binding="tns:WebServicePortSoap11" name="WebServicePortSoap11">
+      <soap:address location="http://localhost:8080/crime-portal-gateway/ws/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/crime-portal-gateway/ws/</con:endpoint><con:endpoint>http://www.justice.gov.uk/magistrates</con:endpoint></con:endpoints><con:operation id="7567e1fa-628d-4b56-aad6-031b9c4be1e8" isOneWay="false" action="" name="ExternalDocument" bindingOperationName="ExternalDocument" type="One-Way" inputName="ExternalDocumentRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="78cc7c0a-fd9c-4299-aa19-edb1c9572341" name="local" useWsAddressing="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/crime-portal-gateway/ws/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+			xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+   <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Action>externalDocument</wsa:Action>
+      <wsa:From>
+         <wsa:Address>CP_NPS_ML</wsa:Address>
+      </wsa:From>
+      <wsa:MessageID>09233523-345b-4351-b623-5dsf35sgs5d6</wsa:MessageID>
+      <wsa:RelatesTo>RelatesToValue</wsa:RelatesTo>
+      <wsa:To>CP_NPS</wsa:To>
+   </soap:Header>
+   <soap:Body>
+      <ns35:ExternalDocumentRequest>
+         <documents>
+            <document>
+               <ns35:info>
+                  <contentType>StandardCourtList</contentType>
+                  <dateOfHearing>26/10/2020</dateOfHearing>
+                  <courtHouse>Sheffield Magistrates Court</courtHouse>
+                  <area>13</area>
+                  <source_file_name>5_27022020_2992_B10JQ00_ADULT_COURT_LIST_DAILY</source_file_name>
+               </ns35:info>
+               <data>
+                  <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns42="http://www.justice.gov.uk/magistrates/cp/CrimePortalMgwService" xmlns:ns41="http://www.justice.gov.uk/magistrates/generic/BinaryString" xmlns:ns40="http://www.justice.gov.uk/magistrates/cp/NamedQueries" xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+                     <printdate>14/11/2016</printdate>
+                     <username>gl.userone</username>
+                     <late>N</late>
+                     <adbox>N</adbox>
+                     <means>N</means>
+                     <sessions>
+                        <session>
+                           <s_id>556805</s_id>
+                           <doh>26/10/2020</doh>
+                           <lja>South West London Magistrates; Court</lja>
+                           <cmu>Gl Management Unit 1</cmu>
+                           <panel>Adult Panel</panel>
+                           <court>Sheffield Magistrates Court</court>
+                           <room>00</room>
+                           <sstart>09:00</sstart>
+                           <send>12:00</send>
+                           <blocks>
+                              <block>
+                                 <sb_id>758095</sb_id>
+                                 <bstart>09:00</bstart>
+                                 <bend>12:00</bend>
+                                 <desc>First Hearings Slot</desc>
+
+                                 <cases>
+
+                                    <!-- Gives 1 matches at time of writing -->
+                                    <case>
+                                       <c_id>1218461</c_id>
+                                       <h_id>1294273</h_id>
+                                       <valid>Y</valid>
+                                       <caseno>1600032981</caseno>
+                                       <type>C</type>
+                                       <def_name>MR CHRIS FAULKNER</def_name>
+                                       <def_dob>06/08/1968</def_dob>
+                                       <def_type>P</def_type>
+                                       <def_sex>F</def_sex>
+                                       <def_addr>
+                                          <line1>A1</line1>
+                                       </def_addr>
+                                       <inf>POL01</inf>
+                                       <cseq>2</cseq>
+                                       <listno>1st</listno>
+                                       <offences>
+                                          <offence>
+                                             <oseq>1</oseq>
+                                             <co_id>1185408</co_id>
+                                             <code>TH68010</code>
+                                             <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
+                                             <title>Theft from a shop</title>
+                                             <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                                             <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                                          </offence>
+                                       </offences>
+                                    </case>
+                                    <!-- Gives 0 matches at time of writing -->
+                                    <case>
+                                       <c_id>1218461</c_id>
+                                       <h_id>1294273</h_id>
+                                       <valid>Y</valid>
+                                       <caseno>1600032980</caseno>
+                                       <type>C</type>
+                                       <def_name>MR Theremin MELLOTRON</def_name>
+                                       <def_dob>16/08/1990</def_dob>
+                                       <def_type>P</def_type>
+                                       <def_sex>N</def_sex>
+                                       <def_addr>
+                                          <line1>A1</line1>
+                                       </def_addr>
+                                       <inf>POL01</inf>
+                                       <cseq>2</cseq>
+                                       <listno>1st</listno>
+                                       <offences>
+                                          <offence>
+                                             <oseq>1</oseq>
+                                             <co_id>1185408</co_id>
+                                             <code>TH68010</code>
+                                             <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
+                                             <title>Theft from a shop</title>
+                                             <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                                             <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                                          </offence>
+                                       </offences>
+                                    </case>
+                                 </cases>
+                              </block>
+                           </blocks>
+                        </session>
+                     </sessions>
+                  </job>
+               </data>
+            </document>
+         </documents>
+      </ns35:ExternalDocumentRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.justice.gov.uk/magistrates/cp/CpMgwExtDocService/icpMirrorGatewayExtDocType/externalDocumentRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call id="43c25fd7-ec54-494b-b08a-ca6be596de1f" name="dev"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/crime-portal-gateway/ws/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+   <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Action>externalDocument</wsa:Action>
+      <wsa:From>
+         <wsa:Address>CP_NPS_ML</wsa:Address>
+      </wsa:From>
+      <wsa:MessageID>09233523-345b-4351-b623-5dsf35sgs5d6</wsa:MessageID>
+      <wsa:RelatesTo>RelatesToValue</wsa:RelatesTo>
+      <wsa:To>CP_NPS</wsa:To>
+   </soap:Header>
+   <soap:Body>
+      <ns35:ExternalDocumentRequest>
+         <documents>
+            <document>
+               <ns35:info>
+                  <contentType>StandardCourtList</contentType>
+                  <dateOfHearing>15/10/2020</dateOfHearing>
+                  <courtHouse>Sheffield Magistrates Court</courtHouse>
+                  <area>13</area>
+                  <source_file_name>5_27022020_2992_B10JQ00_ADULT_COURT_LIST_DAILY</source_file_name>
+               </ns35:info>
+               <data>
+                  <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns42="http://www.justice.gov.uk/magistrates/cp/CrimePortalMgwService" xmlns:ns41="http://www.justice.gov.uk/magistrates/generic/BinaryString" xmlns:ns40="http://www.justice.gov.uk/magistrates/cp/NamedQueries" xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+                     <printdate>14/11/2016</printdate>
+                     <username>gl.userone</username>
+                     <late>N</late>
+                     <adbox>N</adbox>
+                     <means>N</means>
+                     <sessions>
+                        <session>
+                           <s_id>556805</s_id>
+                           <doh>15/10/2020</doh>
+                           <lja>South West London Magistrates; Court</lja>
+                           <cmu>Gl Management Unit 1</cmu>
+                           <panel>Adult Panel</panel>
+                           <court>Sheffield Magistrates Court</court>
+                           <room>00</room>
+                           <sstart>09:00</sstart>
+                           <send>12:00</send>
+                           <blocks>
+                              <block>
+                                 <sb_id>758095</sb_id>
+                                 <bstart>09:00</bstart>
+                                 <bend>12:00</bend>
+                                 <desc>First Hearings Slot</desc>
+                                 <!-- Gives 1 match at time of writing -->
+                                 <cases>
+                                    <case>
+                                       <c_id>1217464</c_id>
+                                       <h_id>1293277</h_id>
+                                       <valid>Y</valid>
+                                       <!-- caseno>1600032952</caseno -->
+                                       <caseno>1230007</caseno>
+                                       <type>C</type>
+                                       <def_name>MR. Chris FAULKNER</def_name>
+                                       <def_sex>N</def_sex>
+                                       <def_dob>06/08/1968</def_dob>
+                                       <def_type>P</def_type>
+                                       <def_addr>
+                                          <line1>A1</line1>
+                                       </def_addr>
+                                       <inf>POL01</inf>
+                                       <cseq>1</cseq>
+                                       <listno>1st</listno>
+                                       <offences>
+                                          <offence>
+                                             <oseq>1</oseq>
+                                             <co_id>1184411</co_id>
+                                             <code>TH68010</code>
+                                             <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
+                                             <title>Theft from a shop</title>
+                                             <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                                             <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                                          </offence>
+                                       </offences>
+                                    </case>
+                                    <!-- Gives 4 matches at time of writing -->
+                                    <case>
+                                       <c_id>1218461</c_id>
+                                       <h_id>1294273</h_id>
+                                       <valid>Y</valid>
+                                       <caseno>1600032979</caseno>
+                                       <type>C</type>
+                                       <def_name>MR. Xander DAVIDSON</def_name>
+                                       <def_dob>16/08/1990</def_dob>
+                                       <def_type>P</def_type>
+                                       <def_sex>N</def_sex>
+                                       <def_addr>
+                                          <line1>A1</line1>
+                                       </def_addr>
+                                       <inf>POL01</inf>
+                                       <cseq>2</cseq>
+                                       <listno>1st</listno>
+                                       <offences>
+                                          <offence>
+                                             <oseq>1</oseq>
+                                             <co_id>1185408</co_id>
+                                             <code>TH68010</code>
+                                             <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
+                                             <title>Theft from a shop</title>
+                                             <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                                             <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                                          </offence>
+                                       </offences>
+                                    </case>
+                                    <!-- Gives 0 matches at time of writing -->
+                                    <case>
+                                       <c_id>1218461</c_id>
+                                       <h_id>1294273</h_id>
+                                       <valid>Y</valid>
+                                       <caseno>1600032980</caseno>
+                                       <type>C</type>
+                                       <def_name>MR. Theremin MELLOTRON</def_name>
+                                       <def_dob>16/08/1990</def_dob>
+                                       <def_type>P</def_type>
+                                       <def_sex>N</def_sex>
+                                       <def_addr>
+                                          <line1>A1</line1>
+                                       </def_addr>
+                                       <inf>POL01</inf>
+                                       <cseq>2</cseq>
+                                       <listno>1st</listno>
+                                       <offences>
+                                          <offence>
+                                             <oseq>1</oseq>
+                                             <co_id>1185408</co_id>
+                                             <code>TH68010</code>
+                                             <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
+                                             <title>Theft from a shop</title>
+                                             <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                                             <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                                          </offence>
+                                       </offences>
+                                    </case>
+                                 </cases>
+                              </block>
+                           </blocks>
+                        </session>
+                     </sessions>
+                  </job>
+               </data>
+            </document>
+         </documents>
+      </ns35:ExternalDocumentRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.justice.gov.uk/magistrates/cp/CpMgwExtDocService/icpMirrorGatewayExtDocType/externalDocumentRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

@@ -33,6 +33,7 @@ class ExternalDocRequestEndpoint(
 
         val messageId = sqsService.enqueueMessage(marshal(request))
         telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+        log.info("Message enqueued with ID {} ", messageId)
 
         return Acknowledgement().apply {
             ackType = AckType().apply {

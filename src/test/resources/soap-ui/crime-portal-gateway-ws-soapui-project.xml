@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="22807eda-aabf-4b60-984e-85e047bf4cd2" activeEnvironment="Default" name="crime-portal-gateway-ws" resourceRoot="${projectDir}" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="WsdlSettings@cache-wsdls">false</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="a8a1eebd-1cf1-4d72-910a-c3bda23fb438" wsaVersion="NONE" name="WebServicePortSoap11" type="wsdl" bindingName="{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}WebServicePortSoap11" soapVersion="1_2" anonymous="optional" definition="http://localhost:8080/crime-portal-gateway/ws/ExternalDocumentRequest.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:endpoints><con:endpoint>http://localhost:8080/crime-portal-gateway/ws/</con:endpoint></con:endpoints><con:operation id="fc728f91-6825-474a-b9b1-ae77cba191f2" isOneWay="false" action="" name="ExternalDocument" bindingOperationName="ExternalDocument" type="One-Way" inputName="ExternalDocumentRequest" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="80e0abaa-ec1b-47da-917d-c36772346e06" name="Request 1" outgoingWss="local-keystore" sslKeystore="keystore.jks"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Content-Type" value="application/soap+xml" xmlns="http://eviware.com/soapui/config"/></con:setting><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@wss-time-to-live">3600</con:setting><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@skip_soap_action">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8081/crime-portal-gateway/ws/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+			xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+   <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Action>externalDocument</wsa:Action>
+      <wsa:From>
+         <wsa:Address>CP_NPS_ML</wsa:Address>
+      </wsa:From>
+      <wsa:MessageID>09233523-345b-4351-b623-5dsf35sgs5d6</wsa:MessageID>
+      <wsa:RelatesTo>RelatesToValue</wsa:RelatesTo>
+      <wsa:To>CP_NPS</wsa:To>
+   </soap:Header>
+   <soap:Body>
+      <ns35:ExternalDocumentRequest>
+         <documents>
+            <document>
+            </document>
+         </documents>
+      </ns35:ExternalDocumentRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest/WebServicePort/ExternalDocumentRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite id="d6fb145c-ba44-41d4-b84a-6fb061ff992f" name="WebServicePortSoap11 TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="75b55d8b-d32d-41ec-81ee-231ba44171e3" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ExternalDocument TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="65ff1a92-c96b-4b93-837c-32357f4ced62" name="ExternalDocument"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>WebServicePortSoap11</con:interface><con:operation>ExternalDocument</con:operation><con:request name="ExternalDocument" id="74ca5aeb-4f50-466d-bc83-73538ba84dad"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/crime-portal-gateway/ws/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ext="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ext:ExternalDocumentRequest>
+         <documents job_number="?">
+            <!--Zero or more repetitions:-->
+            <document>
+               <!--You may enter the following 3 items in any order-->
+               <!--Optional:-->
+               <ext:info>
+                  <!--You may enter the following 5 items in any order-->
+                  <!--Optional:-->
+                  <contentType>?</contentType>
+                  <!--Optional:-->
+                  <dateOfHearing>?</dateOfHearing>
+                  <!--Optional:-->
+                  <courtHouse>?</courtHouse>
+                  <!--Optional:-->
+                  <area>?</area>
+                  <!--Optional:-->
+                  <source_file_name>?</source_file_name>
+               </ext:info>
+               <data>
+                  <!--You may enter ANY elements at this point-->
+               </data>
+               <!--Optional:-->
+               <jsonData>?</jsonData>
+            </document>
+         </documents>
+      </ext:ExternalDocumentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest/WebServicePort/ExternalDocumentRequest" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer><con:crypto><con:source>../keystore/client.jks</con:source><con:password>changeit</con:password><con:type>KEYSTORE</con:type></con:crypto><con:outgoing><con:name>client-key</con:name><con:entry type="Timestamp"><con:configuration/></con:entry><con:entry type="Signature" username="server-public" password="changeit"><con:configuration><crypto>client.jks</crypto><keyIdentifierType>2</keyIdentifierType><signatureAlgorithm/><signatureCanonicalization/><useSingleCert>false</useSingleCert><prependSignature>true</prependSignature><digestAlgorithm/><customTokenValueType/><customTokenId/></con:configuration></con:entry><con:entry type="Encryption" username="server-public" password="changeit"><con:configuration><crypto>client.jks</crypto><keyIdentifierType>2</keyIdentifierType><symmetricEncAlgorithm/><encKeyTransport/><embeddedKeyName/><embeddedKeyPassword/><encryptionCanonicalization/><encryptSymmetricKey>true</encryptSymmetricKey></con:configuration></con:entry></con:outgoing></con:wssContainer><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

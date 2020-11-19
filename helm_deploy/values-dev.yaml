@@ -5,7 +5,7 @@ replicaCount: 1
 
 image:
   repository: quay.io/hmpps/crime-portal-gateway
-  tag: latest
+  tag: 0.0.1
   port: 8081
 
 ingress:

@@ -13,5 +13,6 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
       - KEYSTORE_PASSWORD=changeit
+
 networks:
   hmpps:

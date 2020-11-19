@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.crimeportalgateway.application
+package uk.gov.justice.digital.hmpps.crimeportalgateway.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.ws.context.MessageContext

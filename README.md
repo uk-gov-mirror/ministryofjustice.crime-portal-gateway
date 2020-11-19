@@ -10,6 +10,16 @@ Run the application as a Spring Boot app.
 
 ```./gradlew bootRun```
 
+# Environment variables
+
+
+| Syntax           | Description | Example |
+| ---------------- | ----------- |---------
+| soap-default-uri | The WS endpoint to call | http://localhost:8080/crime-portal-gateway/ws|
+| keystore-password | Password used for the JKS | changeit |
+| trusted-cert-alias-name | Alias for the trusted certicate in the JKS | client-public |
+| private-key-alias-name | Password used for the JKS | server |
+
 # Health / Ping endpoints
 
 The application is configured with a Spring health endpoint at the following location. It is customised to provide a status of the SQS queue.

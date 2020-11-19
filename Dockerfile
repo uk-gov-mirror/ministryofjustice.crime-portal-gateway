@@ -22,6 +22,7 @@ RUN addgroup --gid 2000 --system appgroup && \
 
 WORKDIR /app
 COPY --from=builder --chown=appuser:appgroup /app/build/resources/main/xsd/cp/external/ExternalDocumentRequest.xsd /app
+COPY --from=builder --chown=appuser:appgroup /app/build/resources/main/xsd/cp/external/StandardCourtList.xsd /app
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/crime-portal-gateway*.jar /app/app.jar
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
 COPY --from=builder --chown=appuser:appgroup /app/AI-Agent.xml /app

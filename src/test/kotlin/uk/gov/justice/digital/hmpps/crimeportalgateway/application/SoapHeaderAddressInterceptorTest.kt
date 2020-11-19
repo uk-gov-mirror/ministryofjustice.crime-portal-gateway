@@ -13,6 +13,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.ws.context.MessageContext
 import org.springframework.ws.soap.saaj.SaajSoapMessage
+import uk.gov.justice.digital.hmpps.crimeportalgateway.config.SoapHeaderAddressInterceptor
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 import javax.xml.soap.SOAPElement

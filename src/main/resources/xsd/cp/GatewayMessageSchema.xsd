@@ -17,7 +17,6 @@
 		</xs:documentation>
 	</xs:annotation>
 
-<!--	<xs:import namespace="http://www.justice.gov.uk/magistrates/ack" schemaLocation="../generic/Acknowledgement/Acknowledgement.xsd"/>-->
 	<xs:import namespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" schemaLocation="external/ExternalDocumentRequest.xsd"/>
 
 	<xs:element name="GatewayOperationType">

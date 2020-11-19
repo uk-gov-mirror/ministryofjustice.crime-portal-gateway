@@ -6,11 +6,6 @@ spring:
       org.springframework.ws.client.MessageTracing: TRACE
 
 soap:
-  ws-location-uri: /crime-portal-gateway/ws/
-  target-namespace: http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest
-  inbound-encrypt-actions: "Timestamp Signature Encrypt"
-  keystore-password: changeit
-  keystore-file-path: src/test/resources/keystore/server.jks
   xsd-file-path: src/main/resources/xsd/cp/external/ExternalDocumentRequest.xsd
 
 # Localstack settings
