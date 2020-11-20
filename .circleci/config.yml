@@ -79,37 +79,37 @@ workflows:
               environment: dev
               environment_type: development
               job_type: deployment
-#      - request-preprod-approval:
-#          type: approval
-#          requires:
-#            - deploy_dev
-#      - hmpps/deploy_env:
-#          name: deploy_preprod
-#          env: "preprod"
-#          context: crime-portal-gateway-preprod
-#          requires:
-#            - request-preprod-approval
-#          post-steps:
-#            - jira/notify:
-#              environment: preprod
-#              environment_type: testing
-#              job_type: deployment
-#      - request-prod-approval:
-#          type: approval
-#          requires:
-#            - deploy_preprod
-#      - hmpps/deploy_env:
-#          name: deploy_prod
-#          env: "prod"
-#          slack_notification: true
-#          context: crime-portal-gateway-prod
-#          requires:
-#            - request-prod-approval
-#          post-steps:
-#            - jira/notify:
-#              environment: prod
-#              environment_type: production
-#              job_type: deployment
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: "preprod"
+          context: crime-portal-gateway-preprod
+          requires:
+            - request-preprod-approval
+          post-steps:
+            - jira/notify:
+              environment: preprod
+              environment_type: testing
+              job_type: deployment
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+      - hmpps/deploy_env:
+          name: deploy_prod
+          env: "prod"
+          slack_notification: true
+          context: crime-portal-gateway-prod
+          requires:
+            - request-prod-approval
+          post-steps:
+            - jira/notify:
+              environment: prod
+              environment_type: production
+              job_type: deployment
 
   scheduled:
     triggers:
