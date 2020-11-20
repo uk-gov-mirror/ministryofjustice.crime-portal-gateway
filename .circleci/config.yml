@@ -87,7 +87,7 @@ workflows:
           name: deploy_preprod
           retrieve_secrets: none
           env: "preprod"
-          context: crime-portal-gateway-preprod
+          context: court-probation-preprod
           requires:
             - request-preprod-approval
           post-steps:
@@ -104,7 +104,7 @@ workflows:
           retrieve_secrets: none
           env: "prod"
           slack_notification: true
-          context: crime-portal-gateway-prod
+          context: court-probation-prod
           requires:
             - request-prod-approval
           post-steps:
