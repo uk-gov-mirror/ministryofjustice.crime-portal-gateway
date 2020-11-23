@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -74,6 +75,7 @@ class WebServiceConfig(
         return SimpleXsdSchema(externalDocumentXsdResource)
     }
 
+    @ConditionalOnProperty(value = ["soap.validate-payload"], havingValue = "true")
     @Bean
     fun validationSchema(externalDocumentXsdResource: Resource): Schema {
         val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)

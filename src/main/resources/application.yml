@@ -56,6 +56,8 @@ soap:
   ws-location-uri: /crime-portal-gateway/ws/
   target-namespace: http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest
   xsd-file-path: /app/ExternalDocumentRequest.xsd
+  # The existing feed doesn't validate so we will continue with same approach
+  validate-payload: false
 
 ws-sec:
   keystore-file-path: /mnt/secrets/crime-portal-gateway-jks.key

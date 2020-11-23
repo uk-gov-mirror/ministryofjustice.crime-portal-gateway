@@ -52,7 +52,8 @@
                           <c_id>1218461</c_id>
                           <h_id>1294273</h_id>
                           <valid>Y</valid>
-                          <caseno>1600032981</caseno>
+                          <!-- Less than 10 digits will fail schema validation -->
+                          <caseno>160002981</caseno>
                           <type>C</type>
                           <def_name>MR CHRIS FAULKNER</def_name>
                           <def_dob>06/08/1968</def_dob>

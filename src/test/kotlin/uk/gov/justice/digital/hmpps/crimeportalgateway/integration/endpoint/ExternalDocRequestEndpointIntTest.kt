@@ -1,11 +1,12 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.contains
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Import
@@ -49,7 +50,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun `should enqueue message and return successful acknowledgement`() {
         val requestEnvelope: Source = StringSource(externalDocRequest)
 
-        Mockito.`when`(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
+        whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
 
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
@@ -64,8 +65,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
-        Mockito.verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
-        Mockito.verify(sqsService).enqueueMessage(anyString())
+        verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+        verify(sqsService).enqueueMessage(anyString())
     }
 
     @Test

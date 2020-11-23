@@ -23,7 +23,7 @@ class ExternalDocRequestEndpoint(
     @Autowired val telemetryService: TelemetryService,
     @Autowired val sqsService: SqsService,
     @Autowired val jaxbContext: JAXBContext,
-    @Autowired val validationSchema: Schema
+    @Autowired val validationSchema: Schema?
 ) {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
@@ -46,7 +46,7 @@ class ExternalDocRequestEndpoint(
 
     private fun marshal(request: ExternalDocumentRequest): String {
         val marshaller: Marshaller = jaxbContext.createMarshaller()
-        marshaller.schema = validationSchema
+        validationSchema?.let { marshaller.schema = it }
         val sw = StringWriter()
         marshaller.marshal(request, sw)
         return sw.toString()
