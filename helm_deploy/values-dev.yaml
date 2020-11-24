@@ -5,16 +5,15 @@ replicaCount: 1
 
 image:
   repository: quay.io/hmpps/crime-portal-gateway
-  tag: 0.0.1
+  tag: latest
   port: 8081
 
 ingress:
   enabled: true
   enable_whitelist: true
   hosts:
-    - host: crime-portal-gateway-dev.hmpps.service.justice.gov.uk
-      cert_secret: crime-portal-gateway-cert
-  path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
+    - host: crime-portal-gateway-dev.apps.live-1.cloud-platform.service.justice.gov.uk
+  path: /
 
 env:
   JAVA_OPTS: "-Xmx512m"
