@@ -25,6 +25,7 @@ COPY --from=builder --chown=appuser:appgroup /app/build/resources/main/xsd/cp/ex
 COPY --from=builder --chown=appuser:appgroup /app/build/resources/main/xsd/cp/external/StandardCourtList.xsd /app
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/crime-portal-gateway*.jar /app/app.jar
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
+COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights.json /app
 COPY --from=builder --chown=appuser:appgroup /app/AI-Agent.xml /app
 
 USER 2000
