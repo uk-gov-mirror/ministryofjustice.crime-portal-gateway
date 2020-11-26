@@ -16,7 +16,10 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.ws:spring-ws-security")
+    implementation("org.springframework.ws:spring-ws-security") {
+        exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
+            .because("OWASP found security Issues")
+    }
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("com.microsoft.azure:applicationinsights-spring-boot-starter")

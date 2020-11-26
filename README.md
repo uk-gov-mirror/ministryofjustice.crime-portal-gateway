@@ -57,7 +57,7 @@ The application requires an Amazon SQS queue to be configured. It is possible to
 
 5. It is possible to execute the following command from the project root to call the SOAP endpoint.
 
-```curl --header "content-type: application/soap+xml" -d @src/test/resources/sample-soap-request.xml http://localhost:8080/crime-portal-gateway/ws```
+```curl --header "content-type: application/soap+xml" -d @src/test/resources/soap/sample-request.xml http://localhost:8080/crime-portal-gateway/ws```
 
 This command should submit the message to the local queue and will report back the message ID. The message can be retrieved from teh queue with the AWS CLI with a command with this form. Note that the queue URL may well be the same but will have been reported back from the create queue command in part 3.
 
