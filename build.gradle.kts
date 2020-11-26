@@ -1,5 +1,5 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "2.0.0"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.1.2"
     kotlin("plugin.spring") version "1.4.10"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.owasp.dependencycheck") version "6.0.3"
@@ -42,13 +42,4 @@ xjc {
 
 sourceSets.named("main") {
     xjcBinding.srcDir("resources/xsd")
-}
-
-tasks.register<Copy>("copyAgentConfig") {
-    from(file("applicationinsights.json"))
-    into(file("$buildDir/libs"))
-}
-
-tasks.assemble {
-    dependsOn("copyAgentConfig")
 }
