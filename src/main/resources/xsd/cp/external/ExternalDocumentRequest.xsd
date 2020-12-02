@@ -1,112 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
-						xmlns:scl="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
-           targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" elementFormDefault="unqualified" attributeFormDefault="unqualified">
-	<xs:import namespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData" schemaLocation="StandardCourtList.xsd"/>
-	<xs:annotation>
-		<xs:documentation xml:lang="en">
+           xmlns:scl="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
+           targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
+           elementFormDefault="unqualified" attributeFormDefault="unqualified">
 
-			CGI IT UK Limited. A CGI Group Inc. Company
-			Registered Office: 250 Brook Drive,
-			Green Park, Re
-			ading RG2 6UA,
-			United Kingdom.
+    <xs:import namespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData" schemaLocation="StandardCourtList.xsd"/>
 
-			Registered in England and Wales - Number 947968
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
 
-			0.1 - PP - 02/02/2020 - Initial draft
-			0.2 - PP - 22/06/2020 - Updated to use StandardCourtList.xsd
-			0.3 - PP - 14/06/2020 - Remove ref to StandardCourtList.xsd for Data element
+            CGI IT UK Limited. A CGI Group Inc. Company
+            Registered Office: 250 Brook Drive,
+            Green Park, Re
+            ading RG2 6UA,
+            United Kingdom.
 
-		</xs:documentation>
-	</xs:annotation>
-	<xs:element name="ExternalDocumentRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="documents" type="tns:documents" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+            Registered in England and Wales - Number 947968
 
-	<xs:element name="Acknowledgement">
-	<xs:annotation>
-		<xs:documentation>Acknowledgement response</xs:documentation>
-	</xs:annotation>
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element name="ackType" type="AckType">
-				<xs:annotation>
-					<xs:documentation>Represents a link to the Acknowledgement</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	</xs:element>
+            0.1 - PP - 02/02/2020 - Initial draft
+            0.2 - PP - 22/06/2020 - Updated to use StandardCourtList.xsd
+            0.3 - PP - 14/06/2020 - Remove ref to StandardCourtList.xsd for Data element
 
-	<xs:complexType name="documents">
-		<xs:sequence>
-			<xs:element name="document" type="tns:document" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="job_number" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string"/>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:complexType name="document">
-		<xs:all>
-			<xs:element ref="tns:info" minOccurs="0" />
-			<!-- xs:element name="data" type="tns:data"/ -->
-			<xs:element name="data" type="scl:data" minOccurs="0" />
-			<xs:element name="jsonData" type="xs:string" minOccurs="0" />
-		</xs:all>
-	</xs:complexType>
-	<xs:element name="info">
-		<xs:complexType>
-			<xs:all>
-				<xs:element name="contentType" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="dateOfHearing" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="courtHouse" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="area" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="source_file_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
+        </xs:documentation>
+    </xs:annotation>
+    <xs:element name="ExternalDocumentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="documents" type="tns:documents" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="jsonData" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:complexType name="data">
-		<xs:sequence>
-			<xs:any processContents="skip" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="Acknowledgement">
+        <xs:annotation>
+            <xs:documentation>Acknowledgement response</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ackType" type="AckType">
+                    <xs:annotation>
+                        <xs:documentation>Represents a link to the Acknowledgement</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:complexType name="AckType">
-		<xs:annotation>
-			<xs:documentation>Represents a message acknowledgement response</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="MessageStatus">
-				<xs:annotation>
-					<xs:documentation>Acknowledgement Status - The status will represent the detail of the responce depending on the request </xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="1"/>
-						<xs:maxLength value="22"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="MessageComment" type="xs:string" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>Acknowledgement Comment</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TimeStamp" type="xs:dateTime">
-				<xs:annotation>
-					<xs:documentation>Acknowledgement time stamp</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="documents">
+        <xs:sequence>
+            <xs:element name="document" type="scl:document" minOccurs="0" maxOccurs="unbounded"/>
+            <!-- <xs:any processContents="skip" minOccurs="1" maxOccurs="1"/> -->
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AckType">
+        <xs:annotation>
+            <xs:documentation>Represents a message acknowledgement response</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="MessageStatus">
+                <xs:annotation>
+                    <xs:documentation>Acknowledgement Status - The status will represent the detail of the responce depending on the request </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1"/>
+                        <xs:maxLength value="22"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="MessageComment" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Acknowledgement Comment</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TimeStamp" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Acknowledgement time stamp</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 
 </xs:schema>

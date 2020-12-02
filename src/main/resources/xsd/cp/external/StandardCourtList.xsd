@@ -1,657 +1,702 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
-	targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
-	elementFormDefault="unqualified" attributeFormDefault="unqualified">
-	<xs:annotation>
-		<xs:documentation xml:lang="en">
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:scl="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
+           targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
+           elementFormDefault="unqualified" attributeFormDefault="unqualified">
 
-					CGI IT UK Limited. A CGI Group Inc. Company
-					Registered Office: 250 Brook Drive,
-					Green Park, Re
-					ading RG2 6UA,
-					United Kingdom.
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
 
-					Registered in England and Wales - Number 947968
+            CGI IT UK Limited. A CGI Group Inc. Company
+            Registered Office: 250 Brook Drive,
+            Green Park, Re
+            ading RG2 6UA,
+            United Kingdom.
 
-					0.1 - DW - 06/06/2020 - Initial draft
-					0.2 - DW - 22/06/2020 - Multiple updates
-											Introduce def_name_elements, cro_number, pnc_id
+            Registered in England and Wales - Number 947968
 
+            0.1 - DW - 06/06/2020 - Initial draft
+            0.2 - DW - 22/06/2020 - Multiple updates
+            Introduce def_name_elements, cro_number, pnc_id
+            0.3 - DW - 26/11/2020 - Introduce document, info, general, parameters to match Print Service output
+            0.4 - CF - 30/11/2020 - change document element to complexType
+        </xs:documentation>
+    </xs:annotation>
 
-					</xs:documentation>
-	</xs:annotation>
+    <xs:complexType name="document">
+        <xs:all>
+            <xs:element ref="scl:info" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="data" type="scl:data"/>
+        </xs:all>
+    </xs:complexType>
 
-	<xs:complexType name="data">
-		<xs:sequence>
-			<xs:element name="job" type="tns:job" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="info">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="general" type="scl:general" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="source_file_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="printers" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="parameters" type="scl:parameters" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="start_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:complexType name="job">
-		<xs:sequence>
-			<xs:element name="printdate" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Date in the format DD/MM/YYYY</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="username" type="xs:string" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="late" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="adbox" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="means" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="sessions" type="tns:sessions" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="sessions">
-		<xs:sequence>
-			<xs:element name="session" type="tns:session" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="session">
-		<xs:sequence>
-			<xs:element name="area_code" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Criminal Justice Area Code</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="ou_code" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Courthouse OU Code</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="7"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="s_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="doh" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Date of Hearing in the format DD/MM/YYYY</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="lja" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Local Justice Area Name</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cmu" type="xs:string" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="panel" type="xs:string" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Panel Title eg Adult/Youth</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="court" type="xs:string" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Courthouse Name</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="room" type="xs:int" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Courtroom Number</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="sstart" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Session Start Time in the format HH:MM</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="5"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="send" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Session End Time in the format HH:MM</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="5"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="blocks" type="tns:blocks" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="blocks">
-		<xs:sequence>
-			<xs:element name="block" type="tns:block" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="block">
-		<xs:sequence>
-			<xs:element name="sb_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="bstart" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Block Start Time in the format HH:MM</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="5"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="bend" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Block End Time in the format HH:MM</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="5"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="desc" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Business Type Description eg Trial, Remand etc</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="50"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cases" type="tns:cases" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="cases">
-		<xs:sequence>
-			<xs:element name="case" type="tns:case" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="case">
-		<xs:sequence>
-			<xs:element name="c_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="h_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="valid" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Case Validated Y/N</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="caseno" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Case Number</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="type" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Case Initiation Type eg C-Charge, S-Summons etc</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="prov" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Y if a Provisional hearing</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="urn" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Prosecutor URN</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="40"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="asn" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Prosecutor Arrest Summons Number</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="20"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="marker" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Case Markers held on the Case</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="50"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="linked" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="def_name" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="200"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="def_name_elements" type="tns:def_name_elements" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="def_type" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Defendant Type P-Person, O-Organisation</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="def_sex" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="def_dob" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="def_age" type="xs:int" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="pnc_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="cro_number" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="def_addr" type="tns:def_addr" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="inf" type="xs:string" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Internal code for the Cases' Informant</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="cseq" type="xs:int" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>The Case's Court List number at the time of report generation</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="listno" type="xs:string" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>The number of times the Case has been listed including the hearing being reported eg 1st, 2nd, 3rd etc</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="pg_type" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>P-Person or O-Organisation</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="pg_name" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="200"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="pg_addr" type="tns:pg_addr" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="sol_name" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="200"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="offences" type="tns:offences" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="general">
+        <xs:all>
+            <xs:element name="alerts_address" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="erm_flag" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="doc_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="outputtype" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="docref" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="system" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="preview_text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:all>
+    </xs:complexType>
 
-	<xs:complexType name="def_name_elements">
-		<xs:sequence>
-			<xs:element name="title" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="forename1" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="forename2" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="forename3" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="surname" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="def_addr">
-		<xs:sequence>
-			<xs:element name="line1" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line2" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line3" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line4" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line5" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="pcode" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="8"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="pg_addr">
-		<xs:sequence>
-			<xs:element name="line1" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line2" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line3" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line4" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="line5" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="35"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="pcode" minOccurs="0" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="8"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="offences">
-		<xs:sequence>
-			<xs:element name="offence" type="tns:offence" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="offence">
-		<xs:sequence>
-			<xs:element name="oseq" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Offence Sequence Number</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="co_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="code" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>CJS Offence Code</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="maxpen" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Maximum penalty if convicted</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="title" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Offence Title</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="120"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cy_title" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Offence Title Welsh</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="120"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="alm" type="xs:string" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Alcohol Level Method</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="ala" type="xs:string" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Alcohol Level Amount</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="sum" minOccurs="1" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Offence Wording</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cy_sum" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Welsh Offence Wording</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="as" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Offence legislation</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cy_as" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Welsh Offence legislation</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="sof" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Statement of Facts</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="cy_sof" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Welsh Statement of Facts</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="adjdate" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>The date that the case offence was last adjourned.</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="adjreason" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>The reason(s) recorded for the case offence’s last adjournment.</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4000"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="plea" type="xs:string" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Current Plea for the Offence</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="pleadate" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Plea Date in the format DD/MM/YYYY</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="convdate" minOccurs="0" maxOccurs="1">
-				<xs:annotation>
-					<xs:documentation>Conviction Date in the format DD/MM/YYYY</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="parameters">
+        <xs:all>
+            <xs:element name="pi_mcc_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="pi_psa_code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="pi_job_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="pi_run_date" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="pi_edt_user" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="data">
+        <xs:sequence>
+            <xs:element name="job" type="scl:job" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="job">
+        <xs:sequence>
+            <xs:element name="printdate" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Date in the format DD/MM/YYYY</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="username" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="late" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="adbox" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="means" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="sessions" type="scl:sessions" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="sessions">
+        <xs:sequence>
+            <xs:element name="session" type="scl:session" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="session">
+        <xs:sequence>
+            <xs:element name="area_code" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Criminal Justice Area Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ou_code" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Courthouse OU Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="7"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="s_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="doh" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Date of Hearing in the format DD/MM/YYYY</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="lja" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Local Justice Area Name</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cmu" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="panel" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Panel Title eg Adult/Youth</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="court" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Courthouse Name</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="room" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Courtroom Number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sstart" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Session Start Time in the format HH:MM</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="send" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Session End Time in the format HH:MM</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="blocks" type="scl:blocks" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="blocks">
+        <xs:sequence>
+            <xs:element name="block" type="scl:block" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="block">
+        <xs:sequence>
+            <xs:element name="sb_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bstart" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Block Start Time in the format HH:MM</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="bend" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Block End Time in the format HH:MM</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="desc" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Business Type Description eg Trial, Remand etc</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cases" type="scl:cases" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="cases">
+        <xs:sequence>
+            <xs:element name="case" type="scl:case" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="case">
+        <xs:sequence>
+            <xs:element name="c_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="h_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="valid" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Case Validated Y/N</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="caseno" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Case Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Case Initiation Type eg C-Charge, S-Summons etc</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="prov" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Y if a Provisional hearing</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="urn" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Prosecutor URN</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="asn" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Prosecutor Arrest Summons Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="marker" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Case Markers held on the Case</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="linked" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="def_name" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="200"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="def_name_elements" type="scl:def_name_elements" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="def_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Defendant Type P-Person, O-Organisation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="def_sex" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="def_dob" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="def_age" type="xs:int" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="pnc_id" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="cro_number" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="def_addr" type="scl:def_addr" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inf" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Internal code for the Cases' Informant</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cseq" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The Case's Court List number at the time of report generation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="listno" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The number of times the Case has been listed including the hearing being reported
+                        eg 1st, 2nd, 3rd etc
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="pg_type" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>P-Person or O-Organisation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pg_name" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="200"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pg_addr" type="scl:pg_addr" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="sol_name" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="200"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="offences" type="scl:offences" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="def_name_elements">
+        <xs:sequence>
+            <xs:element name="title" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="forename1" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="forename2" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="forename3" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="surname" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="def_addr">
+        <xs:sequence>
+            <xs:element name="line1" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line2" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line3" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line4" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line5" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pcode" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="8"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pg_addr">
+        <xs:sequence>
+            <xs:element name="line1" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line2" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line3" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line4" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="line5" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="35"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pcode" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="8"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="offences">
+        <xs:sequence>
+            <xs:element name="offence" type="scl:offence" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="offence">
+        <xs:sequence>
+            <xs:element name="oseq" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Offence Sequence Number</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="co_id" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="code" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>CJS Offence Code</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="maxpen" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Maximum penalty if convicted</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="title" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Offence Title</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="120"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cy_title" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Offence Title Welsh</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="120"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="alm" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Alcohol Level Method</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ala" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Alcohol Level Amount</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sum" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Offence Wording</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cy_sum" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Welsh Offence Wording</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="as" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Offence legislation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cy_as" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Welsh Offence legislation</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="sof" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Statement of Facts</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cy_sof" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Welsh Statement of Facts</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="adjdate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The date that the case offence was last adjourned.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="adjreason" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The reason(s) recorded for the case offence’s last adjournment.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="plea" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Current Plea for the Offence</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="pleadate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Plea Date in the format DD/MM/YYYY</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="convdate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Conviction Date in the format DD/MM/YYYY</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

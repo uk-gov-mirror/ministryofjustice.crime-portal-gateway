@@ -13,13 +13,9 @@
     <ns35:ExternalDocumentRequest>
       <documents>
         <document>
-          <ns35:info>
-            <contentType>StandardCourtList</contentType>
-            <dateOfHearing>26/10/2020</dateOfHearing>
-            <courtHouse>Sheffield Magistrates Court</courtHouse>
-            <area>13</area>
-            <source_file_name>5_27022020_2992_B10JQ01_ADULT_COURT_LIST_DAILY</source_file_name>
-          </ns35:info>
+          <info>
+            <source_file_name>5_26102020_2992_B10JQ01_ADULT_COURT_LIST_DAILY</source_file_name>
+          </info>
           <data>
             <job>
               <printdate>14/11/2016</printdate>
@@ -56,8 +52,12 @@
                           <def_dob>06/08/1968</def_dob>
                           <def_type>P</def_type>
                           <def_sex>F</def_sex>
+                          <pnc_id>2020/0158178A</pnc_id>
+                          <cro_number>CR0009900099</cro_number>
                           <def_addr>
-                            <line1>A1</line1>
+                            <line1>1 High Street</line1>
+                            <line5>Salisbury</line5>
+                            <pcode>SP1 1AA</pcode>
                           </def_addr>
                           <inf>POL01</inf>
                           <cseq>2</cseq>
@@ -83,13 +83,9 @@
           </data>
         </document>
         <document>
-          <ns35:info>
-            <contentType>StandardCourtList</contentType>
-            <dateOfHearing>26/10/2020</dateOfHearing>
-            <courtHouse>Sheffield Magistrates Court</courtHouse>
-            <area>13</area>
-            <source_file_name>5_27022020_2992_B10JQ02_ADULT_COURT_LIST_DAILY</source_file_name>
-          </ns35:info>
+          <info>
+            <source_file_name>5_26102020_2992_B10JQ02_ADULT_COURT_LIST_DAILY</source_file_name>
+          </info>
           <data>
             <job>
               <printdate>14/11/2016</printdate>
@@ -123,11 +119,20 @@
                           <caseno>266662981</caseno>
                           <type>C</type>
                           <def_name>MR CHRIS FAULKNER</def_name>
+                          <def_name_elements>
+                            <title>Mr</title>
+                            <forename1>Chris</forename1>
+                            <surname>FAULKNER</surname>
+                          </def_name_elements>
                           <def_dob>06/08/1968</def_dob>
                           <def_type>P</def_type>
                           <def_sex>F</def_sex>
+                          <pnc_id>2020/0156178A</pnc_id>
+                          <cro_number>CR0005100051</cro_number>
                           <def_addr>
-                            <line1>A1</line1>
+                            <line1>1 Main Street</line1>
+                            <line5>Bath</line5>
+                            <pcode>BA1 1AA</pcode>
                           </def_addr>
                           <inf>POL01</inf>
                           <cseq>2</cseq>
@@ -154,13 +159,9 @@
         </document>
 
         <document>
-          <ns35:info>
-            <contentType>StandardCourtList</contentType>
-            <dateOfHearing>27/10/2020</dateOfHearing>
-            <courtHouse>Sheffield Magistrates Court</courtHouse>
-            <area>13</area>
+          <info>
             <source_file_name>5_27022020_2992_B10JQ01_ADULT_COURT_LIST_DAILY</source_file_name>
-          </ns35:info>
+          </info>
           <data>
             <job>
               <printdate>14/11/2016</printdate>

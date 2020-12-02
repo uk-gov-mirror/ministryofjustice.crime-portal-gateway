@@ -13,13 +13,25 @@
     <ns35:ExternalDocumentRequest>
       <documents>
         <document>
-          <ns35:info>
-            <contentType>StandardCourtList</contentType>
-            <dateOfHearing>26/10/2020</dateOfHearing>
-            <courtHouse>Sheffield Magistrates Court</courtHouse>
-            <area>13</area>
-            <source_file_name>5_27022020_2992_B10JQ00_ADULT_COURT_LIST_DAILY</source_file_name>
-          </ns35:info>
+          <info>
+            <general>
+              <doc_type>EDT_Adult_Daily_Courtlist</doc_type>
+              <outputtype>R</outputtype>
+              <version>1_0</version>
+              <docref>575</docref>
+              <system>L</system>
+            </general>
+            <source_file_name>5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY</source_file_name>
+            <printers/>
+            <parameters>
+              <pi_mcc_id>7</pi_mcc_id>
+              <pi_psa_code>2360</pi_psa_code>
+              <pi_job_type>ADULT_COURT_LIST_DAILY</pi_job_type>
+              <pi_run_date>26/11/2020</pi_run_date>
+              <pi_edt_user>2368</pi_edt_user>
+            </parameters>
+            <start_time>09:05:04</start_time>
+          </info>
           <data>
             <job>
               <printdate>14/11/2016</printdate>
@@ -44,21 +56,27 @@
                       <bstart>09:00</bstart>
                       <bend>12:00</bend>
                       <desc>First Hearings Slot</desc>
-
                       <cases>
-
-                        <!-- Gives 1 matches at time of writing -->
                         <case>
                           <c_id>1218461</c_id>
                           <h_id>1294273</h_id>
                           <valid>Y</valid>
-                          <!-- Less than 10 digits will fail schema validation -->
+                          <!-- Less than 10 digits would fail schema validation, if we did it -->
                           <caseno>166662981</caseno>
                           <type>C</type>
-                          <def_name>MR CHRIS FAULKNER</def_name>
+                          <def_name>MR Abraham LINCOLN</def_name>
                           <def_dob>06/08/1968</def_dob>
                           <def_type>P</def_type>
-                          <def_sex>F</def_sex>
+                          <def_sex>M</def_sex>
+                          <def_name_elements>
+                            <title>Mr</title>
+                            <forename1>Abraham</forename1>
+                            <forename2/>
+                            <forename3/>
+                            <surname>LINCOLN</surname>
+                          </def_name_elements>
+                          <pnc_id>2020/1276541A</pnc_id>
+                          <cro_number>CR0006100061</cro_number>
                           <def_addr>
                             <line1>A1</line1>
                           </def_addr>
@@ -77,19 +95,29 @@
                             </offence>
                           </offences>
                         </case>
-                        <!-- Gives 0 matches at time of writing -->
                         <case>
                           <c_id>1218461</c_id>
                           <h_id>1294273</h_id>
                           <valid>Y</valid>
                           <caseno>1777732980</caseno>
                           <type>C</type>
-                          <def_name>MR Theremin MELLOTRON</def_name>
+                          <def_name>Mr Theremin MELLOTRON</def_name>
                           <def_dob>16/08/1990</def_dob>
                           <def_type>P</def_type>
                           <def_sex>N</def_sex>
+                          <def_name_elements>
+                            <title>Mr</title>
+                            <forename1>Theremin</forename1>
+                            <forename2>Flux</forename2>
+                            <forename3>Capacitor</forename3>
+                            <surname>MELLOTRON</surname>
+                          </def_name_elements>
+                          <pnc_id>2019/1276541A</pnc_id>
+                          <cro_number>CR0006200062</cro_number>
                           <def_addr>
-                            <line1>A1</line1>
+                            <line1>1 High Street</line1>
+                            <line5>Salisbury</line5>
+                            <pcode>SP1 1AA</pcode>
                           </def_addr>
                           <inf>POL01</inf>
                           <cseq>2</cseq>
@@ -97,12 +125,17 @@
                           <offences>
                             <offence>
                               <oseq>1</oseq>
-                              <co_id>1185408</co_id>
-                              <code>TH68010</code>
-                              <maxpen>EW: 6M ;/or Ultd Fine</maxpen>
-                              <title>Theft from a shop</title>
-                              <sum>On 01/01/2016 at Town, stole Article, to the value of £100.00, belonging to Person.</sum>
+                              <co_id>1036156</co_id>
+                              <code>TH68001</code>
+                              <maxpen>S:6Months &amp;/or  LE pp</maxpen>
+                              <title>Theft from the person of another</title>
+                              <sum>On 22/09/2020 at Rye stole shoes, to the value of £116.18,, of a value unknown, belonging to Trevor Tainton.</sum>
                               <as>Contrary to section 1(1) and 7 of the Theft Act 1968.</as>
+                              <adjdate>17/08/2020</adjdate>
+                              <adjreason>for consideration of advance information</adjreason>
+                              <plea>G</plea>
+                              <pleadate>14/08/2020</pleadate>
+                              <convdate>14/08/2020</convdate>
                             </offence>
                           </offences>
                         </case>

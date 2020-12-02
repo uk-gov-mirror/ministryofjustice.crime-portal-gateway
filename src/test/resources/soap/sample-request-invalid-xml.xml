@@ -10,6 +10,7 @@
     <wsa:To>CP_NPS</wsa:To>
   </soap:Header>
   <soap:Body>
+    <!-- Supposed to be exactly 1 documents -->
     <ns35:ExternalDocumentRequest>
     </ns35:ExternalDocumentRequest>
   </soap:Body>
