@@ -16,6 +16,9 @@ class WebServiceSecurityConfig(
     @Value("\${keystore-password}") private val keystorePassword: String,
     @Value("\${ws-sec.request-encrypt-actions}") private val requestActions: String,
     @Value("\${ws-sec.response-encrypt-actions}") private val responseActions: String,
+    @Value("\${ws-sec.response-signature-parts}") private val responseSignatureParts: String,
+    @Value("\${ws-sec.response-encryption-parts}") private val responseEncryptionParts: String,
+    @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionSymAlgorithm: String,
     @Value("\${trusted_cert_alias_name}") private val trustedCertAliasName: String,
     @Value("\${keystore-file-path}") private val keystoreFilePath: String,
     @Value("\${private_key_alias_name}") private val privateKeyAliasName: String,
@@ -52,14 +55,15 @@ class WebServiceSecurityConfig(
 
         // encrypt the response
         securityInterceptor.setSecurementEncryptionUser(trustedCertAliasName)
-        securityInterceptor.setSecurementEncryptionParts("{Content}{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}Acknowledgement")
+        securityInterceptor.setSecurementEncryptionSymAlgorithm(encryptionSymAlgorithm)
+        securityInterceptor.setSecurementEncryptionParts(responseEncryptionParts)
         securityInterceptor.setSecurementEncryptionCrypto(getCryptoFactoryBean().getObject())
 
         // sign the response
         securityInterceptor.setSecurementActions(responseActions)
         securityInterceptor.setSecurementUsername(privateKeyAliasName)
         securityInterceptor.setSecurementPassword(keystorePassword)
-        securityInterceptor.setSecurementSignatureParts("{Element}{http://www.w3.org/2003/05/soap-envelope}Body")
+        securityInterceptor.setSecurementSignatureParts(responseSignatureParts)
         securityInterceptor.setSecurementSignatureCrypto(cryptoBean)
         return securityInterceptor
     }
