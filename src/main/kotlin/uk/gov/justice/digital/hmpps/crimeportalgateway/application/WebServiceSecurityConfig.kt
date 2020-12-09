@@ -20,7 +20,7 @@ class WebServiceSecurityConfig(
     @Value("\${ws-sec.response-encryption-parts}") private val responseEncryptionParts: String,
     @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionSymAlgorithm: String,
     @Value("\${trusted_cert_alias_name}") private val trustedCertAliasName: String,
-    @Value("\${keystore-file-path}") private val keystoreFilePath: String,
+    @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String,
     @Value("\${private_key_alias_name}") private val privateKeyAliasName: String,
 ) {
 
