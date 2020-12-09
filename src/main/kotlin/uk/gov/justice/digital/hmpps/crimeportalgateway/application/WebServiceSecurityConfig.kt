@@ -10,7 +10,7 @@ import org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHand
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean
 import java.io.IOException
 
-@Profile("prod", "preprod")
+@Profile("secure")
 @Configuration
 class WebServiceSecurityConfig(
     @Value("\${keystore-password}") private val keystorePassword: String,

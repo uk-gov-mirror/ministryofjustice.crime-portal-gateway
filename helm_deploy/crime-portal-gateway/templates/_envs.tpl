@@ -11,7 +11,7 @@ env:
     value: "{{ .Values.env.JAVA_OPTS }}"
 
   - name: SPRING_PROFILES_ACTIVE
-    value: "logstash"
+    value: "logstash,secure"
 
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
