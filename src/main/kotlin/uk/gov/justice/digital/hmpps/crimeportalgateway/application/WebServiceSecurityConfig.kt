@@ -55,7 +55,7 @@ class WebServiceSecurityConfig(
 
         // encrypt the response
         securityInterceptor.setSecurementEncryptionUser(trustedCertAliasName)
-        securityInterceptor.setSecurementEncryptionSymAlgorithm(encryptionSymAlgorithm)
+        // securityInterceptor.setSecurementEncryptionSymAlgorithm(encryptionSymAlgorithm)
         securityInterceptor.setSecurementEncryptionParts(responseEncryptionParts)
         securityInterceptor.setSecurementEncryptionCrypto(getCryptoFactoryBean().getObject())
 

@@ -64,5 +64,5 @@ ws-sec:
   request-encrypt-actions: "Signature Encrypt"
   response-encrypt-actions: "Signature Encrypt"
   response-signature-parts: "{Element}{http://www.w3.org/2003/05/soap-envelope}Body"
-  response-encryption-parts: "{Content}{http://www.w3.org/2003/05/soap-envelope}Body"
+  response-encryption-parts: "{Content}{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}Acknowledgement"
   encryption-sym-algorithm: "http://www.w3.org/2001/04/xmlenc#tripledes-cbc"
