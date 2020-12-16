@@ -26,22 +26,20 @@
 
     <xs:complexType name="document">
         <xs:all>
-            <xs:element ref="scl:info" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="info" type="scl:info" minOccurs="0" maxOccurs="1"/>
             <xs:element name="data" type="scl:data"/>
         </xs:all>
     </xs:complexType>
 
-    <xs:element name="info">
-        <xs:complexType>
-            <xs:all>
-                <xs:element name="general" type="scl:general" minOccurs="0" maxOccurs="1"/>
-                <xs:element name="source_file_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                <xs:element name="printers" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                <xs:element name="parameters" type="scl:parameters" minOccurs="0" maxOccurs="1"/>
-                <xs:element name="start_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            </xs:all>
-        </xs:complexType>
-    </xs:element>
+    <xs:complexType name="info">
+        <xs:all>
+            <xs:element name="general" type="scl:general" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="source_file_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="printers" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="parameters" type="scl:parameters" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="start_time" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:all>
+    </xs:complexType>
 
     <xs:complexType name="general">
         <xs:all>
