@@ -51,6 +51,7 @@ workflows:
           post-steps:
               - jira/notify:
                 job_type: build
+                token_name: JIRA_CIRCLE_TOKEN
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -62,6 +63,7 @@ workflows:
           post-steps:
             - jira/notify:
               job_type: build
+              token_name: JIRA_CIRCLE_TOKEN
       - hmpps/deploy_env:
           name: deploy_dev
           retrieve_secrets: none
@@ -79,6 +81,7 @@ workflows:
               environment: dev
               environment_type: development
               job_type: deployment
+              token_name: JIRA_CIRCLE_TOKEN
       - request-preprod-approval:
           type: approval
           requires:
@@ -95,6 +98,7 @@ workflows:
               environment: preprod
               environment_type: testing
               job_type: deployment
+              token_name: JIRA_CIRCLE_TOKEN
       - request-prod-approval:
           type: approval
           requires:
@@ -112,6 +116,7 @@ workflows:
               environment: prod
               environment_type: production
               job_type: deployment
+              token_name: JIRA_CIRCLE_TOKEN
 
   scheduled:
     triggers:
