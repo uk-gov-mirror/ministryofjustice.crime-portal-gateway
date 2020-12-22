@@ -67,3 +67,10 @@ cloud-platform-environments/namespaces/live-1.cloud-platform.service.justice.gov
 Ensure the certificate is created and ready for use.
 
 The name of the kubernetes secret where the certificate is stored is used as a value to the helm chart - this is used to configured the ingress.
+
+### Kubernetes Secrets
+
+The deployment expects the following secrets to be available in the deployment namespace:
+- crime-portal-gateway-keystore-cert - Should contain base64 encoded `crime-portal-gateway-jks.key` keystore
+- crime-portal-gateway-secrets - See `_envs.tpl` for usage, contains app insights instrumentation key, keystore pass and secrets and certs for authenticating and decoding incoming payload
+- crime-portal-gateway-queue-credentials - See `_envs.tpl` for usage, contains queue credentials and location
