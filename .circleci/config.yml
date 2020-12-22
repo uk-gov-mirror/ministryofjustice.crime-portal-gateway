@@ -74,11 +74,11 @@ workflows:
             - validate
             - build_docker
             - helm_lint
-          post-steps:
-            - jira/notify:
-              environment: dev
-              environment_type: development
-              job_type: deployment
+#          post-steps:
+#            - jira/notify:
+#              environment: dev
+#              environment_type: development
+#              job_type: deployment
       - request-preprod-approval:
           type: approval
           requires:
@@ -90,11 +90,11 @@ workflows:
           context: court-probation-preprod
           requires:
             - request-preprod-approval
-          post-steps:
-            - jira/notify:
-              environment: preprod
-              environment_type: testing
-              job_type: deployment
+#          post-steps:
+#            - jira/notify:
+#              environment: preprod
+#              environment_type: testing
+#              job_type: deployment
       - request-prod-approval:
           type: approval
           requires:
@@ -107,11 +107,11 @@ workflows:
           context: court-probation-prod
           requires:
             - request-prod-approval
-          post-steps:
-            - jira/notify:
-              environment: prod
-              environment_type: production
-              job_type: deployment
+#          post-steps:
+#            - jira/notify:
+#              environment: prod
+#              environment_type: production
+#              job_type: deployment
 
   scheduled:
     triggers:
