@@ -17,7 +17,7 @@ ingress:
 
 env:
   JAVA_OPTS: "-Xmx512m"
-  SPRING_PROFILES_ACTIVE: "dev,secure,logstash"
+  SPRING_PROFILES_ACTIVE: "dev,logstash"
 
 whitelist:
   office: "217.33.148.210/32"
