@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.crimeportalgateway.config
+package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
 import org.slf4j.LoggerFactory
 import org.springframework.ws.context.MessageContext
@@ -25,6 +25,8 @@ class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryServic
     override fun handleResponse(messageContext: MessageContext, p1: Any?): Boolean {
         val soapResponseMessage = messageContext.response as SaajSoapMessage
         val soapRequestMessage = messageContext.request as SaajSoapMessage
+
+        log.trace("Processing response ", soapResponseMessage.soapAction?.toString())
 
         val soapResponseHeader = soapResponseMessage.saajMessage?.soapPart?.envelope?.header
         if (soapResponseHeader != null) {
@@ -63,7 +65,7 @@ class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryServic
     }
 
     override fun afterCompletion(messageContext: MessageContext, p1: Any, p2: Exception?) {
-//        TODO("Not yet implemented")
+        log.trace("Completed SOAP request / response")
     }
 
     private fun addTextNodeToNewElement(soapElement: SOAPElement, elementName: String, elementTextNode: String) {

@@ -2,7 +2,6 @@
 <xs:schema xmlns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:tns="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
-           xmlns:scl="http://www.justice.gov.uk/magistrates/external/ExternalDocumentData"
            targetNamespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
            elementFormDefault="unqualified" attributeFormDefault="unqualified">
 
@@ -28,7 +27,7 @@
     <xs:element name="ExternalDocumentRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="documents" type="tns:documents" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="documents" type="tns:documents" minOccurs="0" maxOccurs="1"/>
                 <xs:element name="jsonData" type="xs:string" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
@@ -51,8 +50,8 @@
 
     <xs:complexType name="documents">
         <xs:sequence>
-            <xs:element name="document" type="scl:document" minOccurs="0" maxOccurs="unbounded"/>
-            <!-- <xs:any processContents="skip" minOccurs="1" maxOccurs="1"/> -->
+<!--            <xs:element name="document" type="scl:document" minOccurs="0" maxOccurs="unbounded"/>-->
+             <xs:any processContents="skip" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

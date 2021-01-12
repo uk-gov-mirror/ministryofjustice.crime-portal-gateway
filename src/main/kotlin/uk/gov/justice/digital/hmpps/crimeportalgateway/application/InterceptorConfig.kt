@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.ws.config.annotation.WsConfigurerAdapter
 import org.springframework.ws.server.EndpointInterceptor
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor
-import uk.gov.justice.digital.hmpps.crimeportalgateway.config.SoapHeaderAddressInterceptor
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 
 @Configuration

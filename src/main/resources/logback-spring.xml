@@ -25,12 +25,22 @@
     <appender name="logAppender" class="com.microsoft.applicationinsights.logback.ApplicationInsightsAppender"/>
   </springProfile>
 
+  <logger name="org.springframework.ws" additivity="false" level="INFO">
+    <appender-ref ref="logAppender"/>
+    <appender-ref ref="consoleAppender"/>
+  </logger>
+
   <logger name="uk.gov.justice.digital.hmpps.crimeportalgateway.CrimePortalGatewayKt" additivity="false" level="DEBUG">
     <appender-ref ref="logAppender"/>
     <appender-ref ref="consoleAppender"/>
   </logger>
 
-  <logger name="uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint.ExternalDocRequestEndpoint" additivity="false" level="DEBUG">
+  <logger name="uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint" additivity="false" level="DEBUG">
+    <appender-ref ref="logAppender"/>
+    <appender-ref ref="consoleAppender"/>
+  </logger>
+
+  <logger name="uk.gov.justice.digital.hmpps.crimeportalgateway.application" additivity="false" level="DEBUG">
     <appender-ref ref="logAppender"/>
     <appender-ref ref="consoleAppender"/>
   </logger>

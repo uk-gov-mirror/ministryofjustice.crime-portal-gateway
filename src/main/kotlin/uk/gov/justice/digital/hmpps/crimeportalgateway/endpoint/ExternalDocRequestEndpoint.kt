@@ -29,7 +29,7 @@ class ExternalDocRequestEndpoint(
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
     @ResponsePayload
     fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
-        log.info("Request payload received. Document count {}", request.documents?.document?.size ?: 0)
+        log.info("Request payload received. {}", request.documents?.toString())
 
         val messageId = sqsService.enqueueMessage(marshal(request))
         telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
