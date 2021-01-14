@@ -16,10 +16,12 @@ import org.springframework.core.io.ResourceLoader
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
-import uk.gov.justice.magistrates.external.externaldocumentrequest.Documents
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
+import java.io.File
+import java.io.StringReader
 import javax.xml.XMLConstants
 import javax.xml.bind.JAXBContext
+import javax.xml.bind.Unmarshaller
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 
@@ -36,19 +38,18 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = ExternalDocRequestEndpoint(telemetryService, sqsService, jaxbContext, schema)
+        endpoint = ExternalDocRequestEndpoint(setOf("B10JQ"), telemetryService, sqsService, jaxbContext, schema)
     }
 
     @Test
     fun `given success should the correct acknowledgement message`() {
-        val request = ExternalDocumentRequest()
-        val documents = Documents()
-        request.documents = documents
+
+        val externalDocument = marshal(xmlFile.readText())
 
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
             .thenReturn("a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02")
 
-        val ack = endpoint.processRequest(request)
+        val ack = endpoint.processRequest(externalDocument)
 
         verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
         verify(sqsService).enqueueMessage(anyString())
@@ -58,10 +59,15 @@ internal class ExternalDocRequestEndpointTest {
         assertThat(ack.ackType.timeStamp).isNotNull
     }
 
+    private fun marshal(request: String): ExternalDocumentRequest {
+        val marshaller: Unmarshaller = jaxbContext.createUnmarshaller()
+        return marshaller.unmarshal(StringReader(request)) as ExternalDocumentRequest
+    }
+
     companion object {
 
+        private lateinit var xmlFile: File
         private lateinit var jaxbContext: JAXBContext
-
         private lateinit var schema: Schema
 
         @JvmStatic
@@ -72,6 +78,7 @@ internal class ExternalDocRequestEndpointTest {
             val xsdResource = resourceLoader.getResource("xsd/cp/external/ExternalDocumentRequest.xsd")
             schema = schemaFactory.newSchema(xsdResource.file)
             jaxbContext = JAXBContext.newInstance(ExternalDocumentRequest::class.java)
+            xmlFile = File("./src/test/resources/external-document-request/request-B10JQ.xml")
         }
     }
 }

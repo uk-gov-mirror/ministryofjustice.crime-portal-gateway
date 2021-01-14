@@ -66,3 +66,5 @@ ws-sec:
   response-signature-parts: "{Element}{http://www.w3.org/2003/05/soap-envelope}Body"
   response-encryption-parts: "{Content}{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}Acknowledgement"
   encryption-sym-algorithm: "http://www.w3.org/2001/04/xmlenc#tripledes-cbc"
+
+included-court-codes: "B14LO,B14AV,B14ET,B62DC,B20BL,B01GU,B10JQ,B10JJ,B10BD,B16HE,B16BG"

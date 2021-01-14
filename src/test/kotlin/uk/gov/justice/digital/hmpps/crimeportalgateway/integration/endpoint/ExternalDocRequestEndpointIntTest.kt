@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.contains
@@ -16,8 +16,8 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.ws.test.server.MockWebServiceClient
 import org.springframework.ws.test.server.RequestCreators
+import org.springframework.ws.test.server.ResponseMatchers
 import org.springframework.ws.test.server.ResponseMatchers.noFault
-import org.springframework.ws.test.server.ResponseMatchers.serverOrReceiverFault
 import org.springframework.ws.test.server.ResponseMatchers.validPayload
 import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
@@ -26,6 +26,7 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTe
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
+import java.io.File
 import javax.xml.transform.Source
 
 @Import(MessagingConfigTest::class)
@@ -49,7 +50,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
     @Test
     fun `should enqueue message and return successful acknowledgement`() {
-        val requestEnvelope: Source = StringSource(externalDocRequest)
+        val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
+        val requestEnvelope: Source = StringSource(externalDoc1)
 
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
 
@@ -70,15 +72,61 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         verify(sqsService).enqueueMessage(anyString())
     }
 
-    @Disabled
     @Test
-    fun `given invalid ExternalDocumentRequest should provide SOAP fault `() {
-        val requestEnvelope: Source = StringSource(externalDocRequest.replace("<documents></documents>", "xxx"))
+    fun `should not enqueue message when court is not processed but return acknowledgement`() {
+        val externalDoc1 = readFile("src/test/resources/soap/ignored-courts.xml")
+        val requestEnvelope: Source = StringSource(externalDoc1)
 
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
-            .andExpect(serverOrReceiverFault())
+            .andExpect(validPayload(xsdResource))
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                    .evaluatesTo("Message ignored - the court B10XX in the message is not processed")
+            )
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                    .evaluatesTo("Success")
+            )
+            .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
+            .andExpect(noFault())
+
+        verifyZeroInteractions(sqsService)
+    }
+
+    @Test
+    fun `given no court present`() {
+        val requestEnvelope: Source = StringSource(readFile("src/test/resources/soap/sample-request-invalid-xml.xml"))
+
+        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+            .andExpect(validPayload(xsdResource))
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                    .evaluatesTo("Message ignored - no court code found in the message")
+            )
+            .andExpect(
+                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                    .evaluatesTo("Success")
+            )
+            .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
+            .andExpect(noFault())
+
+        verifyZeroInteractions(sqsService)
+    }
+
+    @Test
+    fun `given no SQS available then SOAP Fault`() {
+        val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
+        val requestEnvelope: Source = StringSource(externalDoc1)
+
+        whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
+            .thenThrow(IllegalArgumentException())
+
+        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+            .andExpect(ResponseMatchers.serverOrReceiverFault())
             .andExpect(xpath("//env:Fault/env:Code/env:Value", namespaces).exists())
     }
+
+    fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
 
     companion object {
 
@@ -87,22 +135,6 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         private val namespaces = HashMap<String, String>()
 
         private const val sqsMessageId = "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02"
-
-        private const val externalDocRequest: String =
-            """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ns35="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest">\n>
-                <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">\n
-                   <wsa:Action>externalDocument</wsa:Action>\n 
-                   <wsa:From>\n
-                         <wsa:Address>CP_NPS_ML</wsa:Address>\n
-                   </wsa:From>\n
-                      <wsa:MessageID>09233523-345b-4351-b623-5dsf35sgs5d6</wsa:MessageID>\n
-                      <wsa:RelatesTo>RelatesToValue</wsa:RelatesTo>\n
-                      <wsa:To>CP_NPS</wsa:To>\n
-                </soap:Header>\n
-                <soap:Body>\n
-                   <ns35:ExternalDocumentRequest><documents></documents></ns35:ExternalDocumentRequest>\n
-                </soap:Body>\n
-                </soap:Envelope>"""
 
         @JvmStatic
         @BeforeAll
