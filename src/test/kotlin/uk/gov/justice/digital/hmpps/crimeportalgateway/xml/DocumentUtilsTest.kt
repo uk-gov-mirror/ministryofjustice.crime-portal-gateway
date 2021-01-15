@@ -2,7 +2,8 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.xml
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import java.io.File
@@ -20,45 +21,49 @@ internal class DocumentUtilsTest {
     private val sourceFileName = "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
     private val sourceFileNameElement = "<source_file_name>$sourceFileName</source_file_name>"
 
-    @Test
-    fun `get court code from correctly formed ExternalDocumentRequest`() {
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `get court code from correctly formed ExternalDocumentRequest`(useXPath: Boolean) {
 
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement)
+        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isEqualTo("B10JQ")
     }
 
-    @Test
-    fun `get empty set when there is no source_file_name`() {
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `get empty set when there is no source_file_name`(useXPath: Boolean) {
 
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement)
+        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }
 
-    @Test
-    fun `get empty set when there is no source_file_name value`() {
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `get empty set when there is no source_file_name value`(useXPath: Boolean) {
 
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name />")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement)
+        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }
 
-    @Test
-    fun `get empty set when source_file_name is invalid`() {
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `get empty set when source_file_name is invalid`(useXPath: Boolean) {
 
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement)
+        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }

@@ -23,3 +23,6 @@ aws:
 soap:
   xsd-file-path: src/main/resources/xsd/cp/external/ExternalDocumentRequest.xsd
   validate-payload: true
+
+enqueue-msg-async: false
+use-xpath-for-court-code: true

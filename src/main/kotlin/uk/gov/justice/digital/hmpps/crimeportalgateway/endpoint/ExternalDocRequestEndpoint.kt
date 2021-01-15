@@ -16,6 +16,7 @@ import uk.gov.justice.magistrates.external.externaldocumentrequest.Acknowledgeme
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
 import java.io.StringWriter
 import java.time.LocalDateTime
+import java.util.concurrent.CompletableFuture
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import javax.xml.validation.Schema
@@ -23,10 +24,12 @@ import javax.xml.validation.Schema
 @Endpoint
 class ExternalDocRequestEndpoint(
     @Value("#{'\${included-court-codes}'.split(',')}") private val includedCourts: Set<String>,
-    @Autowired val telemetryService: TelemetryService,
-    @Autowired val sqsService: SqsService,
-    @Autowired val jaxbContext: JAXBContext,
-    @Autowired val validationSchema: Schema?
+    @Value("\${enqueue-msg-async:true}") private val enqueueMsgAsync: Boolean,
+    @Value("\${use-xpath-for-court-code:true}") private val xPathForCourtCode: Boolean,
+    @Autowired private val telemetryService: TelemetryService,
+    @Autowired private val sqsService: SqsService,
+    @Autowired private val jaxbContext: JAXBContext,
+    @Autowired private val validationSchema: Schema?
 ) {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
@@ -34,26 +37,38 @@ class ExternalDocRequestEndpoint(
     fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
         log.info("Request payload received. {}", request.documents?.toString())
 
-        val courtCode = request.documents?.any?.let { DocumentUtils.getCourtCode(it) }
-        val message: String
-
-        when (includedCourts.contains(courtCode)) {
+        when (enqueueMsgAsync) {
             true -> {
-                val messageId = sqsService.enqueueMessage(marshal(request))
-                message = String.format(SUCCESS_MESSAGE_COMMENT, messageId)
-                telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
-                log.info("Message enqueued with ID {} ", messageId)
+                CompletableFuture
+                    .supplyAsync<Any> { enqueueMessage(request) }
+                    .exceptionally { exception: Throwable? ->
+                        log.error("Error from enqueuing message", exception)
+                    }
             }
             false -> {
-                message = courtCode?.let { String.format(IGNORED_MESSAGE_UNKNOWN_COURT, it) } ?: IGNORED_MESSAGE_NO_COURT
+                enqueueMessage(request)
             }
         }
 
         return Acknowledgement().apply {
             ackType = AckType().apply {
-                messageComment = message
+                messageComment = "MessageComment"
                 messageStatus = SUCCESS_MESSAGE_STATUS
                 timeStamp = LocalDateTime.now()
+            }
+        }
+    }
+
+    fun enqueueMessage(request: ExternalDocumentRequest) {
+        val courtCode = request.documents?.any?.let { DocumentUtils.getCourtCode(it, xPathForCourtCode) }
+        when (includedCourts.contains(courtCode)) {
+            true -> {
+                val messageId = sqsService.enqueueMessage(marshal(request))
+                telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtCode, messageId))
+            }
+            false -> {
+                log.info(courtCode?.let { String.format(IGNORED_MESSAGE_UNKNOWN_COURT, it) } ?: IGNORED_MESSAGE_NO_COURT)
             }
         }
     }
@@ -68,7 +83,7 @@ class ExternalDocRequestEndpoint(
 
     companion object {
         const val SUCCESS_MESSAGE_STATUS = "Success"
-        const val SUCCESS_MESSAGE_COMMENT = "Message successfully enqueued with id %s"
+        const val SUCCESS_MESSAGE_COMMENT = "Message successfully enqueued for court %s with id %s"
         const val IGNORED_MESSAGE_UNKNOWN_COURT = "Message ignored - the court %s in the message is not processed"
         const val IGNORED_MESSAGE_NO_COURT = "Message ignored - no court code found in the message"
         const val NAMESPACE_URI = "http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"

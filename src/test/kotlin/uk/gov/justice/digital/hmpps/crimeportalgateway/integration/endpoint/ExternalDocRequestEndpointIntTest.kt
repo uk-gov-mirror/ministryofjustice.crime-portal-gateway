@@ -59,7 +59,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
-                    .evaluatesTo("Message successfully enqueued with id $sqsMessageId")
+                    .evaluatesTo("MessageComment")
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
@@ -81,7 +81,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
-                    .evaluatesTo("Message ignored - the court B10XX in the message is not processed")
+                    .evaluatesTo("MessageComment")
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
@@ -101,7 +101,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
-                    .evaluatesTo("Message ignored - no court code found in the message")
+                    .evaluatesTo("MessageComment")
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)

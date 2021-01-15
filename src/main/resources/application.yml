@@ -68,3 +68,5 @@ ws-sec:
   encryption-sym-algorithm: "http://www.w3.org/2001/04/xmlenc#tripledes-cbc"
 
 included-court-codes: "B14LO,B14AV,B14ET,B62DC,B20BL,B01GU,B10JQ,B10JJ,B10BD,B16HE,B16BG"
+enqueue-msg-async: true
+use-xpath-for-court-code: true

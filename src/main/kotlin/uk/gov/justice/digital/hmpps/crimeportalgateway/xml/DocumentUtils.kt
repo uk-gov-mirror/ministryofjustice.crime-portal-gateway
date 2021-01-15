@@ -11,11 +11,13 @@ object DocumentUtils {
 
     private const val OU_CODE_LENGTH = 5
 
+    private const val SOURCE_FILE_NAME = "source_file_name"
+
     private const val SOURCE_FILE_NAME_EXPR = "//source_file_name/text()"
 
     private const val DELIMITER = "_"
 
-    fun getCourtCode(documents: Element): String? {
+    fun getCourtCodeByXPath(documents: Element): String? {
         // XPathFactory not thread safe so make one each time
         val xPath: XPath = XPathFactory.newInstance().newXPath()
         val exp = xPath.compile(SOURCE_FILE_NAME_EXPR)
@@ -29,7 +31,23 @@ object DocumentUtils {
         return null
     }
 
-    private fun getOuCode(item: Node): String? {
+    fun getCourtCode(documents: Element): String? {
+        val sourceFileNameNodes = documents.getElementsByTagName(SOURCE_FILE_NAME)
+        for (j in 0 until sourceFileNameNodes.length) {
+            val sourceFileNameElement = sourceFileNameNodes.item(j) as Element
+            val childTextNodes: NodeList = sourceFileNameElement.childNodes
+            for (k in 0 until childTextNodes.length) {
+                return getOuCode(childTextNodes.item(k))
+            }
+        }
+        return null
+    }
+
+    fun getCourtCode(documents: Element, useXPath: Boolean): String? {
+        return if (useXPath) getCourtCodeByXPath(documents) else getCourtCode(documents)
+    }
+
+    fun getOuCode(item: Node): String? {
         // Source filename has the following format 146_27072020_2578_B01OB00_ADULT_COURT_LIST_DAILY
         val fileNameParts: Array<String> = item.nodeValue?.split(DELIMITER)?.toTypedArray() ?: emptyArray()
         if (fileNameParts.size >= 4) {
