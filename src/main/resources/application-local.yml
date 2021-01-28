@@ -2,7 +2,7 @@ spring:
   logging:
     level:
       org.springframework.web: TRACE
-      org.springframework.ws: DEBUG
+      org.springframework.ws: TRACE
       org.springframework.ws.server.MessageTracing.received: TRACE
       org.springframework.ws.server.MessageTracing.sent: TRACE
       uk.gov.justice.digital.hmpps.crimeportalgateway.application: TRACE

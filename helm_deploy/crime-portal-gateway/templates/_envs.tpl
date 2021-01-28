@@ -49,6 +49,12 @@ env:
         name: crime-portal-gateway-secrets
         key: KEYSTORE_PASSWORD
 
+  - name: PRIVATE_KEY_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: crime-portal-gateway-secrets
+        key: PRIVATE_KEY_PASSWORD
+
   - name: TRUSTED_CERT_ALIAS_NAME
     valueFrom:
       secretKeyRef:

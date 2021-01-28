@@ -12,6 +12,7 @@ spring:
   logging:
     level:
       org.springframework.web: INFO
+      org.springframework.ws: INFO
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:

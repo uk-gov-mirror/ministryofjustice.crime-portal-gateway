@@ -8,35 +8,34 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor
 import org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHandler
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean
-import java.io.IOException
 
 @Profile("secure")
 @Configuration
 class WebServiceSecurityConfig(
     @Value("\${keystore-password}") private val keystorePassword: String,
+    @Value("\${private-key-password}") private val privateKeyPassword: String,
     @Value("\${ws-sec.request-encrypt-actions}") private val requestActions: String,
     @Value("\${ws-sec.response-encrypt-actions}") private val responseActions: String,
     @Value("\${ws-sec.response-signature-parts}") private val responseSignatureParts: String,
     @Value("\${ws-sec.response-encryption-parts}") private val responseEncryptionParts: String,
-    @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionSymAlgorithm: String,
     @Value("\${trusted_cert_alias_name}") private val trustedCertAliasName: String,
-    @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String,
-    @Value("\${private_key_alias_name}") private val privateKeyAliasName: String,
+    @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String
 ) {
 
     @Bean
-    fun securityCallbackHandler(): KeyStoreCallbackHandler {
+    @Throws(Exception::class)
+    fun keyStoreCallbackHandler(): KeyStoreCallbackHandler {
         val callbackHandler = KeyStoreCallbackHandler()
-        callbackHandler.setPrivateKeyPassword(keystorePassword)
+        callbackHandler.setPrivateKeyPassword(privateKeyPassword)
         return callbackHandler
     }
 
     @Bean
-    @Throws(IOException::class)
-    fun getCryptoFactoryBean(): CryptoFactoryBean {
+    fun getValidationCryptoFactoryBean(): CryptoFactoryBean {
         val cryptoFactoryBean = CryptoFactoryBean()
-        cryptoFactoryBean.setKeyStorePassword(keystorePassword)
         cryptoFactoryBean.setKeyStoreLocation(FileSystemResource(keystoreFilePath))
+        cryptoFactoryBean.setKeyStorePassword(keystorePassword)
+        cryptoFactoryBean.setDefaultX509Alias(trustedCertAliasName)
         return cryptoFactoryBean
     }
 
@@ -45,26 +44,23 @@ class WebServiceSecurityConfig(
     fun securityInterceptor(): Wss4jSecurityInterceptor {
         val securityInterceptor = Wss4jSecurityInterceptor()
 
-        val cryptoBean = getCryptoFactoryBean().getObject()
-
         // validate incoming request
         securityInterceptor.setValidationActions(requestActions)
-        securityInterceptor.setValidationSignatureCrypto(cryptoBean)
-        securityInterceptor.setValidationDecryptionCrypto(cryptoBean)
-        securityInterceptor.setValidationCallbackHandler(securityCallbackHandler())
+        securityInterceptor.setValidationSignatureCrypto(getValidationCryptoFactoryBean().getObject())
+        securityInterceptor.setValidationDecryptionCrypto(getValidationCryptoFactoryBean().getObject())
+        securityInterceptor.setValidationCallbackHandler(keyStoreCallbackHandler())
 
         // encrypt the response
         securityInterceptor.setSecurementEncryptionUser(trustedCertAliasName)
-        // securityInterceptor.setSecurementEncryptionSymAlgorithm(encryptionSymAlgorithm)
         securityInterceptor.setSecurementEncryptionParts(responseEncryptionParts)
-        securityInterceptor.setSecurementEncryptionCrypto(getCryptoFactoryBean().getObject())
+        securityInterceptor.setSecurementEncryptionCrypto(getValidationCryptoFactoryBean().getObject())
 
         // sign the response
         securityInterceptor.setSecurementActions(responseActions)
-        securityInterceptor.setSecurementUsername(privateKeyAliasName)
-        securityInterceptor.setSecurementPassword(keystorePassword)
+        securityInterceptor.setSecurementUsername(trustedCertAliasName)
+        securityInterceptor.setSecurementPassword(privateKeyPassword)
         securityInterceptor.setSecurementSignatureParts(responseSignatureParts)
-        securityInterceptor.setSecurementSignatureCrypto(cryptoBean)
+        securityInterceptor.setSecurementSignatureCrypto(getValidationCryptoFactoryBean().getObject())
         return securityInterceptor
     }
 }

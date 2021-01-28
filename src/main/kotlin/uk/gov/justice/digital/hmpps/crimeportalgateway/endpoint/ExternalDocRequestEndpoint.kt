@@ -7,6 +7,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot
 import org.springframework.ws.server.endpoint.annotation.RequestPayload
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload
+import org.springframework.ws.soap.server.endpoint.annotation.SoapAction
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
@@ -34,9 +35,29 @@ class ExternalDocRequestEndpoint(
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
     @ResponsePayload
-    fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
-        log.info("Request payload received. {}", request.documents?.toString())
+    fun processPayloadRootRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+        log.info("Request payload received to PayloadRoot mapped. {}", request.documents?.toString())
 
+        return process(request)
+    }
+
+    @SoapAction("externalDocument")
+    @ResponsePayload
+    fun processRequestExternalDocument(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+        log.info("Request payload received to externalDocument SoapAction. {}", request.documents?.toString())
+
+        return process(request)
+    }
+
+    @SoapAction("")
+    @ResponsePayload
+    fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+        log.info("Request payload received to ExternalDocument SoapAction. {}", request.documents?.toString())
+
+        return process(request)
+    }
+
+    private fun process(request: ExternalDocumentRequest): Acknowledgement {
         when (enqueueMsgAsync) {
             true -> {
                 CompletableFuture

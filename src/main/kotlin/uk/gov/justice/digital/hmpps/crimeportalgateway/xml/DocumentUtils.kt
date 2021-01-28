@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.xml
 
+import org.slf4j.LoggerFactory
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
@@ -9,6 +10,8 @@ import javax.xml.xpath.XPathFactory
 
 object DocumentUtils {
 
+    private val log = LoggerFactory.getLogger(this::class.java)
+
     private const val OU_CODE_LENGTH = 5
 
     private const val SOURCE_FILE_NAME = "source_file_name"
@@ -17,7 +20,11 @@ object DocumentUtils {
 
     private const val DELIMITER = "_"
 
-    fun getCourtCodeByXPath(documents: Element): String? {
+    fun getCourtCode(documents: Element, useXPath: Boolean): String? {
+        return if (useXPath) getCourtCodeByXPath(documents) else getCourtCode(documents)
+    }
+
+    private fun getCourtCodeByXPath(documents: Element): String? {
         // XPathFactory not thread safe so make one each time
         val xPath: XPath = XPathFactory.newInstance().newXPath()
         val exp = xPath.compile(SOURCE_FILE_NAME_EXPR)
@@ -31,7 +38,7 @@ object DocumentUtils {
         return null
     }
 
-    fun getCourtCode(documents: Element): String? {
+    private fun getCourtCode(documents: Element): String? {
         val sourceFileNameNodes = documents.getElementsByTagName(SOURCE_FILE_NAME)
         for (j in 0 until sourceFileNameNodes.length) {
             val sourceFileNameElement = sourceFileNameNodes.item(j) as Element
@@ -43,20 +50,17 @@ object DocumentUtils {
         return null
     }
 
-    fun getCourtCode(documents: Element, useXPath: Boolean): String? {
-        return if (useXPath) getCourtCodeByXPath(documents) else getCourtCode(documents)
-    }
-
-    fun getOuCode(item: Node): String? {
+    private fun getOuCode(item: Node): String? {
         // Source filename has the following format 146_27072020_2578_B01OB00_ADULT_COURT_LIST_DAILY
-        val fileNameParts: Array<String> = item.nodeValue?.split(DELIMITER)?.toTypedArray() ?: emptyArray()
+        val nodeValue = item.nodeValue
+        val fileNameParts: Array<String> = nodeValue?.split(DELIMITER)?.toTypedArray() ?: emptyArray()
         if (fileNameParts.size >= 4) {
             fileNameParts[3].toUpperCase().let { ouCode ->
                 if (ouCode.length >= OU_CODE_LENGTH) {
                     return ouCode.substring(0, OU_CODE_LENGTH)
                 }
             }
-        }
+        } else { log.error("failed to extract court code from: $nodeValue") }
         return null
     }
 }
