@@ -68,6 +68,6 @@ ws-sec:
   response-encryption-parts: "{Content}{http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest}Acknowledgement"
   encryption-sym-algorithm: "http://www.w3.org/2001/04/xmlenc#tripledes-cbc"
 
-included-court-codes: "B14LO,B14AV,B14ET,B62DC,B20BL,B01GU,B10JQ,B10JJ,B10BD,B16HE,B16BG"
+included-court-codes: "B01BH,B01CE,B01CN,B01EF,B01GU,B01ND,B03DE,B10BD,B10JJ,B10JQ,B13HT,B14AV,B14ET,B14LO,B16BG,B16HE,B17JA,B20EB,B40IM,B44BA,B47CL,B54MW,B62DC,B62MV"
 enqueue-msg-async: true
 use-xpath-for-court-code: true

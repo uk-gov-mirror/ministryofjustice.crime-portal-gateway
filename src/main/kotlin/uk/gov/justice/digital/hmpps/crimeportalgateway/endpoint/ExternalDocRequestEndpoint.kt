@@ -99,7 +99,9 @@ class ExternalDocRequestEndpoint(
         validationSchema?.let { marshaller.schema = it }
         val sw = StringWriter()
         marshaller.marshal(request, sw)
-        return sw.toString()
+        val msg = sw.toString()
+        log.trace(msg)
+        return msg
     }
 
     companion object {
