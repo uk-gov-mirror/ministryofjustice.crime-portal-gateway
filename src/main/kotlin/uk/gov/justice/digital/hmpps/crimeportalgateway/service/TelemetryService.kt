@@ -10,4 +10,8 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     fun trackEvent(eventType: TelemetryEventType) {
         telemetryClient.trackEvent(eventType.eventName)
     }
+
+    fun trackEvent(eventType: TelemetryEventType, customDimensions: Map<String, String?>) {
+        telemetryClient.trackEvent(eventType.eventName, customDimensions, null)
+    }
 }

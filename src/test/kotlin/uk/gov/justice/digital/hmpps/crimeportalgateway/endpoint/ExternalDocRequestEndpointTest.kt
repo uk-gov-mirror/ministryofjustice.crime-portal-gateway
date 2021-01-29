@@ -48,6 +48,12 @@ internal class ExternalDocRequestEndpointTest {
         externalDocument = marshal(xmlFile.readText())
     }
 
+    private val customDimensionsMap = mapOf(
+        "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
+        "courtCode" to "B10JQ",
+        "payloadId" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+    )
+
     @Test
     fun `given a valid message then should enqueue the message and return the correct acknowledgement`() {
 
@@ -58,7 +64,7 @@ internal class ExternalDocRequestEndpointTest {
 
         assertAck(ack)
 
-        verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+        verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED, customDimensionsMap)
         verify(sqsService).enqueueMessage(anyString())
         verifyNoMoreInteractions(sqsService, telemetryService)
     }
@@ -72,7 +78,14 @@ internal class ExternalDocRequestEndpointTest {
 
         assertAck(ack)
 
-        verifyZeroInteractions(telemetryService, sqsService)
+        verify(telemetryService).trackEvent(
+            TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+            mapOf(
+                "courtCode" to "B10JQ",
+                "payloadId" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+            )
+        )
+        verifyZeroInteractions(sqsService)
     }
 
     @Test
@@ -86,7 +99,7 @@ internal class ExternalDocRequestEndpointTest {
         val ack = endpoint.processRequest(externalDocument)
 
         assertAck(ack)
-        verify(telemetryService, timeout(TIMEOUT_MS)).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+        verify(telemetryService, timeout(TIMEOUT_MS)).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED, customDimensionsMap)
         verify(sqsService, timeout(TIMEOUT_MS)).enqueueMessage(anyString())
         verifyNoMoreInteractions(sqsService, telemetryService)
     }

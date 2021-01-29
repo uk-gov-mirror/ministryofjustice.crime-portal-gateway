@@ -13,15 +13,24 @@ class TelemetryServiceTest {
 
     @Mock
     private lateinit var telemetryClient: TelemetryClient
+    @Mock
+    private lateinit var customDimensions: Map<String, String>
 
     @InjectMocks
     private lateinit var telemetryService: TelemetryService
 
     @Test
-    fun `service send event name to telemetry`() {
+    fun `service sends event name to telemetry`() {
 
         telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
 
         mockitoVerify(telemetryClient).trackEvent("PiCCourtListMessageReceived")
+    }
+    @Test
+    fun `service sends event name and customDimensions to telemetry`() {
+
+        telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED, customDimensions)
+
+        mockitoVerify(telemetryClient).trackEvent("PiCCourtListMessageReceived", customDimensions, null)
     }
 }

@@ -22,6 +22,10 @@ import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import javax.xml.validation.Schema
 
+private const val SQS_MESSAGE_ID_LABEL = "sqsMessageId"
+private const val COURT_CODE_LABEL = "courtCode"
+private const val PAYLOAD_ID_LABEL = "payloadId"
+
 @Endpoint
 class ExternalDocRequestEndpoint(
     @Value("#{'\${included-court-codes}'.split(',')}") private val includedCourts: Set<String>,
@@ -82,14 +86,29 @@ class ExternalDocRequestEndpoint(
 
     fun enqueueMessage(request: ExternalDocumentRequest) {
         val courtCode = request.documents?.any?.let { DocumentUtils.getCourtCode(it, xPathForCourtCode) }
+        val payloadId = request.documents?.any?.let { DocumentUtils.getFileName(it) }
         when (includedCourts.contains(courtCode)) {
             true -> {
-                val messageId = sqsService.enqueueMessage(marshal(request))
-                telemetryService.trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
-                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtCode, messageId))
+                val sqsMessageId = sqsService.enqueueMessage(marshal(request))
+                telemetryService.trackEvent(
+                    TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED,
+                    mapOf(
+                        SQS_MESSAGE_ID_LABEL to sqsMessageId,
+                        COURT_CODE_LABEL to courtCode,
+                        PAYLOAD_ID_LABEL to payloadId
+                    )
+                )
+                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtCode, sqsMessageId))
             }
             false -> {
                 log.info(courtCode?.let { String.format(IGNORED_MESSAGE_UNKNOWN_COURT, it) } ?: IGNORED_MESSAGE_NO_COURT)
+                telemetryService.trackEvent(
+                    TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+                    mapOf(
+                        COURT_CODE_LABEL to courtCode,
+                        PAYLOAD_ID_LABEL to payloadId
+                    )
+                )
             }
         }
     }

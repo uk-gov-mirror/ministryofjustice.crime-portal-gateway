@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.xml
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.w3c.dom.Document
@@ -30,6 +31,16 @@ internal class DocumentUtilsTest {
         val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isEqualTo("B10JQ")
+    }
+
+    @Test
+    fun `get filename from correctly formed ExternalDocumentRequest`() {
+
+        val externalDocument = toXml(StringReader(xmlFile.readText()))
+
+        val courtCode = DocumentUtils.getFileName(externalDocument.documentElement)
+
+        assertThat(courtCode).isEqualTo("5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY")
     }
 
     @ParameterizedTest

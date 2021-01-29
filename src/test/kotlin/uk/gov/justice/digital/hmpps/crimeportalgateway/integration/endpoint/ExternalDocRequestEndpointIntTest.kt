@@ -68,7 +68,14 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
-        verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED)
+        verify(telemetryService).trackEvent(
+            TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED,
+            mapOf(
+                "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
+                "courtCode" to "B10JQ",
+                "payloadId" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+            )
+        )
         verify(sqsService).enqueueMessage(anyString())
     }
 

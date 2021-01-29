@@ -63,4 +63,14 @@ object DocumentUtils {
         } else { log.error("failed to extract court code from: $nodeValue") }
         return null
     }
+
+    fun getFileName(documents: Element): String? {
+        val xPath: XPath = XPathFactory.newInstance().newXPath()
+        val exp = xPath.compile(SOURCE_FILE_NAME_EXPR)
+        val nodeList = exp.evaluate(documents, XPathConstants.NODESET) as NodeList
+        for (i in 0 until nodeList.length) {
+            return nodeList.item(i).textContent
+        }
+        return null
+    }
 }
