@@ -104,6 +104,7 @@ workflows:
           retrieve_secrets: none
           env: "prod"
           slack_notification: true
+          slack_channel_name: probation_in_court_dev
           context: court-probation-prod
           requires:
             - request-prod-approval
