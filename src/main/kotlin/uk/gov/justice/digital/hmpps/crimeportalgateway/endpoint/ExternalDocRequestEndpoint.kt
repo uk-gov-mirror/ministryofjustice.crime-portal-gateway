@@ -24,7 +24,7 @@ import javax.xml.validation.Schema
 
 private const val SQS_MESSAGE_ID_LABEL = "sqsMessageId"
 private const val COURT_CODE_LABEL = "courtCode"
-private const val PAYLOAD_ID_LABEL = "payloadId"
+private const val FILENAME_LABEL = "fileName"
 
 @Endpoint
 class ExternalDocRequestEndpoint(
@@ -86,7 +86,7 @@ class ExternalDocRequestEndpoint(
 
     fun enqueueMessage(request: ExternalDocumentRequest) {
         val courtCode = request.documents?.any?.let { DocumentUtils.getCourtCode(it, xPathForCourtCode) }
-        val payloadId = request.documents?.any?.let { DocumentUtils.getFileName(it) }
+        val fileName = request.documents?.any?.let { DocumentUtils.getFileName(it) }
         when (includedCourts.contains(courtCode)) {
             true -> {
                 val sqsMessageId = sqsService.enqueueMessage(marshal(request))
@@ -95,7 +95,7 @@ class ExternalDocRequestEndpoint(
                     mapOf(
                         SQS_MESSAGE_ID_LABEL to sqsMessageId,
                         COURT_CODE_LABEL to courtCode,
-                        PAYLOAD_ID_LABEL to payloadId
+                        FILENAME_LABEL to fileName
                     )
                 )
                 log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtCode, sqsMessageId))
@@ -106,7 +106,7 @@ class ExternalDocRequestEndpoint(
                     TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
                     mapOf(
                         COURT_CODE_LABEL to courtCode,
-                        PAYLOAD_ID_LABEL to payloadId
+                        FILENAME_LABEL to fileName
                     )
                 )
             }
