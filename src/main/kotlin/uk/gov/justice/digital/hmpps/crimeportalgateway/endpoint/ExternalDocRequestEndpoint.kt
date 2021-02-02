@@ -40,7 +40,7 @@ class ExternalDocRequestEndpoint(
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
     @ResponsePayload
     fun processPayloadRootRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
-        log.info("Request payload received to PayloadRoot mapped. {}", request.documents?.toString())
+        log.debug("Request payload received to PayloadRoot mapped. {}", request.documents?.toString())
 
         return process(request)
     }
@@ -48,7 +48,7 @@ class ExternalDocRequestEndpoint(
     @SoapAction("externalDocument")
     @ResponsePayload
     fun processRequestExternalDocument(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
-        log.info("Request payload received to externalDocument SoapAction. {}", request.documents?.toString())
+        log.debug("Request payload received to externalDocument SoapAction. {}", request.documents?.toString())
 
         return process(request)
     }
@@ -56,7 +56,7 @@ class ExternalDocRequestEndpoint(
     @SoapAction("")
     @ResponsePayload
     fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
-        log.info("Request payload received to ExternalDocument SoapAction. {}", request.documents?.toString())
+        log.debug("Request payload received to ExternalDocument SoapAction. {}", request.documents?.toString())
 
         return process(request)
     }
