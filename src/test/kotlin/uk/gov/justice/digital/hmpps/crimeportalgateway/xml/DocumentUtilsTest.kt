@@ -19,18 +19,32 @@ fun toXml(string: StringReader): Document {
 
 internal class DocumentUtilsTest {
 
-    private val sourceFileName = "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+    private val sourceFileName = "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
     private val sourceFileNameElement = "<source_file_name>$sourceFileName</source_file_name>"
 
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
-    fun `get court code from correctly formed ExternalDocumentRequest`(useXPath: Boolean) {
+    fun `get court code and room from correctly formed ExternalDocumentRequest`(useXPath: Boolean) {
 
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
+        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode).isEqualTo("B10JQ")
+        assertThat(courtCode?.first).isEqualTo("B10JQ")
+        assertThat(courtCode?.second).isEqualTo(5)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `get court code from ExternalDocumentRequest where there is no room`(useXPath: Boolean) {
+
+        val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_B10JQ_ADULT_COURT_LIST_DAILY</source_file_name>")
+        val externalDocument = toXml(StringReader(str))
+
+        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+
+        assertThat(courtCode?.first).isEqualTo("B10JQ")
+        assertThat(courtCode?.second).isEqualTo(0)
     }
 
     @Test
@@ -40,7 +54,7 @@ internal class DocumentUtilsTest {
 
         val courtCode = DocumentUtils.getFileName(externalDocument.documentElement)
 
-        assertThat(courtCode).isEqualTo("5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY")
+        assertThat(courtCode).isEqualTo("5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY")
     }
 
     @ParameterizedTest
@@ -50,7 +64,7 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
+        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }
@@ -62,7 +76,7 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name />")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
+        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }
@@ -74,7 +88,7 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtCode(externalDocument.documentElement, useXPath)
+        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
 
         assertThat(courtCode).isNull()
     }
@@ -86,7 +100,7 @@ internal class DocumentUtilsTest {
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-            xmlFile = File("./src/test/resources/external-document-request/request-B10JQ.xml")
+            xmlFile = File("./src/test/resources/external-document-request/request-B10JQ01.xml")
         }
     }
 }

@@ -44,14 +44,15 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false)
+        endpoint = buildEndpoint(setOf("B10JQ"), false, 10)
         externalDocument = marshal(xmlFile.readText())
     }
 
     private val customDimensionsMap = mapOf(
         "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
         "courtCode" to "B10JQ",
-        "fileName" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+        "courtRoom" to "5",
+        "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
     )
 
     @Test
@@ -70,9 +71,9 @@ internal class ExternalDocRequestEndpointTest {
     }
 
     @Test
-    fun `given a message for a court which is not in the include list then should not enqueue message`() {
+    fun `given a valid message with dummy court room then should not enqueue the message and return the correct acknowledgement`() {
 
-        endpoint = buildEndpoint(setOf("XXXXX"), false)
+        endpoint = buildEndpoint(setOf("B10JQ"), false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -82,7 +83,46 @@ internal class ExternalDocRequestEndpointTest {
             TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
             mapOf(
                 "courtCode" to "B10JQ",
-                "fileName" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
+                "courtRoom" to "5",
+                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
+            )
+        )
+        verifyNoMoreInteractions(telemetryService, sqsService)
+    }
+
+    @Test
+    fun `given a message for a court which is not in the include list then should not enqueue message`() {
+
+        endpoint = buildEndpoint(setOf("XXXXX"), false, 5)
+
+        val ack = endpoint.processRequest(externalDocument)
+
+        assertAck(ack)
+
+        verify(telemetryService).trackEvent(
+            TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+            mapOf(
+                "courtCode" to "B10JQ",
+                "courtRoom" to "5",
+                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
+            )
+        )
+        verifyZeroInteractions(sqsService)
+    }
+
+    @Test
+    fun `given a message with no usable court code then do not enqueue message`() {
+
+        externalDocument = marshal(xmlFile.readText().replace("5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY", "5_26102020_2992_B10_ADULT_COURT_LIST_DAILY"))
+
+        val ack = endpoint.processRequest(externalDocument)
+
+        assertAck(ack)
+
+        verify(telemetryService).trackEvent(
+            TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+            mapOf(
+                "fileName" to "5_26102020_2992_B10_ADULT_COURT_LIST_DAILY"
             )
         )
         verifyZeroInteractions(sqsService)
@@ -91,7 +131,7 @@ internal class ExternalDocRequestEndpointTest {
     @Test
     fun `given async then success should the correct acknowledgement message`() {
 
-        endpoint = buildEndpoint(setOf("B10JQ"), true)
+        endpoint = buildEndpoint(setOf("B10JQ"), true, 50)
 
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
             .thenReturn("a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02")
@@ -116,11 +156,12 @@ internal class ExternalDocRequestEndpointTest {
         return marshaller.unmarshal(StringReader(request)) as ExternalDocumentRequest
     }
 
-    private fun buildEndpoint(includedCourts: Set<String>, aSync: Boolean): ExternalDocRequestEndpoint {
+    private fun buildEndpoint(includedCourts: Set<String>, aSync: Boolean, minDummyCourtRoom: Int): ExternalDocRequestEndpoint {
         return ExternalDocRequestEndpoint(
             includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
             xPathForCourtCode = true,
+            minDummyCourtRoom = minDummyCourtRoom,
             telemetryService = telemetryService,
             sqsService = sqsService,
             jaxbContext = jaxbContext,
@@ -143,7 +184,7 @@ internal class ExternalDocRequestEndpointTest {
             val xsdResource = resourceLoader.getResource("xsd/cp/external/ExternalDocumentRequest.xsd")
             schema = schemaFactory.newSchema(xsdResource.file)
             jaxbContext = JAXBContext.newInstance(ExternalDocumentRequest::class.java)
-            xmlFile = File("./src/test/resources/external-document-request/request-B10JQ.xml")
+            xmlFile = File("./src/test/resources/external-document-request/request-B10JQ01.xml")
         }
     }
 }

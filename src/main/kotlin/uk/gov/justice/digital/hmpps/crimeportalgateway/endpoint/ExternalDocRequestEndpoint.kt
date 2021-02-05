@@ -24,6 +24,7 @@ import javax.xml.validation.Schema
 
 private const val SQS_MESSAGE_ID_LABEL = "sqsMessageId"
 private const val COURT_CODE_LABEL = "courtCode"
+private const val COURT_ROOM_LABEL = "courtRoom"
 private const val FILENAME_LABEL = "fileName"
 
 @Endpoint
@@ -31,6 +32,7 @@ class ExternalDocRequestEndpoint(
     @Value("#{'\${included-court-codes}'.split(',')}") private val includedCourts: Set<String>,
     @Value("\${enqueue-msg-async:true}") private val enqueueMsgAsync: Boolean,
     @Value("\${use-xpath-for-court-code:true}") private val xPathForCourtCode: Boolean,
+    @Value("\${min-dummy-court-room:50}") private val minDummyCourtRoom: Int,
     @Autowired private val telemetryService: TelemetryService,
     @Autowired private val sqsService: SqsService,
     @Autowired private val jaxbContext: JAXBContext,
@@ -85,27 +87,40 @@ class ExternalDocRequestEndpoint(
     }
 
     fun enqueueMessage(request: ExternalDocumentRequest) {
-        val courtCode = request.documents?.any?.let { DocumentUtils.getCourtCode(it, xPathForCourtCode) }
         val fileName = request.documents?.any?.let { DocumentUtils.getFileName(it) }
-        when (includedCourts.contains(courtCode)) {
+        val courtDetail = request.documents?.any?.let { DocumentUtils.getCourtDetail(it, xPathForCourtCode) }
+            ?: kotlin.run {
+                log.info(IGNORED_MESSAGE_NO_COURT)
+                telemetryService.trackEvent(
+                    TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+                    mapOf(
+                        FILENAME_LABEL to fileName,
+                    )
+                )
+                return
+            }
+
+        when (includedCourts.contains(courtDetail.first) && courtDetail.second < minDummyCourtRoom) {
             true -> {
                 val sqsMessageId = sqsService.enqueueMessage(marshal(request))
                 telemetryService.trackEvent(
                     TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED,
                     mapOf(
                         SQS_MESSAGE_ID_LABEL to sqsMessageId,
-                        COURT_CODE_LABEL to courtCode,
+                        COURT_CODE_LABEL to courtDetail.first,
+                        COURT_ROOM_LABEL to courtDetail.second.toString(),
                         FILENAME_LABEL to fileName
                     )
                 )
-                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtCode, sqsMessageId))
+                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtDetail.first, courtDetail.second, sqsMessageId))
             }
             false -> {
-                log.info(courtCode?.let { String.format(IGNORED_MESSAGE_UNKNOWN_COURT, it) } ?: IGNORED_MESSAGE_NO_COURT)
+                log.info(String.format(IGNORED_MESSAGE_UNKNOWN_COURT, courtDetail.first, courtDetail.second))
                 telemetryService.trackEvent(
                     TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
                     mapOf(
-                        COURT_CODE_LABEL to courtCode,
+                        COURT_CODE_LABEL to courtDetail.first,
+                        COURT_ROOM_LABEL to courtDetail.second.toString(),
                         FILENAME_LABEL to fileName
                     )
                 )
@@ -125,8 +140,8 @@ class ExternalDocRequestEndpoint(
 
     companion object {
         const val SUCCESS_MESSAGE_STATUS = "Success"
-        const val SUCCESS_MESSAGE_COMMENT = "Message successfully enqueued for court %s with id %s"
-        const val IGNORED_MESSAGE_UNKNOWN_COURT = "Message ignored - the court %s in the message is not processed"
+        const val SUCCESS_MESSAGE_COMMENT = "Message successfully enqueued for court %s / room %s with id %s"
+        const val IGNORED_MESSAGE_UNKNOWN_COURT = "Message ignored - the court %s / room %s values in the message is not processed"
         const val IGNORED_MESSAGE_NO_COURT = "Message ignored - no court code found in the message"
         const val NAMESPACE_URI = "http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
         const val REQUEST_LOCAL_NAME = "ExternalDocumentRequest"
