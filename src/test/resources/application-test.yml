@@ -2,10 +2,6 @@ feature:
   flags:
     disable-auth: true
 
-spring:
-  profiles:
-    include: stdout
-
 server:
   shutdown: immediate
 

@@ -1,0 +1,9 @@
+{
+  "role": {
+    "name": "crime-portal-gateway",
+    "instance": "crime-portal-gateway"
+  },
+  "heartbeat": {
+    "intervalSeconds": 15
+  }
+}
