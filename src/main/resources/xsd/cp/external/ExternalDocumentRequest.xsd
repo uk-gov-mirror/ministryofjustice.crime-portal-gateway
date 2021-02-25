@@ -31,53 +31,9 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="Acknowledgement">
-        <xs:annotation>
-            <xs:documentation>Acknowledgement response</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="ackType" type="AckType">
-                    <xs:annotation>
-                        <xs:documentation>Represents a link to the Acknowledgement</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
     <xs:complexType name="documents">
         <xs:sequence>
              <xs:any processContents="skip" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="AckType">
-        <xs:annotation>
-            <xs:documentation>Represents a message acknowledgement response</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="MessageStatus">
-                <xs:annotation>
-                    <xs:documentation>Acknowledgement Status - The status will represent the detail of the responce depending on the request </xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="1"/>
-                        <xs:maxLength value="22"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="MessageComment" type="xs:string" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Acknowledgement Comment</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="TimeStamp" type="xs:dateTime">
-                <xs:annotation>
-                    <xs:documentation>Acknowledgement time stamp</xs:documentation>
-                </xs:annotation>
-            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

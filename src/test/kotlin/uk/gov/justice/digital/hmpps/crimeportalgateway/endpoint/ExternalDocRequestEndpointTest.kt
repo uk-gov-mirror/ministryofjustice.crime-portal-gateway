@@ -19,7 +19,7 @@ import org.springframework.core.io.ResourceLoader
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
-import uk.gov.justice.magistrates.external.externaldocumentrequest.Acknowledgement
+import uk.gov.justice.magistrates.ack.Acknowledgement
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
 import java.io.File
 import java.io.StringReader
@@ -146,9 +146,9 @@ internal class ExternalDocRequestEndpointTest {
 
     private fun assertAck(ack: Acknowledgement) {
         assertThat(ack).isNotNull
-        assertThat(ack.ackType.messageComment).isEqualTo("MessageComment")
-        assertThat(ack.ackType.messageStatus).isEqualTo("Success")
-        assertThat(ack.ackType.timeStamp).isNotNull
+        assertThat(ack.ack.messageComment).isEqualTo("MessageComment")
+        assertThat(ack.ack.messageStatus).isEqualTo("Success")
+        assertThat(ack.ack.timeStamp).isNotNull
     }
 
     private fun marshal(request: String): ExternalDocumentRequest {

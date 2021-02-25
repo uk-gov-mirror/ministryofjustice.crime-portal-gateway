@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.web.context.WebApplicationContext
@@ -17,6 +18,8 @@ import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition
 import org.springframework.xml.xsd.SimpleXsdSchema
 import org.springframework.xml.xsd.XsdSchema
+import org.springframework.xml.xsd.XsdSchemaCollection
+import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
 import java.io.File
 import javax.xml.XMLConstants
@@ -61,13 +64,23 @@ class WebServiceConfig(
     }
 
     @Bean(name = ["ExternalDocumentRequest"])
-    fun wsdl11Definition(requestSchema: XsdSchema): DefaultWsdl11Definition? {
+    fun wsdl11Definition(requestSchema: XsdSchema): DefaultWsdl11Definition {
         return DefaultWsdl11Definition().apply {
             setPortTypeName("WebServicePort")
             setLocationUri(wsLocationUri)
             setTargetNamespace(targetNamespace)
-            setSchema(requestSchema)
+            setSchemaCollection(xsds())
         }
+    }
+
+    @Bean
+    fun xsds(): XsdSchemaCollection {
+        val xsds = CommonsXsdSchemaCollection(
+            ClassPathResource("xsd/cp/external/ExternalDocumentRequest.xsd"),
+            ClassPathResource("xsd/generic/Acknowledgement/Acknowledgement.xsd")
+        )
+        xsds.setInline(true)
+        return xsds
     }
 
     @Bean

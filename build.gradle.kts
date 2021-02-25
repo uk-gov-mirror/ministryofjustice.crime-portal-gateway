@@ -27,6 +27,7 @@ dependencies {
     implementation("wsdl4j:wsdl4j")
     implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
 
+    runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
     runtimeOnly("javax.xml.bind:jaxb-api:$jaxbVersion")
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:$jaxbVersion")
 

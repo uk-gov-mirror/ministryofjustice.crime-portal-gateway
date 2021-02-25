@@ -18,13 +18,14 @@
 	</xs:annotation>
 
 	<xs:import namespace="http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest" schemaLocation="external/ExternalDocumentRequest.xsd"/>
+	<xs:import namespace="http://www.justice.gov.uk/magistrates/ack" schemaLocation="../generic/Acknowledgement/Acknowledgement.xsd"/>
 
 	<xs:element name="GatewayOperationType">
 		<xs:complexType>
 			<xs:choice>
 
 				<!--ACKNOWLEDGEMENT-->
-				<xs:element ref="cp-edrreq:Acknowledgement"/>
+				<xs:element ref="ack:Acknowledgement"/>
 
 				<!-- EXTERNAL DOCUMENT -->
 				<xs:element ref="cp-edrreq:ExternalDocumentRequest"/>

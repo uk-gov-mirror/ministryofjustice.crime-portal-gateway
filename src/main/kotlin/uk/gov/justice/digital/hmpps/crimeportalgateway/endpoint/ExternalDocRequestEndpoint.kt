@@ -12,8 +12,8 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.xml.DocumentUtils
-import uk.gov.justice.magistrates.external.externaldocumentrequest.AckType
-import uk.gov.justice.magistrates.external.externaldocumentrequest.Acknowledgement
+import uk.gov.justice.magistrates.ack.AckType
+import uk.gov.justice.magistrates.ack.Acknowledgement
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
 import java.io.StringWriter
 import java.time.LocalDateTime
@@ -78,7 +78,7 @@ class ExternalDocRequestEndpoint(
         }
 
         return Acknowledgement().apply {
-            ackType = AckType().apply {
+            ack = AckType().apply {
                 messageComment = "MessageComment"
                 messageStatus = SUCCESS_MESSAGE_STATUS
                 timeStamp = LocalDateTime.now()

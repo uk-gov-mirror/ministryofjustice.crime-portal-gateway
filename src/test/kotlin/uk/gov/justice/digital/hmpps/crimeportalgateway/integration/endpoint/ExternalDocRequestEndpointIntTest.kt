@@ -1,13 +1,13 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.anyString
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.contains
-import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Import
@@ -58,14 +58,14 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment")
             )
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success")
             )
-            .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
+            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         verify(telemetryService).trackEvent(
@@ -88,14 +88,14 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment")
             )
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success")
             )
-            .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
+            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         verifyZeroInteractions(sqsService)
@@ -108,14 +108,14 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageComment", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment")
             )
             .andExpect(
-                xpath("//ns3:Acknowledgement/ackType/MessageStatus", namespaces)
+                xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success")
             )
-            .andExpect(xpath("//ns3:Acknowledgement/ackType/TimeStamp", namespaces).exists())
+            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         verifyZeroInteractions(sqsService)
@@ -147,10 +147,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         @JvmStatic
         @BeforeAll
         fun beforeAll() {
-            namespaces["ns3"] = "http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
+            // namespaces["ns35"] = "http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
+            namespaces["ns3"] = "http://www.justice.gov.uk/magistrates/ack"
             namespaces["env"] = "http://www.w3.org/2003/05/soap-envelope"
             val resourceLoader: ResourceLoader = DefaultResourceLoader()
-            xsdResource = resourceLoader.getResource("xsd/cp/external/ExternalDocumentRequest.xsd")
+            xsdResource = resourceLoader.getResource("xsd/generic/Acknowledgement/Acknowledgement.xsd")
         }
     }
 }

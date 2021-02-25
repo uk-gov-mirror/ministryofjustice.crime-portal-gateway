@@ -19,7 +19,9 @@ class WebServiceSecurityConfig(
     @Value("\${ws-sec.response-signature-parts}") private val responseSignatureParts: String,
     @Value("\${ws-sec.response-encryption-parts}") private val responseEncryptionParts: String,
     @Value("\${trusted_cert_alias_name}") private val trustedCertAliasName: String,
-    @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String
+    @Value("\${private_key_alias_name}") private val privateKeyAliasName: String,
+    @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String,
+    @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionAlgorithm: String
 ) {
 
     @Bean
@@ -51,9 +53,10 @@ class WebServiceSecurityConfig(
         securityInterceptor.setValidationCallbackHandler(keyStoreCallbackHandler())
 
         // encrypt the response
-        securityInterceptor.setSecurementEncryptionUser(trustedCertAliasName)
+        securityInterceptor.setSecurementEncryptionUser(privateKeyAliasName)
         securityInterceptor.setSecurementEncryptionParts(responseEncryptionParts)
         securityInterceptor.setSecurementEncryptionCrypto(getValidationCryptoFactoryBean().getObject())
+        securityInterceptor.setSecurementEncryptionSymAlgorithm(encryptionAlgorithm)
 
         // sign the response
         securityInterceptor.setSecurementActions(responseActions)
