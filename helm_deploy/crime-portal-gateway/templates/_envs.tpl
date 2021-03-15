@@ -13,6 +13,9 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "{{ .Values.env.SPRING_PROFILES_ACTIVE }}"
 
+  - name: INCLUDED_COURT_CODES
+    value: "{{ .Values.env.INCLUDED_COURT_CODES }}"
+
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
       secretKeyRef:

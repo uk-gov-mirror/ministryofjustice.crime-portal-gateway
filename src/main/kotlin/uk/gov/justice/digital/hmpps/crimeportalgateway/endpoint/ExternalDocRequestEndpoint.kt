@@ -18,6 +18,7 @@ import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocum
 import java.io.StringWriter
 import java.time.LocalDateTime
 import java.util.concurrent.CompletableFuture
+import javax.annotation.PostConstruct
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import javax.xml.validation.Schema
@@ -136,6 +137,11 @@ class ExternalDocRequestEndpoint(
         val msg = sw.toString()
         log.trace(msg)
         return msg
+    }
+
+    @PostConstruct
+    private fun initialise() {
+        log.info("Included courts {}", includedCourts)
     }
 
     companion object {
