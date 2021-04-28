@@ -6,13 +6,9 @@ plugins {
 }
 
 val jaxbVersion by extra { "2.3.1" }
-val lombokVersion by extra { "1.18.6" }
 val junitJupiterVersion by extra { "5.4.2" }
 
 dependencies {
-
-    compileOnly("org.projectlombok:lombok:$lombokVersion")
-    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
