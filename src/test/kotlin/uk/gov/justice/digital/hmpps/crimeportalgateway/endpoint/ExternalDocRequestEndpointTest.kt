@@ -52,6 +52,7 @@ internal class ExternalDocRequestEndpointTest {
         "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
         "courtCode" to "B10JQ",
         "courtRoom" to "5",
+        "hearingDate" to "2020-10-26",
         "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
     )
 

@@ -26,6 +26,7 @@ import javax.xml.validation.Schema
 private const val SQS_MESSAGE_ID_LABEL = "sqsMessageId"
 private const val COURT_CODE_LABEL = "courtCode"
 private const val COURT_ROOM_LABEL = "courtRoom"
+private const val HEARING_DATE_LABEL = "hearingDate"
 private const val FILENAME_LABEL = "fileName"
 
 @Endpoint
@@ -89,7 +90,7 @@ class ExternalDocRequestEndpoint(
 
     fun enqueueMessage(request: ExternalDocumentRequest) {
         val fileName = request.documents?.any?.let { DocumentUtils.getFileName(it) }
-        val courtDetail = request.documents?.any?.let { DocumentUtils.getCourtDetail(it, xPathForCourtCode) }
+        val courtDetail = request.documents?.any?.let { DocumentUtils.getMessageDetail(it, xPathForCourtCode) }
             ?: kotlin.run {
                 log.info(IGNORED_MESSAGE_NO_COURT)
                 telemetryService.trackEvent(
@@ -101,27 +102,28 @@ class ExternalDocRequestEndpoint(
                 return
             }
 
-        when (includedCourts.contains(courtDetail.first) && courtDetail.second < minDummyCourtRoom) {
+        when (includedCourts.contains(courtDetail.courtCode) && courtDetail.courtRoom < minDummyCourtRoom) {
             true -> {
                 val sqsMessageId = sqsService.enqueueMessage(marshal(request))
                 telemetryService.trackEvent(
                     TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED,
                     mapOf(
                         SQS_MESSAGE_ID_LABEL to sqsMessageId,
-                        COURT_CODE_LABEL to courtDetail.first,
-                        COURT_ROOM_LABEL to courtDetail.second.toString(),
+                        COURT_CODE_LABEL to courtDetail.courtCode,
+                        COURT_ROOM_LABEL to courtDetail.courtRoom.toString(),
+                        HEARING_DATE_LABEL to courtDetail.hearingDate,
                         FILENAME_LABEL to fileName
                     )
                 )
-                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtDetail.first, courtDetail.second, sqsMessageId))
+                log.info(String.format(SUCCESS_MESSAGE_COMMENT, courtDetail.courtCode, courtDetail.courtRoom, sqsMessageId))
             }
             false -> {
-                log.info(String.format(IGNORED_MESSAGE_UNKNOWN_COURT, courtDetail.first, courtDetail.second))
+                log.info(String.format(IGNORED_MESSAGE_UNKNOWN_COURT, courtDetail.courtCode, courtDetail.courtRoom))
                 telemetryService.trackEvent(
                     TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
                     mapOf(
-                        COURT_CODE_LABEL to courtDetail.first,
-                        COURT_ROOM_LABEL to courtDetail.second.toString(),
+                        COURT_CODE_LABEL to courtDetail.courtCode,
+                        COURT_ROOM_LABEL to courtDetail.courtRoom.toString(),
                         FILENAME_LABEL to fileName
                     )
                 )

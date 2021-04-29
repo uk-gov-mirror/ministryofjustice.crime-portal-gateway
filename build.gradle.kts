@@ -1,18 +1,14 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.6"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.7"
     kotlin("plugin.spring") version "1.4.10"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.owasp.dependencycheck") version "6.0.3"
 }
 
 val jaxbVersion by extra { "2.3.1" }
-val lombokVersion by extra { "1.18.6" }
 val junitJupiterVersion by extra { "5.4.2" }
 
 dependencies {
-
-    compileOnly("org.projectlombok:lombok:$lombokVersion")
-    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")

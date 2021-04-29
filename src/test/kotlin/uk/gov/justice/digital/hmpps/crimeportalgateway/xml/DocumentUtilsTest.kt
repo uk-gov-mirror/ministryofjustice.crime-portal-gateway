@@ -9,6 +9,9 @@ import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import java.io.File
 import java.io.StringReader
+import java.time.LocalDate
+import java.time.Month
+import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
 fun toXml(string: StringReader): Document {
@@ -28,10 +31,11 @@ internal class DocumentUtilsTest {
 
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
-        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+        val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode?.first).isEqualTo("B10JQ")
-        assertThat(courtCode?.second).isEqualTo(5)
+        assertThat(messageDetail?.courtCode).isEqualTo("B10JQ")
+        assertThat(messageDetail?.courtRoom).isEqualTo(5)
+        assertThat(messageDetail?.hearingDate).isEqualTo(LocalDate.of(2020, Month.OCTOBER, 26).format(DateTimeFormatter.ISO_DATE))
     }
 
     @ParameterizedTest
@@ -41,10 +45,11 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_B10JQ_ADULT_COURT_LIST_DAILY</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+        val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode?.first).isEqualTo("B10JQ")
-        assertThat(courtCode?.second).isEqualTo(0)
+        assertThat(messageDetail?.courtCode).isEqualTo("B10JQ")
+        assertThat(messageDetail?.courtRoom).isEqualTo(0)
+        assertThat(messageDetail?.hearingDate).isEqualTo(LocalDate.of(2020, Month.OCTOBER, 26).format(DateTimeFormatter.ISO_DATE))
     }
 
     @Test
@@ -52,9 +57,9 @@ internal class DocumentUtilsTest {
 
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
-        val courtCode = DocumentUtils.getFileName(externalDocument.documentElement)
+        val sourceFileName = DocumentUtils.getFileName(externalDocument.documentElement)
 
-        assertThat(courtCode).isEqualTo("5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY")
+        assertThat(sourceFileName).isEqualTo("5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY")
     }
 
     @ParameterizedTest
@@ -64,9 +69,9 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+        val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode).isNull()
+        assertThat(messageDetail).isNull()
     }
 
     @ParameterizedTest
@@ -76,9 +81,9 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name />")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+        val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode).isNull()
+        assertThat(messageDetail).isNull()
     }
 
     @ParameterizedTest
@@ -88,9 +93,9 @@ internal class DocumentUtilsTest {
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 
-        val courtCode = DocumentUtils.getCourtDetail(externalDocument.documentElement, useXPath)
+        val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
 
-        assertThat(courtCode).isNull()
+        assertThat(messageDetail).isNull()
     }
 
     companion object {
