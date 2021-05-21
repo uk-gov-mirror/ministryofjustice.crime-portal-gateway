@@ -1,12 +1,15 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.startsWith
 import org.mockito.Mockito.contains
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -23,9 +26,11 @@ import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
 import uk.gov.justice.digital.hmpps.crimeportalgateway.application.MessagingConfigTest
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.S3Service
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
+import uk.gov.justice.digital.hmpps.crimeportalgateway.xml.MessageDetail
 import java.io.File
 import javax.xml.transform.Source
 
@@ -40,6 +45,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
     @Autowired
     private lateinit var sqsService: SqsService
+
+    @Autowired
+    private lateinit var s3Service: S3Service
 
     private lateinit var mockClient: MockWebServiceClient
 
@@ -79,6 +87,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             )
         )
         verify(sqsService).enqueueMessage(anyString())
+        val expectedMessageDetail = MessageDetail(courtCode = "B10JQ", courtRoom = 0, hearingDate = "2020-10-26")
+        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
+        verifyNoMoreInteractions(sqsService, s3Service)
     }
 
     @Test
@@ -99,6 +110,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
+        val expectedMessageDetail = MessageDetail(courtCode = "B10XX", courtRoom = 0, hearingDate = "2020-10-26")
+        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
+        verifyNoMoreInteractions(s3Service)
         verifyZeroInteractions(sqsService)
     }
 
@@ -119,6 +133,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
+        verify(s3Service).uploadMessage(startsWith("fail"), contains("ExternalDocumentRequest"))
+        verifyNoMoreInteractions(s3Service)
         verifyZeroInteractions(sqsService)
     }
 
@@ -133,6 +149,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(ResponseMatchers.serverOrReceiverFault())
             .andExpect(xpath("//env:Fault/env:Code/env:Value", namespaces).exists())
+
+        verifyNoMoreInteractions(s3Service)
     }
 
     fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)

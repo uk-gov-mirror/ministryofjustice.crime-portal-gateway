@@ -46,6 +46,30 @@ env:
         name: crime-portal-gateway-queue-credentials
         key: sqs_id
 
+  - name: AWS_S3_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: crime-portal-gateway-s3-credentials
+        key: access_key_id
+
+  - name: AWS_S3_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: crime-portal-gateway-s3-credentials
+        key: secret_access_key
+
+  - name: AWS_S3_BUCKET_NAME
+    valueFrom:
+      secretKeyRef:
+        name: crime-portal-gateway-s3-credentials
+        key: sqs_name
+
+  - name: AWS_S3_BUCKET_ARN
+    valueFrom:
+      secretKeyRef:
+        name: crime-portal-gateway-s3-credentials
+        key: sqs_id
+
   - name: KEYSTORE_PASSWORD
     valueFrom:
       secretKeyRef:

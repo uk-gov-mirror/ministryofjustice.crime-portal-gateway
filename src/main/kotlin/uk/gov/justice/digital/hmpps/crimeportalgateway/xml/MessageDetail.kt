@@ -1,3 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.xml
 
-data class MessageDetail(val courtCode: String, val courtRoom: Int, val hearingDate: String)
+data class MessageDetail(val courtCode: String, val courtRoom: Int, val hearingDate: String) {
+
+    fun asFileNameStem(): String = "$hearingDate-$courtCode-$courtRoom"
+}

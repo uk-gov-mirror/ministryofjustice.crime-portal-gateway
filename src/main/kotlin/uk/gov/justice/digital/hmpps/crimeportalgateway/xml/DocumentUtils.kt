@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.xml
 
-import org.slf4j.LoggerFactory
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
@@ -11,8 +10,6 @@ import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
 object DocumentUtils {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     // Source filename has the following format 146_27072020_2578_B01OB00_ADULT_COURT_LIST_DAILY
     // These constants relate to that string
@@ -64,7 +61,7 @@ object DocumentUtils {
             return null
         }
 
-        val ouCode = fileNameParts[OU_CODE_POSITION].toUpperCase()
+        val ouCode = fileNameParts[OU_CODE_POSITION].uppercase()
         val courtCode = ouCode.substring(0, OU_CODE_LENGTH)
         val hearingDate = LocalDate.parse(fileNameParts[HEARING_DATE_POSITION], HEARING_DATE_FORMATTER).format(DateTimeFormatter.ISO_DATE)
         return MessageDetail(courtCode, getRoomFromFileName(ouCode), hearingDate)

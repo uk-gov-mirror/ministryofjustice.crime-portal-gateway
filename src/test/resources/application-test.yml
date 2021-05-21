@@ -10,11 +10,16 @@ management.endpoint:
   info.cache.time-to-live: 0
 
 # Localstack settings
+# Default access key and secret_access_key are for SQS
 aws:
   region-name: eu-west-2
   endpoint-url: "http://localhost:4566"
-  access_key: none
-  secret_access_key: none
+  access_key: foobar
+  secret_access_key: foobar
+  s3:
+    access_key: foobar
+    secret_access_key: foobar
+    bucket_name: cpg-bucket
 
 soap:
   xsd-file-path: src/main/resources/xsd/cp/external/ExternalDocumentRequest.xsd

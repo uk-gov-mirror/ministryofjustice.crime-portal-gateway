@@ -1,5 +1,5 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.7"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.2.1"
     kotlin("plugin.spring") version "1.4.10"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.owasp.dependencycheck") version "6.0.3"
@@ -21,7 +21,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("com.microsoft.azure:applicationinsights-spring-boot-starter")
-    implementation("com.amazonaws:aws-java-sdk-sqs:1.11.899")
+    implementation("com.amazonaws:aws-java-sdk-sqs:1.11.1022")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.11.1022")
+
     implementation("wsdl4j:wsdl4j")
     implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
 
