@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.service
 
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.model.GetQueueUrlResult
+import com.amazonaws.services.sqs.model.MessageAttributeValue
 import com.amazonaws.services.sqs.model.SendMessageRequest
 import com.amazonaws.services.sqs.model.SendMessageResult
 import com.nhaarman.mockitokotlin2.whenever
@@ -17,12 +18,13 @@ internal class SqsServiceTest {
 
     @Mock
     private lateinit var amazonSQS: AmazonSQS
+    private val operationId = { "operation-123" }
 
     private lateinit var sqsService: SqsService
 
     @BeforeEach
     fun beforeEach() {
-        sqsService = SqsService(queueName, amazonSQS)
+        sqsService = SqsService(queueName, amazonSQS, operationId)
     }
 
     @Test
@@ -46,6 +48,13 @@ internal class SqsServiceTest {
         val msgRequest = SendMessageRequest()
             .withQueueUrl(queueUrl)
             .withMessageBody("Hello World")
+            .withMessageAttributes(
+                mapOf(
+                    "operation_Id" to MessageAttributeValue()
+                        .withStringValue("operation-123")
+                        .withDataType("String")
+                )
+            )
 
         whenever(amazonSQS.sendMessage(msgRequest)).thenReturn(SendMessageResult().withMessageId("ID"))
 

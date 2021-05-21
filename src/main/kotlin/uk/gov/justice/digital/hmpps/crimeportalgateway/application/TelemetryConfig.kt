@@ -40,4 +40,9 @@ class TelemetryConfig {
             .map { obj: RequestTelemetry -> obj.properties }
             .orElse(emptyMap())
     }
+
+    @Bean
+    fun getOperationId(): () -> String? {
+        return { ThreadContext.getRequestTelemetryContext()?.httpRequestTelemetry?.context?.operation?.id }
+    }
 }

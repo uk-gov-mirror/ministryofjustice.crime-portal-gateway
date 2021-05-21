@@ -1,23 +1,33 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.service
 
 import com.amazonaws.services.sqs.AmazonSQS
+import com.amazonaws.services.sqs.model.MessageAttributeValue
 import com.amazonaws.services.sqs.model.SendMessageRequest
 import com.amazonaws.services.sqs.model.SendMessageResult
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class SqsService(
     @Value("\${aws_sqs_queue_name:crime-portal-gateway-queue}") private val queueName: String,
-    @Autowired private val amazonSqs: AmazonSQS
+    @Autowired private val amazonSqs: AmazonSQS,
+    @Autowired @Qualifier("getOperationId") private val getOperationId: () -> String
 ) {
 
     fun enqueueMessage(externalDocumentRequest: String): String {
         val msgRequest = SendMessageRequest()
             .withQueueUrl(getQueueUrl())
             .withMessageBody(externalDocumentRequest)
+            .withMessageAttributes(
+                mapOf(
+                    "operation_Id" to MessageAttributeValue()
+                        .withDataType("String")
+                        .withStringValue(getOperationId())
+                )
+            )
         val value: SendMessageResult = amazonSqs.sendMessage(msgRequest)
         return value.messageId
     }

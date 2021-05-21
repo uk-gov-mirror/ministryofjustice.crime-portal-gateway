@@ -42,3 +42,15 @@ xjc {
 sourceSets.named("main") {
     xjcBinding.srcDir("resources/xsd")
 }
+
+tasks {
+    register<Copy>("copyAgentConfig") {
+        description = "Copy applicationinsights.json to build.lib so App Insights config is applied correctly"
+        from("applicationinsights.json")
+        into("$buildDir/libs")
+    }
+}
+
+tasks.named("assemble") {
+    dependsOn("copyAgentConfig")
+}

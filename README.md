@@ -41,21 +41,20 @@ The generated WSDL will be available at the following location
 
 The application requires an Amazon SQS queue to be configured. It is possible to run the application with the Spring "local" profile. This can be achieved by 
 
-1. Clone localstack repo (https://github.com/localstack/localstack)
-2. Start localstack.
+1. Start localstack.
 
-```cd localstack```
-   
-```SERVICES=sqs PORT_WEB_UI=9080 docker-compose up```
-3. Create the SQS queue. This depends on the AWS CLI.
+```docker-compose up localstack```
+
+2. Create the SQS queue. This depends on the AWS CLI.
 
 ```aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name crime-portal-gateway-queue```
 
-4. Start the application
+
+3. Start the application
 
 ```SPRING_PROFILES_ACTIVE=local SQS_QUEUE_NAME=crime-portal-gateway-queue AWS_SECRET_ACCESS_KEY=none AWS_ACCESS_KEY=none ./gradlew bootRun```
 
-5. It is possible to execute the following command from the project root to call the SOAP endpoint.
+4. It is possible to execute the following command from the project root to call the SOAP endpoint.
 
 ```curl --header "content-type: application/soap+xml" -d @src/test/resources/soap/sample-request.xml http://localhost:8080/crime-portal-gateway/ws```
 
