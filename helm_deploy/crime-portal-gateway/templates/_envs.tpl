@@ -62,13 +62,13 @@ env:
     valueFrom:
       secretKeyRef:
         name: crime-portal-gateway-s3-credentials
-        key: sqs_name
+        key: bucket_name
 
   - name: AWS_S3_BUCKET_ARN
     valueFrom:
       secretKeyRef:
         name: crime-portal-gateway-s3-credentials
-        key: sqs_id
+        key: bucket_arn
 
   - name: KEYSTORE_PASSWORD
     valueFrom:
