@@ -4,6 +4,8 @@ This project delivers a SOAP interface for the delivery of case lists from Libra
 
 https://github.com/ministryofjustice/court-case-matcher
 
+For more informations, check our [Runbook](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/2548662614/Prepare+a+Case+for+Sentence+RUNBOOK)
+
 # Instructions
 
 Run the application as a Spring Boot app.
