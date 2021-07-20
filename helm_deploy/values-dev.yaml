@@ -14,7 +14,8 @@ ingress:
   enable_whitelist: true
   hosts:
     - host: crime-portal-gateway-dev.apps.live-1.cloud-platform.service.justice.gov.uk
-  path: /
+  path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
+  rewrite_target: /crime-portal-gateway/ws/$2
 
 env:
   JAVA_OPTS: "-Xmx512m"
