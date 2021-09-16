@@ -9,6 +9,6 @@ internal class MessageDetailTest {
     fun `as filename`() {
         val messageDetail = MessageDetail(courtCode = "B10JQ", courtRoom = 0, hearingDate = "2020-10-26")
 
-        assertThat(messageDetail.asFileNameStem()).isEqualTo("2020-10-26-B10JQ-0")
+        assertThat(messageDetail.asFileNameStem()).startsWith("2020-10-26-B10JQ-0")
     }
 }

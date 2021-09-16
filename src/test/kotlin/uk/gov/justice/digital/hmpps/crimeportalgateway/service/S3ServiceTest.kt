@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.service
 
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.PutObjectResult
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -39,11 +41,11 @@ internal class S3ServiceTest {
             expirationTime = Date()
             eTag = "ETAG"
         }
-        whenever(amazonS3Client.putObject("bucket-name", "29-08-2016-B10JQ-2.xml", "message")).thenReturn(putResult)
+        whenever(amazonS3Client.putObject(eq("bucket-name"), any(), eq("message"))).thenReturn(putResult)
 
         val eTag = s3Service.uploadMessage(messageDetail, "message")
 
-        verify(amazonS3Client).putObject("bucket-name", "29-08-2016-B10JQ-2.xml", "message")
+        verify(amazonS3Client).putObject(eq("bucket-name"), any(), eq("message"))
         assertThat(eTag).isEqualTo("ETAG")
     }
 }
