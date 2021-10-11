@@ -1,12 +1,16 @@
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.9"
-    kotlin("plugin.spring") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.5.31"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.owasp.dependencycheck") version "6.3.1"
 }
 
 val jaxbVersion by extra { "2.3.1" }
 val junitJupiterVersion by extra { "5.4.2" }
+
+dependencyCheck {
+    suppressionFiles.add("cpg-suppressions.xml")
+}
 
 dependencies {
 
@@ -16,6 +20,8 @@ dependencies {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
             .because("OWASP found security Issues")
         exclude(group = "org.cryptacular", module = "cryptacular")
+            .because("OWASP found security Issues")
+        exclude(group = "org.apache.santuario", module = "xmlsec")
             .because("OWASP found security Issues")
     }
     implementation("org.springframework.boot:spring-boot-devtools")
