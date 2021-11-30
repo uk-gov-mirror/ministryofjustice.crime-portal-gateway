@@ -1,5 +1,5 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.12"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.13"
     id("org.jetbrains.kotlin.plugin.spring") version "1.5.31"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.owasp.dependencycheck") version "6.3.1"
@@ -23,6 +23,7 @@ dependencies {
             .because("OWASP found security Issues")
         exclude(group = "org.apache.santuario", module = "xmlsec")
             .because("OWASP found security Issues")
+        implementation("org.apache.santuario:xmlsec:2.2.3")
     }
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
