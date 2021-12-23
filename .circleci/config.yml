@@ -62,10 +62,12 @@ workflows:
           post-steps:
             - jira/notify:
               job_type: build
+#      TODO: DELETE after live migration
       - hmpps/deploy_env:
           name: deploy_dev
           retrieve_secrets: none
           env: "dev"
+          helm_additional_args: --values ./crime-portal-gateway/values-live1.yaml
           filters:
             branches:
               only:
@@ -74,11 +76,6 @@ workflows:
             - validate
             - build_docker
             - helm_lint
-#          post-steps:
-#            - jira/notify:
-#              environment: dev
-#              environment_type: development
-#              job_type: deployment
       - request-preprod-approval:
           type: approval
           requires:
@@ -87,14 +84,10 @@ workflows:
           name: deploy_preprod
           retrieve_secrets: none
           env: "preprod"
+          helm_additional_args: --values ./crime-portal-gateway/values-live1.yaml
           context: court-probation-preprod
           requires:
             - request-preprod-approval
-#          post-steps:
-#            - jira/notify:
-#              environment: preprod
-#              environment_type: testing
-#              job_type: deployment
       - request-prod-approval:
           type: approval
           requires:
@@ -103,16 +96,48 @@ workflows:
           name: deploy_prod
           retrieve_secrets: none
           env: "prod"
+          helm_additional_args: --values ./crime-portal-gateway/values-live1.yaml
           slack_notification: true
           slack_channel_name: probation_in_court_dev
           context: court-probation-prod
           requires:
             - request-prod-approval
-#          post-steps:
-#            - jira/notify:
-#              environment: prod
-#              environment_type: production
-#              job_type: deployment
+#          TODO: END
+      - hmpps/deploy_env:
+          name: deploy_live_dev
+          retrieve_secrets: none
+          env: "dev"
+          helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
+          context:
+            - court-probation-live-dev
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - validate
+            - build_docker
+            - helm_lint
+      - hmpps/deploy_env:
+          name: deploy_live_preprod
+          retrieve_secrets: none
+          env: "preprod"
+          helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
+          context:
+            - court-probation-live-preprod
+          requires:
+            - request-preprod-approval
+      - hmpps/deploy_env:
+          name: deploy_live_prod
+          retrieve_secrets: none
+          env: "prod"
+          helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
+          context:
+            - court-probation-live-prod
+          slack_notification: true
+          slack_channel_name: probation_in_court_dev
+          requires:
+            - request-prod-approval
 
   scheduled:
     triggers:
