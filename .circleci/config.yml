@@ -55,10 +55,10 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          filters:
-            branches:
-              only:
-                - main
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
           post-steps:
             - jira/notify:
               job_type: build
@@ -69,10 +69,10 @@ workflows:
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - court-probation-live-dev
-          filters:
-            branches:
-              only:
-                - main
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
           requires:
             - validate
             - build_docker
