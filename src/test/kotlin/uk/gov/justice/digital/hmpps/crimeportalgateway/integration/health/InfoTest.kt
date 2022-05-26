@@ -19,7 +19,7 @@ class InfoTest : IntegrationTestBase() {
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("app.name").isEqualTo("Crime Portal Gateway")
+            .jsonPath("build.name").isEqualTo("crime-portal-gateway")
     }
 
     @Test

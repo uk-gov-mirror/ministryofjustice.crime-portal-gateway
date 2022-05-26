@@ -1,16 +1,16 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.startsWith
 import org.mockito.Mockito.contains
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Import
@@ -113,7 +113,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         val expectedMessageDetail = MessageDetail(courtCode = "B10XX", courtRoom = 0, hearingDate = "2020-10-26")
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
         verifyNoMoreInteractions(s3Service)
-        verifyZeroInteractions(sqsService)
+        verifyNoInteractions(sqsService)
     }
 
     @Test
@@ -135,7 +135,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
         verify(s3Service).uploadMessage(startsWith("fail"), contains("ExternalDocumentRequest"))
         verifyNoMoreInteractions(s3Service)
-        verifyZeroInteractions(sqsService)
+        verifyNoInteractions(sqsService)
     }
 
     @Test

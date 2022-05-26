@@ -1,10 +1,5 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.timeout
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -15,6 +10,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.springframework.core.io.DefaultResourceLoader
 import org.springframework.core.io.ResourceLoader
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.S3Service
@@ -125,7 +125,7 @@ internal class ExternalDocRequestEndpointTest {
             )
         )
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
-        verifyZeroInteractions(sqsService)
+        verifyNoInteractions(sqsService)
     }
 
     @Test
@@ -144,7 +144,7 @@ internal class ExternalDocRequestEndpointTest {
             )
         )
         verify(s3Service).uploadMessage(eq("5_26102020_2992_B10_ADULT_COURT_LIST_DAILY.xml"), contains("ExternalDocumentRequest"))
-        verifyZeroInteractions(sqsService)
+        verifyNoInteractions(sqsService)
     }
 
     @Test

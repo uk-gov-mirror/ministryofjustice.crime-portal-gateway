@@ -1,8 +1,7 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.13"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.5.31"
-    id("org.unbroken-dome.xjc") version "2.0.0"
-    id("org.owasp.dependencycheck") version "6.3.1"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.2.0-beta-2"
+    kotlin("plugin.spring")
+    id("org.unbroken-dome.xjc")
 }
 
 val jaxbVersion by extra { "2.3.1" }
@@ -23,22 +22,22 @@ dependencies {
             .because("OWASP found security Issues")
         exclude(group = "org.apache.santuario", module = "xmlsec")
             .because("OWASP found security Issues")
-        implementation("org.apache.santuario:xmlsec:2.2.3")
+        implementation("org.apache.santuario:xmlsec:_")
     }
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("com.microsoft.azure:applicationinsights-spring-boot-starter")
-    implementation("com.amazonaws:aws-java-sdk-sqs:1.11.1022")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.11.1022")
+    implementation("com.amazonaws:aws-java-sdk-sqs:_")
+    implementation("com.amazonaws:aws-java-sdk-s3:_")
 
     implementation("wsdl4j:wsdl4j")
-    implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
+    implementation("javax.xml.bind:jaxb-api:_")
 
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
-    runtimeOnly("javax.xml.bind:jaxb-api:$jaxbVersion")
-    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:$jaxbVersion")
+    runtimeOnly("javax.xml.bind:jaxb-api:_")
+    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:_")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+    testImplementation(Testing.junit.jupiter)
     testImplementation("org.springframework.ws:spring-ws-test")
     testImplementation("org.mockito:mockito-core")
 }

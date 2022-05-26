@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.xml.MessageDetail
 
 @Component
 class S3Service(
-    @Value("\${aws_s3_bucket_name}") private val bucketName: String,
+    @Value("\${aws.s3.bucket_name}") private val bucketName: String,
     @Autowired private val amazonS3Client: AmazonS3
 ) {
 

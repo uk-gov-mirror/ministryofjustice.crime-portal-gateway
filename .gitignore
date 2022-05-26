@@ -68,3 +68,4 @@ ecr.repo
 
 # JKS
 **/MGW*.jks
+/.trivyignore
