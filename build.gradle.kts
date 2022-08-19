@@ -1,45 +1,45 @@
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.4.1"
-    kotlin("plugin.spring")
-    id("org.unbroken-dome.xjc")
+    kotlin("plugin.spring") version "1.7.10"
+    id("org.unbroken-dome.xjc") version "2.0.0"
 }
-
-val jaxbVersion by extra { "2.3.1" }
-val junitJupiterVersion by extra { "5.4.2" }
 
 dependencyCheck {
     suppressionFiles.add("cpg-suppressions.xml")
 }
 
+val junitJupiterVersion by extra { "5.9.0" }
+val awsSdkVersion = "1.12.285"
+val springBootVersion = "2.7.2"
+
 dependencies {
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.ws:spring-ws-security") {
+    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:$springBootVersion")
+    implementation("org.springframework.ws:spring-ws-security:3.1.3") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
             .because("OWASP found security Issues")
         exclude(group = "org.cryptacular", module = "cryptacular")
             .because("OWASP found security Issues")
         exclude(group = "org.apache.santuario", module = "xmlsec")
             .because("OWASP found security Issues")
-        implementation("org.apache.santuario:xmlsec:_")
+        implementation("org.apache.santuario:xmlsec:3.0.0")
     }
-    implementation("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.boot:spring-boot-starter-web-services")
-    implementation("com.microsoft.azure:applicationinsights-spring-boot-starter")
-    implementation("com.amazonaws:aws-java-sdk-sqs:_")
-    implementation("com.amazonaws:aws-java-sdk-s3:_")
+    implementation("org.springframework.boot:spring-boot-devtools:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web-services:$springBootVersion")
+    implementation("com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.4")
+    implementation("com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion")
+    implementation("com.amazonaws:aws-java-sdk-s3:$awsSdkVersion")
 
-    implementation("wsdl4j:wsdl4j")
-    implementation("javax.xml.bind:jaxb-api:_")
+    implementation("wsdl4j:wsdl4j:1.6.3")
+    implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
-    runtimeOnly("javax.xml.bind:jaxb-api:_")
-    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:_")
+    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438")
 
-    testImplementation(Testing.junit.jupiter)
-    testImplementation("org.springframework.ws:spring-ws-test")
-    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testImplementation("org.springframework.ws:spring-ws-test:3.1.3")
+    testImplementation("org.mockito:mockito-core:4.7.0")
 }
 
 xjc {
