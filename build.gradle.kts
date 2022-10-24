@@ -39,7 +39,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testImplementation("org.springframework.ws:spring-ws-test:3.1.3")
-    testImplementation("org.mockito:mockito-core:4.7.0")
+    testImplementation("org.mockito:mockito-core:4.8.1")
 }
 
 xjc {
