@@ -8,7 +8,6 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
   annotations:
-    ingressClassName: modsec
     {{ if .Values.ingress.enable_whitelist }}nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.whitelist | quote }}{{ end }}
     {{ if .Values.ingress.rewrite_target }}nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.rewrite_target }}{{ end }}
     external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-{{ .Release.Namespace }}-{{ .Values.ingress.contextColour }}
@@ -16,6 +15,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
+  ingressClassName: modsec
   tls:
   {{- range .Values.ingress.hosts }}
   - hosts:
