@@ -55,11 +55,13 @@ workflows:
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
+          context: [hmpps-common-vars]
           name: build_docker
           filters:
             branches:
               only:
                 - main
+                - /.*deployable_branch.*/
           post-steps:
             - jira/notify:
               job_type: build
@@ -69,11 +71,13 @@ workflows:
           env: "dev"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
+            - hmpps-common-vars
             - court-probation-live-dev
           filters:
             branches:
               only:
                 - main
+                - /.*deployable_branch.*/
           requires:
             - validate
             - build_docker
@@ -88,6 +92,7 @@ workflows:
           env: "preprod"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
+            - hmpps-common-vars
             - court-probation-live-preprod
           requires:
             - request-preprod-approval
@@ -101,6 +106,7 @@ workflows:
           env: "prod"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
+            - hmpps-common-vars
             - court-probation-live-prod
           slack_notification: true
           slack_channel_name: probation_in_court_dev
