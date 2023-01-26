@@ -2,13 +2,15 @@ version: 2.1
 
 orbs:
   owasp: entur/owasp@0.0.10
-  hmpps: ministryofjustice/hmpps@2.1.0
+  hmpps: ministryofjustice/hmpps@7.1.0
   slack: circleci/slack@4.1.1
   jira: circleci/jira@1.2.2
 
 jobs:
   validate:
-    executor: hmpps/java
+    executor:
+      name: hmpps/java
+      tag: "17.0"
     steps:
       - checkout
       - restore_cache:
@@ -67,7 +69,6 @@ workflows:
               job_type: build
       - hmpps/deploy_env:
           name: deploy_dev
-          retrieve_secrets: none
           env: "dev"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
@@ -88,7 +89,6 @@ workflows:
             - deploy_dev
       - hmpps/deploy_env:
           name: deploy_preprod
-          retrieve_secrets: none
           env: "preprod"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
@@ -102,7 +102,6 @@ workflows:
             - deploy_preprod
       - hmpps/deploy_env:
           name: deploy_prod
-          retrieve_secrets: none
           env: "prod"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
@@ -123,4 +122,6 @@ workflows:
                 - main
     jobs:
       - owasp/gradle_owasp_dependency_check:
-          executor: hmpps/java
+          executor:
+            name: hmpps/java
+            tag: "17.0"

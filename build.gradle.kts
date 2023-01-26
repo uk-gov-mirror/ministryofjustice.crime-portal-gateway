@@ -1,6 +1,6 @@
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.5.4"
-    kotlin("plugin.spring") version "1.7.10"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.1"
+    kotlin("plugin.spring") version "1.8.0"
     id("org.unbroken-dome.xjc") version "2.0.0"
 }
 
@@ -10,7 +10,7 @@ dependencyCheck {
 
 val junitJupiterVersion by extra { "5.9.0" }
 val awsSdkVersion = "1.12.300"
-val springBootVersion = "2.7.3"
+val springBootVersion = "3.0.1"
 
 dependencies {
 
@@ -25,7 +25,6 @@ dependencies {
             .because("OWASP found security Issues")
         implementation("org.apache.santuario:xmlsec:3.0.0")
     }
-    implementation("org.springframework.boot:spring-boot-devtools:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web-services:$springBootVersion")
     implementation("com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.4")
     implementation("com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion")
