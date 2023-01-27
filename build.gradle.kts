@@ -16,7 +16,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-webflux:$springBootVersion")
-    implementation("org.springframework.ws:spring-ws-security:3.1.3") {
+    implementation("org.springframework.ws:spring-ws-security:4.0.1") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
             .because("OWASP found security Issues")
         exclude(group = "org.cryptacular", module = "cryptacular")
