@@ -42,7 +42,6 @@ class HealthCheckTest : IntegrationTestBase() {
 
     @Test
     fun `Health info reports version`() {
-
         webTestClient.get().uri("/health")
             .exchange()
             .expectStatus().isOk

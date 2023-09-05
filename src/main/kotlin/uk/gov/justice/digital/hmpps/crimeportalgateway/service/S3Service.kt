@@ -18,7 +18,6 @@ class S3Service(
     }
 
     fun uploadMessage(fileName: String, messageContent: String): String? {
-
         return try {
             val putResult = amazonS3Client.putObject(bucketName, fileName, messageContent)
             log.info("File {} saved to S3 bucket {} with expiration date of {}, eTag {}", fileName, bucketName, putResult.expirationTime, putResult.eTag)

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component
 class SqsService(
     @Value("\${aws_sqs_queue_name:crime-portal-gateway-queue}") private val queueName: String,
     @Autowired private val amazonSqs: AmazonSQS,
-    @Autowired @Qualifier("getOperationId") private val getOperationId: () -> String
+    @Autowired
+    @Qualifier("getOperationId")
+    private val getOperationId: () -> String
 ) {
 
     fun enqueueMessage(externalDocumentRequest: String): String {
@@ -37,7 +39,6 @@ class SqsService(
     }
 
     fun isQueueAvailable(): Boolean {
-
         try {
             return getQueueUrl().isNotEmpty()
         } catch (exception: Exception) {

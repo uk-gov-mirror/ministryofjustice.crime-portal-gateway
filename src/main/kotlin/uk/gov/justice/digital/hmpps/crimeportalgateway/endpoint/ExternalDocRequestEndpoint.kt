@@ -69,7 +69,6 @@ class ExternalDocRequestEndpoint(
     }
 
     private fun process(request: ExternalDocumentRequest): Acknowledgement {
-
         when (enqueueMsgAsync) {
             true -> {
                 CompletableFuture
@@ -101,7 +100,7 @@ class ExternalDocRequestEndpoint(
                 telemetryService.trackEvent(
                     TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
                     mapOf(
-                        FILENAME_LABEL to fileName,
+                        FILENAME_LABEL to fileName
                     )
                 )
                 val failedFileName = fileName ?: "fail-" + DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())

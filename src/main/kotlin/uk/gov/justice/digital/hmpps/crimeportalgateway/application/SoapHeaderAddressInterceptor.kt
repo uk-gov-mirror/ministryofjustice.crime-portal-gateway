@@ -81,8 +81,11 @@ class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryServic
         val headerMap: MutableMap<String, String> = HashMap()
 
         val headerElements: MutableIterator<SOAPHeaderElement>? =
-            if (soapHeader != null) soapHeader.examineAllHeaderElements()
-            else Collections.emptyIterator()
+            if (soapHeader != null) {
+                soapHeader.examineAllHeaderElements()
+            } else {
+                Collections.emptyIterator()
+            }
 
         headerElements?.forEachRemaining { hdr: SOAPHeaderElement ->
             headerMap[hdr.localName] = hdr.textContent.trim()

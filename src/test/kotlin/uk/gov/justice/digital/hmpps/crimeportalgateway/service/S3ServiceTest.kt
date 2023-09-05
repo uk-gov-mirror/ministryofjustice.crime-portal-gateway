@@ -30,7 +30,6 @@ internal class S3ServiceTest {
 
     @Test
     fun `given normal input then message is uploaded as file`() {
-
         val messageDetail = MessageDetail(
             hearingDate = "29-08-2016",
             courtCode = "B10JQ",

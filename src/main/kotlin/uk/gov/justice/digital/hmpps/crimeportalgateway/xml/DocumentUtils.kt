@@ -34,7 +34,7 @@ object DocumentUtils {
         val nodeList = exp.evaluate(documents, XPathConstants.NODESET) as NodeList
         for (i in 0 until nodeList.length) {
             getMessageDetail(nodeList.item(i))?.let {
-                messageDetail ->
+                    messageDetail ->
                 return messageDetail
             }
         }
@@ -54,7 +54,6 @@ object DocumentUtils {
     }
 
     private fun getMessageDetail(item: Node): MessageDetail? {
-
         val nodeValue = item.nodeValue
         val fileNameParts: Array<String> = nodeValue?.split(DELIMITER)?.toTypedArray() ?: emptyArray()
         if (fileNameParts.size <= 4 || fileNameParts[OU_CODE_POSITION].length < OU_CODE_LENGTH) {

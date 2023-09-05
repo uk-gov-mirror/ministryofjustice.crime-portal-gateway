@@ -22,7 +22,6 @@ internal class SqsCheckTest {
 
     @Test
     fun `should give UP status when queue is available`() {
-
         whenever(sqsService.isQueueAvailable()).thenReturn(true)
 
         val health: Health = sqsCheck.health().block()
@@ -32,7 +31,6 @@ internal class SqsCheckTest {
 
     @Test
     fun `should give DOWN status when queue is available`() {
-
         whenever(sqsService.isQueueAvailable()).thenReturn(false)
 
         val health: Health = sqsCheck.health().block()

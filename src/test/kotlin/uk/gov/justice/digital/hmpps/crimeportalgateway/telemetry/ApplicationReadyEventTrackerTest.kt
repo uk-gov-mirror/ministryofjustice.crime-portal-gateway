@@ -15,8 +15,10 @@ internal class ApplicationReadyEventTrackerTest {
 
     @Mock
     lateinit var telemetryClient: TelemetryClient
+
     @Mock
     lateinit var buildProperties: BuildProperties
+
     @Mock
     lateinit var applicationReadyEvent: ApplicationReadyEvent
 

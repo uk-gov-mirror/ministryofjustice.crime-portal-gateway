@@ -72,7 +72,6 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a valid message then should enqueue the message and return the correct acknowledgement`() {
-
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
             .thenReturn("a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02")
 
@@ -88,7 +87,6 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a valid message with dummy court room then should not enqueue the message and return the correct acknowledgement`() {
-
         endpoint = buildEndpoint(setOf("B10JQ"), false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
@@ -109,7 +107,6 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a message for a court which is not in the include list then should not enqueue message`() {
-
         endpoint = buildEndpoint(setOf("XXXXX"), false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
@@ -130,7 +127,6 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a message with no usable court code then do not enqueue message`() {
-
         externalDocument = marshal(xmlFile.readText().replace("5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY", "5_26102020_2992_B10_ADULT_COURT_LIST_DAILY"))
 
         val ack = endpoint.processRequest(externalDocument)
@@ -149,7 +145,6 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given async then success should the correct acknowledgement message`() {
-
         endpoint = buildEndpoint(setOf("B10JQ"), true, 50)
 
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))

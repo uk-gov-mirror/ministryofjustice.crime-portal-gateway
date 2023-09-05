@@ -28,7 +28,6 @@ internal class DocumentUtilsTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     fun `get court code and room from correctly formed ExternalDocumentRequest`(useXPath: Boolean) {
-
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
         val messageDetail = DocumentUtils.getMessageDetail(externalDocument.documentElement, useXPath)
@@ -41,7 +40,6 @@ internal class DocumentUtilsTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     fun `get court code from ExternalDocumentRequest where there is no room`(useXPath: Boolean) {
-
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_B10JQ_ADULT_COURT_LIST_DAILY</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 
@@ -54,7 +52,6 @@ internal class DocumentUtilsTest {
 
     @Test
     fun `get filename from correctly formed ExternalDocumentRequest`() {
-
         val externalDocument = toXml(StringReader(xmlFile.readText()))
 
         val sourceFileName = DocumentUtils.getFileName(externalDocument.documentElement)
@@ -65,7 +62,6 @@ internal class DocumentUtilsTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     fun `get empty set when there is no source_file_name`(useXPath: Boolean) {
-
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "")
         val externalDocument = toXml(StringReader(str))
 
@@ -77,7 +73,6 @@ internal class DocumentUtilsTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     fun `get empty set when there is no source_file_name value`(useXPath: Boolean) {
-
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name />")
         val externalDocument = toXml(StringReader(str))
 
@@ -89,7 +84,6 @@ internal class DocumentUtilsTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     fun `get empty set when source_file_name is invalid`(useXPath: Boolean) {
-
         val str: String = xmlFile.readText().replace(sourceFileNameElement, "<source_file_name>5_26102020_2992_</source_file_name>")
         val externalDocument = toXml(StringReader(str))
 

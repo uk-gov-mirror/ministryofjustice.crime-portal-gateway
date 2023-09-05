@@ -80,10 +80,11 @@ class SoapHeaderAddressInterceptorTest {
     private fun mockForHeader(messageContext: MessageContext, response: Boolean): Any {
         val saajSoapMessage = mock(SaajSoapMessage::class.java)
         val header: SOAPHeader = mock(SOAPHeader::class.java)
-        if (response)
+        if (response) {
             whenever(messageContext.response).thenReturn(saajSoapMessage)
-        else
+        } else {
             whenever(messageContext.request).thenReturn(saajSoapMessage)
+        }
 
         mockMessageContext(saajSoapMessage, header)
         return header
