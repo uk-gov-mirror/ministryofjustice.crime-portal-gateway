@@ -57,9 +57,36 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     }
 
     @Test
+    fun `should send message to SQS queue with a size greater than SQS Limit`() {
+        // Given
+        val externalDoc = readFile("src/test/resources/soap/sample-request-large.xml")
+        val requestEnvelope: Source = StringSource(externalDoc)
+
+        // When
+        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+            .andExpect(validPayload(xsdResource))
+            .andExpect(
+                xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
+                    .evaluatesTo("MessageComment")
+            )
+            .andExpect(
+                xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
+                    .evaluatesTo("Success")
+            )
+            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            .andExpect(noFault())
+
+        // Then
+        verify(sqsService).enqueueMessage(anyString())
+        val expectedMessageDetail = MessageDetail(courtCode = "B10JQ", courtRoom = 1, hearingDate = "2020-02-27")
+        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
+        verifyNoMoreInteractions(sqsService, s3Service)
+    }
+
+    @Test
     fun `should enqueue message and return successful acknowledgement`() {
-        val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
-        val requestEnvelope: Source = StringSource(externalDoc1)
+        val externalDoc = readFile("src/test/resources/soap/sample-request.xml")
+        val requestEnvelope: Source = StringSource(externalDoc)
 
         whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
 

@@ -6,7 +6,7 @@ export AWS_SECRET_ACCESS_KEY=foobar
 export AWS_DEFAULT_REGION=eu-west-2
 export PAGER=
 
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name crime-portal-gateway-queue
-aws --endpoint-url=http://localhost:4566 s3 mb s3://cpg-bucket
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name crime-portal-gateway-queue --region eu-west-2
+aws --endpoint-url=http://localhost:4566 s3 mb s3://cpg-bucket --region eu-west-2
 
 echo "S3 Configured"
