@@ -31,6 +31,8 @@ whitelist:
   cloudplatform-live1-2: "3.8.51.207/32"
   cloudplatform-live1-3: "35.177.252.54/32"
   cgi-test-env: "51.140.207.121/32"
+  cgi-new-test-env-1: "195.206.176.96/27"
+  cgi-new-test-env-2: "195.206.178.96/27"
   cgi-nle-env: "40.81.152.12/32"
   global-protect: "35.176.93.186/32"
 
