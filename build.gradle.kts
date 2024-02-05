@@ -31,7 +31,6 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion")
     implementation("com.amazonaws:aws-java-sdk-s3:$awsSdkVersion")
     implementation("com.amazonaws:aws-java-sdk-sts:$awsSdkVersion")
-    implementation("com.amazonaws:amazon-sqs-java-extended-client-lib:2.0.3")
 
     implementation("wsdl4j:wsdl4j:1.6.3")
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
@@ -42,8 +41,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.springframework.ws:spring-ws-test:3.1.3")
     testImplementation("org.mockito:mockito-core:5.1.1")
-    testImplementation("org.testcontainers:testcontainers:1.17.6")
-    testImplementation("org.testcontainers:junit-jupiter:1.17.6")
 }
 
 xjc {

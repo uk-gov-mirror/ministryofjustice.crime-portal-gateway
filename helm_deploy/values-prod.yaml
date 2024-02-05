@@ -32,8 +32,6 @@ whitelist:
   cloudplatform-live1-3: "35.177.252.54/32"
   cgi-prod-env: "40.81.159.83/32"
   global-protect: "35.176.93.186/32"
-  cgi-prod-env-az1: "195.206.176.96/27"
-  cgi-prod-env-az2: "195.206.178.96/27"
 
 resources:
   cpu:
