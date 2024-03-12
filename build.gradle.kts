@@ -31,6 +31,7 @@ dependencies {
 
     implementation("com.amazonaws:aws-java-sdk-s3:$awsSdkVersion")
     implementation("com.amazonaws:aws-java-sdk-sns:$awsSdkVersion")
+    implementation("com.amazonaws:aws-java-sdk-sts:$awsSdkVersion")
 
     implementation("wsdl4j:wsdl4j:1.6.3")
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
