@@ -128,9 +128,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         )
 
         val firstCase = CaseDetails(caseNo = 166662981, defendantName = "MR Abraham LINCOLN", pnc = "20030011985X", cro = "CR0006100061")
-        checkMessage(firstCase)
         val secondCase = CaseDetails(caseNo = 1777732980, defendantName = "Mr Theremin MELLOTRON", pnc = "20120052494Q", cro = "CR0006200062")
-        checkMessage(secondCase)
+        checkMessage(listOf(firstCase, secondCase))
+
         checkS3Upload("2020-10-26-B10")
     }
 
@@ -182,6 +182,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         assertThat(numberOfMessagesOnQueue).isEqualTo("$count")
     }
 
+    private fun countMessagesOnQueue() = amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages"))
+        .attributes["ApproximateNumberOfMessages"]?.toInt()!!
+
     private fun checkS3Upload(fileNameStart: String) {
         val items = amazonS3.listObjects(bucketName).objectSummaries
         assertThat(items.size).isEqualTo(1)
@@ -198,11 +201,14 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
     private fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
 
-    private fun checkMessage(expectedCase: CaseDetails) {
-        val message = amazonSQS.receiveMessage(ReceiveMessageRequest(queueUrl)).messages[0]
-        val messageBody = objectMapper.readValue(message.body, SQSMessage::class.java)
-        val actualCase = objectMapper.readValue(messageBody.message, CaseDetails::class.java)
-        assertThat(actualCase).isEqualTo(expectedCase)
+    private fun checkMessage(expectedCases: List<CaseDetails>) {
+        var cases = mutableListOf<CaseDetails>()
+        while (countMessagesOnQueue() > 0) {
+            val message = amazonSQS.receiveMessage(ReceiveMessageRequest(queueUrl)).messages[0]
+            val messageBody = objectMapper.readValue(message.body, SQSMessage::class.java)
+            cases.add(objectMapper.readValue(messageBody.message, CaseDetails::class.java))
+        }
+        assertThat(cases).containsAll(expectedCases)
     }
 
     companion object {
