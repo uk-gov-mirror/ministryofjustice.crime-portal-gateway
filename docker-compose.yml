@@ -25,15 +25,12 @@ services:
       - 9080:9080
     environment:
       - SERVICES=s3,sqs,sns
-      - PORT_WEB_UI=9080
       - DEBUG=${DEBUG- }
-      - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - DEFAULT_REGION=eu-west-2
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - $PWD/src/test/resources/localstack:/docker-entrypoint-initaws.d
+      - "$PWD/src/test/resources/localstack/setup-s3.sh:/etc/localstack/init/ready.d/init-aws.sh"
 
 networks:
   hmpps:

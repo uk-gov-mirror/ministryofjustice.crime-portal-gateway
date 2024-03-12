@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.amazonaws.services.sns.AmazonSNS
 import com.amazonaws.services.sns.util.Topics
 import com.amazonaws.services.sqs.AmazonSQS
+import com.amazonaws.services.sqs.model.PurgeQueueRequest
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -67,6 +68,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         val queue = amazonSQS.createQueue("court-case-events-queue")
         val localstackUrl = localStackContainer?.getEndpointOverride(LocalStackContainer.Service.SNS).toString()
         queueUrl = queue.queueUrl.replace("http://sqs.eu-west-2.localhost:4566", localstackUrl)
+        amazonSQS.purgeQueue(PurgeQueueRequest(queueUrl))
 
         Topics.subscribeQueue(
             amazonSNS,
