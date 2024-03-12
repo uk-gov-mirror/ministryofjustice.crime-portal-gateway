@@ -12,13 +12,13 @@ management.endpoint:
 # Localstack settings
 # Default access key and secret_access_key are for SQS
 aws:
+  localstack-endpoint-url: "http://localhost:4566"
   region-name: eu-west-2
+  sns:
+    court-case-events-topic: "arn:aws:sns:eu-west-2:000000000000:court-case-events-topic"
+    court-case-events-topic-name: "court-case-events-topic"
   endpoint-url: "http://localhost:4566"
-  access_key: foobar
-  secret_access_key: foobar
   s3:
-    access_key: foobar
-    secret_access_key: foobar
     bucket_name: cpg-bucket
 
 soap:

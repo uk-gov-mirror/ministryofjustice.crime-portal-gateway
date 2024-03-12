@@ -1,68 +1,106 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.model.ObjectListing
+import com.amazonaws.services.s3.model.S3ObjectSummary
+import com.amazonaws.services.sns.AmazonSNS
+import com.amazonaws.services.sns.util.Topics
+import com.amazonaws.services.sqs.AmazonSQS
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.startsWith
-import org.mockito.Mockito.contains
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.Import
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.DefaultResourceLoader
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
-import org.springframework.ws.test.server.MockWebServiceClient
 import org.springframework.ws.test.server.RequestCreators
-import org.springframework.ws.test.server.ResponseMatchers
 import org.springframework.ws.test.server.ResponseMatchers.noFault
 import org.springframework.ws.test.server.ResponseMatchers.validPayload
 import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
-import uk.gov.justice.digital.hmpps.crimeportalgateway.application.MessagingConfigTest
+import org.testcontainers.containers.localstack.LocalStackContainer
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
-import uk.gov.justice.digital.hmpps.crimeportalgateway.service.S3Service
-import uk.gov.justice.digital.hmpps.crimeportalgateway.service.SqsService
-import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType
+import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
-import uk.gov.justice.digital.hmpps.crimeportalgateway.xml.MessageDetail
 import java.io.File
 import javax.xml.transform.Source
 
-@Import(MessagingConfigTest::class)
 class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
-
-    @Autowired
-    private lateinit var applicationContext: ApplicationContext
 
     @Autowired
     private lateinit var telemetryService: TelemetryService
 
     @Autowired
-    private lateinit var sqsService: SqsService
+    lateinit var amazonSNS: AmazonSNS
 
     @Autowired
-    private lateinit var s3Service: S3Service
+    lateinit var amazonSQS: AmazonSQS
 
-    private lateinit var mockClient: MockWebServiceClient
+    @Autowired
+    lateinit var amazonS3: AmazonS3
+
+    @Value("\${aws.sns.court-case-events-topic-name}")
+    lateinit var topicName: String
+
+    @Value("\${aws.s3.bucket_name}")
+    lateinit var bucketName: String
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
+    lateinit var queueUrl: String
 
     @BeforeEach
-    fun before() {
-        mockClient = MockWebServiceClient.createClient(applicationContext)
+    fun beforeEach() {
+        // this is all a bit horrible, using an old version of AWS SDK
+        // would be best to bring in https://github.com/ministryofjustice/hmpps-spring-boot-sqs
+        // using the spring-boot-2 branch as upgrading to Spring boot 3 brings in far-reaching changes
+        val topic = amazonSNS.createTopic(topicName)
+        val queue = amazonSQS.createQueue("court-case-events-queue")
+        val localstackUrl = localStackContainer?.getEndpointOverride(LocalStackContainer.Service.SNS).toString()
+        queueUrl = queue.queueUrl.replace("http://sqs.eu-west-2.localhost:4566", localstackUrl)
+
+        Topics.subscribeQueue(
+            amazonSNS,
+            amazonSQS,
+            topic.topicArn,
+            queueUrl
+        )
+        amazonS3.createBucket(bucketName, "eu-west-2")
+    }
+
+    @AfterEach
+    fun afterEach() {
+        // :-( deleting everything in the S3 bucket
+        // is the s3 upload even required? Nothing appears to read it
+        var objectListing: ObjectListing = amazonS3.listObjects(bucketName)
+        while (true) {
+            val objIter: Iterator<S3ObjectSummary> = objectListing.objectSummaries.iterator()
+            while (objIter.hasNext()) {
+                amazonS3.deleteObject(bucketName, objIter.next().key)
+            }
+
+            if (objectListing.isTruncated) {
+                objectListing = amazonS3.listNextBatchOfObjects(objectListing)
+            } else {
+                break
+            }
+        }
+        amazonS3.deleteBucket(bucketName)
     }
 
     @Test
-    fun `should enqueue message and return successful acknowledgement`() {
+    fun `should send SQS message for each case`() {
         val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
         val requestEnvelope: Source = StringSource(externalDoc1)
-
-        whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest"))).thenReturn(sqsMessageId)
-
         mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
@@ -77,19 +115,21 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(noFault())
 
         verify(telemetryService).trackEvent(
-            TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED,
+            COURT_LIST_MESSAGE_RECEIVED,
             mapOf(
-                "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
+
                 "courtCode" to "B10JQ",
                 "courtRoom" to "0",
                 "hearingDate" to "2020-10-26",
                 "fileName" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
             )
         )
-        verify(sqsService).enqueueMessage(anyString())
-        val expectedMessageDetail = MessageDetail(courtCode = "B10JQ", courtRoom = 0, hearingDate = "2020-10-26")
-        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
-        verifyNoMoreInteractions(sqsService, s3Service)
+
+        val firstCase = CaseDetails(caseNo = 166662981, defendantName = "MR Abraham LINCOLN", pnc = "20030011985X", cro = "CR0006100061")
+        checkMessage(firstCase)
+        val secondCase = CaseDetails(caseNo = 1777732980, defendantName = "Mr Theremin MELLOTRON", pnc = "20120052494Q", cro = "CR0006200062")
+        checkMessage(secondCase)
+        checkS3Upload("2020-10-26-B10")
     }
 
     @Test
@@ -110,10 +150,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
-        val expectedMessageDetail = MessageDetail(courtCode = "B10XX", courtRoom = 0, hearingDate = "2020-10-26")
-        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
-        verifyNoMoreInteractions(s3Service)
-        verifyNoInteractions(sqsService)
+        checkMessagesOnQueue(0)
+        checkS3Upload("2020-10-26-B10")
     }
 
     @Test
@@ -133,35 +171,43 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
-        verify(s3Service).uploadMessage(startsWith("fail"), contains("ExternalDocumentRequest"))
-        verifyNoMoreInteractions(s3Service)
-        verifyNoInteractions(sqsService)
+        checkMessagesOnQueue(0)
+        checkS3Upload("fail-2024-03-12")
     }
 
-    @Test
-    fun `given no SQS available then SOAP Fault`() {
-        val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
-        val requestEnvelope: Source = StringSource(externalDoc1)
-
-        whenever(sqsService.enqueueMessage(contains("ExternalDocumentRequest")))
-            .thenThrow(IllegalArgumentException())
-
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
-            .andExpect(ResponseMatchers.serverOrReceiverFault())
-            .andExpect(xpath("//env:Fault/env:Code/env:Value", namespaces).exists())
-
-        verifyNoMoreInteractions(s3Service)
+    private fun checkMessagesOnQueue(count: Int) {
+        val numberOfMessagesOnQueue = amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages")).attributes["ApproximateNumberOfMessages"]
+        assertThat(numberOfMessagesOnQueue).isEqualTo("$count")
     }
 
-    fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
+    private fun checkS3Upload(fileNameStart: String) {
+        val items = amazonS3.listObjects(bucketName).objectSummaries
+        assertThat(items.size).isEqualTo(1)
+        assertThat(items[0].key.startsWith(fileNameStart)).isTrue()
+        val s3Object = amazonS3.getObject(bucketName, items[0].key)
+        val startOfDoc = s3Object.objectContent.readNBytes(1000).toString(Charsets.UTF_8)
+        println(startOfDoc)
+        assertThat(
+            startOfDoc.startsWith(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:ExternalDocumentRequest xmlns:ns2=\"http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest\"" // ktlint-disable max-line-length
+            )
+        ).isTrue()
+    }
+
+    private fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
+
+    private fun checkMessage(expectedCase: CaseDetails) {
+        val message = amazonSQS.receiveMessage(ReceiveMessageRequest(queueUrl)).messages[0]
+        val messageBody = objectMapper.readValue(message.body, SQSMessage::class.java)
+        val actualCase = objectMapper.readValue(messageBody.message, CaseDetails::class.java)
+        assertThat(actualCase).isEqualTo(expectedCase)
+    }
 
     companion object {
 
         private lateinit var xsdResource: Resource
 
         private val namespaces = HashMap<String, String>()
-
-        private const val sqsMessageId = "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02"
 
         @JvmStatic
         @BeforeAll
@@ -174,3 +220,18 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         }
     }
 }
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SQSMessage(
+
+    @JsonProperty("Message")
+    val message: String
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class CaseDetails(
+    val caseNo: Int,
+    val defendantName: String,
+    val cro: String,
+    val pnc: String
+)

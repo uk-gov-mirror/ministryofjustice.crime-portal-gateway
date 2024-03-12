@@ -14,7 +14,9 @@ soap:
 
 # Localstack settings
 aws:
-  sqs-endpoint-url: "http://localhost:4566"
+  localstack-endpoint-url: "http://localhost:4566"
+  sns:
+    court-case-events-topic: "arn:aws:sns:eu-west-2:000000000000:court-case-events-topic"
   region-name: eu-west-2
   access_key: foobar
   secret_access_key: foobar

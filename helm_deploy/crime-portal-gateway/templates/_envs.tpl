@@ -34,6 +34,12 @@ env:
         name: crime-portal-gateway-queue-credentials
         key: sqs_id
 
+  - name: AWS_SNS_COURT_CASE_EVENTS_TOPIC
+    valueFrom:
+      secretKeyRef:
+        name: court-case-events-topic
+        key: topic_arn
+
   - name: AWS_S3_BUCKET_NAME
     valueFrom:
       secretKeyRef:

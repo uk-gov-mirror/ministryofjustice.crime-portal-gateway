@@ -1,33 +1,16 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.health
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.anyBoolean
-import org.mockito.kotlin.whenever
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.actuate.health.Health
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
-import reactor.core.publisher.Mono
-import uk.gov.justice.digital.hmpps.crimeportalgateway.application.MessagingConfigTest
-import uk.gov.justice.digital.hmpps.crimeportalgateway.application.healthchecks.SqsCheck
+import uk.gov.justice.digital.hmpps.crimeportalgateway.application.TestMessagingConfig
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
 
-@MockBean(SqsCheck::class)
-@Import(MessagingConfigTest::class)
+@Import(TestMessagingConfig::class)
 class HealthCheckTest : IntegrationTestBase() {
-
-    @Autowired
-    private lateinit var sqsCheck: SqsCheck
-
-    @BeforeEach
-    fun beforeEach() {
-        whenever(sqsCheck.getHealth(anyBoolean())).thenReturn(Mono.just(Health.Builder().up().build()))
-    }
 
     @Test
     fun `Health page reports ok`() {

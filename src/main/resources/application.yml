@@ -52,6 +52,8 @@ management:
 
 aws:
   region-name: eu-west-2
+  sns:
+    court-case-events-topic: ${AWS_SNS_COURT_CASE_EVENTS_TOPIC}
 
 soap:
   ws-location-uri: /crime-portal-gateway/ws/
