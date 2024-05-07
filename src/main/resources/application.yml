@@ -35,7 +35,7 @@ server:
 management:
   endpoints:
     web:
-      base-path: /
+      base-path: /crime-portal-gateway/ws/
       exposure:
         include: 'info, health'
   endpoint:
