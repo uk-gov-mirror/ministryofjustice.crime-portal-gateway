@@ -133,3 +133,12 @@ workflows:
           executor:
             name: hmpps/java
             tag: "19.0"
+      - hmpps/trivy_latest_scan:
+          slack_channel: probation_in_court_alerts_prod
+          context:
+            - hmpps-common-vars
+      - hmpps/veracode_pipeline_scan:
+          slack_channel: probation_in_court_alerts_prod
+          context:
+            - veracode-credentials
+            - hmpps-common-vars
