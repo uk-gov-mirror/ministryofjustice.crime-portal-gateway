@@ -21,14 +21,14 @@ services:
     container_name: localstack
     ports:
       - "4566-4597:4566-4597"
-      - 8999:8080
-      - 9080:9080
+      - "8999:8080"
+      - "9080:9080"
     environment:
       - SERVICES=s3,sqs,sns
       - DEBUG=${DEBUG- }
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "$PWD/src/test/resources/localstack/setup-s3.sh:/etc/localstack/init/ready.d/init-aws.sh"
 
