@@ -32,6 +32,8 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTe
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.xml.transform.Source
 
 class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
@@ -174,7 +176,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(noFault())
 
         checkMessagesOnQueue(0)
-        checkS3Upload("fail-2024-03-12")
+        val date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+        checkS3Upload("fail-$date")
     }
 
     private fun checkMessagesOnQueue(count: Int) {
