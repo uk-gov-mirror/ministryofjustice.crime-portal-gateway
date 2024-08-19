@@ -1,18 +1,9 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
+
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.9.0"
-    kotlin("plugin.spring") version "1.9.0"
+    kotlin("plugin.spring") version "1.8.0"
     id("org.unbroken-dome.xjc") version "2.0.0"
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
-}
-
-kotlin {
-    jvmToolchain(21)
-}
-
-tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-    }
 }
 
 dependencyCheck {
@@ -20,7 +11,7 @@ dependencyCheck {
 }
 
 val junitJupiterVersion by extra { "5.9.0" }
-var awsSdkVersion = "1.12.747"
+var awsSdkVersion = "1.12.543"
 
 dependencies {
 
@@ -55,7 +46,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.ws:spring-ws-test:3.1.3")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("org.mockito:mockito-core:5.1.1")
     testImplementation("com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion")
 }
 
@@ -72,8 +63,7 @@ tasks {
     register<Copy>("copyAgentConfig") {
         description = "Copy applicationinsights.json to build.lib so App Insights config is applied correctly"
         from("applicationinsights.json")
-        val output: Provider<Directory> = layout.buildDirectory.dir("libs")
-        into(output)
+        into("$buildDir/libs")
     }
 }
 

@@ -10,7 +10,7 @@ jobs:
   validate:
     executor:
       name: hmpps/localstack
-      jdk_tag: "21.0"
+      jdk_tag: "19.0"
       localstack_tag: "3"
       services: "sqs,sns,s3"
     steps:
@@ -127,12 +127,3 @@ workflows:
           executor:
             name: hmpps/java
             tag: "19.0"
-      - hmpps/trivy_latest_scan:
-          slack_channel: probation_in_court_alerts_prod
-          context:
-            - hmpps-common-vars
-      - hmpps/veracode_pipeline_scan:
-          slack_channel: probation_in_court_alerts_prod
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
