@@ -1,3 +1,9 @@
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+    }
+}
+
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.9.0"
     kotlin("plugin.spring") version "2.0.20"
