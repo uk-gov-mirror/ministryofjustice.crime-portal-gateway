@@ -1,12 +1,8 @@
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.9.0"
-    kotlin("plugin.spring") version "1.9.0"
+    kotlin("plugin.spring") version "2.0.20"
     id("org.unbroken-dome.xjc") version "2.0.0"
     id("org.jetbrains.kotlin.jvm") version "1.9.23"
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 tasks {
@@ -21,7 +17,6 @@ dependencyCheck {
 
 val junitJupiterVersion by extra { "5.9.0" }
 var awsSdkVersion = "1.12.747"
-val springBootVersion = "3.0.2"
 
 dependencies {
 
