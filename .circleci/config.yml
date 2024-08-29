@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   owasp: entur/owasp@0.0.10
-  hmpps: ministryofjustice/hmpps@7.1.0
+  hmpps: ministryofjustice/hmpps@8
   slack: circleci/slack@4.1.1
   jira: circleci/jira@1.2.2
 
@@ -75,7 +75,6 @@ workflows:
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - hmpps-common-vars
-            - court-probation-live-dev
           filters:
             branches:
               only:
