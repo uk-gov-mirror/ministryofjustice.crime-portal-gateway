@@ -7,13 +7,17 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.model.externaldocumentreq
 import uk.gov.justice.digital.hmpps.crimeportalgateway.model.externaldocumentrequest.Info
 
 @Component
-class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) {
-
+class TelemetryService(
+    @Autowired private val telemetryClient: TelemetryClient,
+) {
     fun trackEvent(eventType: TelemetryEventType) {
         telemetryClient.trackEvent(eventType.eventName)
     }
 
-    fun trackEvent(eventType: TelemetryEventType, customDimensions: Map<String, String?>) {
+    fun trackEvent(
+        eventType: TelemetryEventType,
+        customDimensions: Map<String, String?>,
+    ) {
         telemetryClient.trackEvent(eventType.eventName, customDimensions, null)
     }
 
@@ -23,15 +27,19 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
         telemetryClient.trackEvent(TelemetryEventType.COURT_LIST_RECEIVED.eventName, properties, emptyMap())
     }
 
-    fun trackCourtCaseSplitEvent(case: Case, messageId: String) {
+    fun trackCourtCaseSplitEvent(
+        case: Case,
+        messageId: String,
+    ) {
         val session = case.block.session
-        val properties = mapOf(
-            COURT_CODE_KEY to session.courtCode,
-            COURT_ROOM_KEY to session.courtRoom,
-            HEARING_DATE_KEY to session.dateOfHearing.toString(),
-            CASE_NO_KEY to case.caseNo,
-            SQS_MESSAGE_ID_KEY to messageId
-        )
+        val properties =
+            mapOf(
+                COURT_CODE_KEY to session.courtCode,
+                COURT_ROOM_KEY to session.courtRoom,
+                HEARING_DATE_KEY to session.dateOfHearing.toString(),
+                CASE_NO_KEY to case.caseNo,
+                SQS_MESSAGE_ID_KEY to messageId,
+            )
 
         telemetryClient.trackEvent(TelemetryEventType.COURT_CASE_SPLIT.eventName, properties, emptyMap())
     }

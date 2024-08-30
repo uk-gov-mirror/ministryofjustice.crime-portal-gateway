@@ -20,63 +20,46 @@ import javax.validation.constraints.NotNull
 data class Case(
     @JacksonXmlProperty(localName = "c_id")
     val caseId: Long? = null,
-
     @field:NotBlank
     @JacksonXmlProperty(localName = "caseno")
     val caseNo: String?,
-
     @JacksonXmlProperty(localName = "cseq")
     @JsonIgnore
     val seq: Int? = null,
-
     @JacksonXmlProperty(localName = "def_name_elements")
     val name: Name? = null,
-
     @JacksonXmlProperty(localName = "def_name")
     val defendantName: String? = null,
-
     @JacksonXmlProperty(localName = "def_type")
     val defendantType: String? = null,
-
     @JacksonXmlProperty(localName = "def_sex")
     val defendantSex: String? = null,
-
     @JacksonXmlProperty(localName = "def_dob")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", lenient = OptBoolean.TRUE)
     @JsonDeserialize(using = LocalDateDeserializer::class)
     val defendantDob: LocalDate? = null,
-
     @JacksonXmlProperty(localName = "def_addr")
     val defendantAddress: Address? = null,
-
     @JacksonXmlProperty(localName = "def_age")
     @JsonIgnore
     val defendantAge: Int? = null,
-
     @JacksonXmlProperty(localName = "cro_number")
     val cro: String? = null,
-
     @JacksonXmlProperty(localName = "pnc_id")
     val pnc: String? = null,
-
     @JacksonXmlProperty(localName = "listno")
     val listNo: String? = null,
-
     @JacksonXmlProperty(localName = "urn")
     val urn: String? = null,
-
     @JacksonXmlProperty(localName = "nationality_1")
     val nationality1: String? = null,
-
     @JacksonXmlProperty(localName = "nationality_2")
     val nationality2: String? = null,
-
     @field:NotNull
     @field:Valid
     @JacksonXmlProperty(localName = "offences")
     @JacksonXmlElementWrapper
-    val offences: List<Offence> = ArrayList()
-
+    val offences: List<Offence> = ArrayList(),
 ) {
     @field:Valid
     @field:NotNull

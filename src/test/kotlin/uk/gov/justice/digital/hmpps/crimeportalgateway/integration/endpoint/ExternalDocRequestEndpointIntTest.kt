@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
 import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.model.CreateBucketRequest
 import com.amazonaws.services.s3.model.ObjectListing
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.amazonaws.services.sns.AmazonSNS
@@ -37,7 +38,6 @@ import java.time.format.DateTimeFormatter
 import javax.xml.transform.Source
 
 class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
-
     @Autowired
     private lateinit var telemetryService: TelemetryService
 
@@ -76,9 +76,10 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             amazonSNS,
             amazonSQS,
             topic.topicArn,
-            queueUrl
+            queueUrl,
         )
-        amazonS3.createBucket(bucketName, "eu-west-2")
+        val createBucketRequest = CreateBucketRequest(bucketName, "eu-west-2")
+        amazonS3.createBucket(createBucketRequest)
     }
 
     @AfterEach
@@ -109,11 +110,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
-                    .evaluatesTo("MessageComment")
+                    .evaluatesTo("MessageComment"),
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
-                    .evaluatesTo("Success")
+                    .evaluatesTo("Success"),
             )
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
@@ -121,12 +122,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         verify(telemetryService).trackEvent(
             COURT_LIST_MESSAGE_RECEIVED,
             mapOf(
-
                 "courtCode" to "B10JQ",
                 "courtRoom" to "0",
                 "hearingDate" to "2020-10-26",
-                "fileName" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY"
-            )
+                "fileName" to "5_26102020_2992_B10JQ00_ADULT_COURT_LIST_DAILY",
+            ),
         )
 
         val firstCase = CaseDetails(caseNo = 166662981, defendantName = "MR Abraham LINCOLN", pnc = "20030011985X", cro = "CR0006100061")
@@ -145,11 +145,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
-                    .evaluatesTo("MessageComment")
+                    .evaluatesTo("MessageComment"),
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
-                    .evaluatesTo("Success")
+                    .evaluatesTo("Success"),
             )
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
@@ -166,11 +166,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
-                    .evaluatesTo("MessageComment")
+                    .evaluatesTo("MessageComment"),
             )
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
-                    .evaluatesTo("Success")
+                    .evaluatesTo("Success"),
             )
             .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
@@ -186,8 +186,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         assertThat(numberOfMessagesOnQueue).isEqualTo("$count")
     }
 
-    private fun countMessagesOnQueue() = amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages"))
-        .attributes["ApproximateNumberOfMessages"]?.toInt()!!
+    private fun countMessagesOnQueue() =
+        amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages"))
+            .attributes["ApproximateNumberOfMessages"]?.toInt()!!
 
     private fun checkS3Upload(fileNameStart: String) {
         val items = amazonS3.listObjects(bucketName).objectSummaries
@@ -197,9 +198,10 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         val startOfDoc = s3Object.objectContent.readNBytes(1000).toString(Charsets.UTF_8)
         println(startOfDoc)
         assertThat(
+            @Suppress("ktlint:standard:max-line-length")
             startOfDoc.startsWith(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:ExternalDocumentRequest xmlns:ns2=\"http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest\"" // ktlint-disable max-line-length
-            )
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:ExternalDocumentRequest xmlns:ns2=\"http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest\"",
+            ),
         ).isTrue()
     }
 
@@ -216,7 +218,6 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     }
 
     companion object {
-
         private lateinit var xsdResource: Resource
 
         private val namespaces = HashMap<String, String>()
@@ -235,9 +236,8 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class SQSMessage(
-
     @JsonProperty("Message")
-    val message: String
+    val message: String,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -245,5 +245,5 @@ data class CaseDetails(
     val caseNo: Int,
     val defendantName: String,
     val cro: String,
-    val pnc: String
+    val pnc: String,
 )

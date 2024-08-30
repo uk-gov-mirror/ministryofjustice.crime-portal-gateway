@@ -14,7 +14,6 @@ import java.util.Optional
 @Profile(value = ["dev", "preprod", "prod"])
 @Configuration
 class TelemetryConfig : BaseTelemetryConfig() {
-
     @Bean
     @Conditional(AppInsightKeyAbsentCondition::class)
     fun getTelemetryClient(): TelemetryClient {

@@ -15,7 +15,6 @@ import javax.validation.Validation
 
 @Configuration
 class MessagingConfig {
-
     @Bean
     @Primary
     fun objectMapper(): ObjectMapper {

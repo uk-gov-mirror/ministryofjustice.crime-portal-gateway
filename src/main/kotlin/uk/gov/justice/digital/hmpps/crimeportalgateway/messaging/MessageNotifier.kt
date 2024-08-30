@@ -22,18 +22,20 @@ class MessageNotifier(
     @Autowired
     private val amazonSNSClient: AmazonSNS,
     @Value("\${aws.sns.court-case-events-topic}")
-    private val topicArn: String
+    private val topicArn: String,
 ) {
     fun send(case: Case) {
         val message = objectMapper.writeValueAsString(case)
         val subject = "Details for case " + case.caseNo + " in court " + case.courtCode + " published"
 
-        val messageValue = MessageAttributeValue()
-            .withDataType("String")
-            .withStringValue(MESSAGE_TYPE)
+        val messageValue =
+            MessageAttributeValue()
+                .withDataType("String")
+                .withStringValue(MESSAGE_TYPE)
 
-        val publishRequest = PublishRequest(topicArn, message)
-            .withMessageAttributes(mapOf("messageType" to messageValue))
+        val publishRequest =
+            PublishRequest(topicArn, message)
+                .withMessageAttributes(mapOf("messageType" to messageValue))
 
         val publishResult = amazonSNSClient.publish(publishRequest)
         log.info("Published message with subject {} with message Id {}", subject, publishResult.messageId)

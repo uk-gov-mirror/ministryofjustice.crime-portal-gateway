@@ -10,5 +10,5 @@ data class GatewayOperationType(
     @field:Valid
     @field:NotNull
     @JacksonXmlProperty(namespace = EXT_DOC_NS, localName = "ExternalDocumentRequest")
-    val externalDocumentRequest: ExternalDocumentRequest
+    val externalDocumentRequest: ExternalDocumentRequest,
 )

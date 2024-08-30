@@ -13,7 +13,10 @@ object LocalStackHelper {
     private val log = LoggerFactory.getLogger(this::class.java)
     val instance by lazy { startLocalstackIfNotRunning() }
 
-    fun setLocalStackProperties(localStackContainer: LocalStackContainer, registry: DynamicPropertyRegistry) {
+    fun setLocalStackProperties(
+        localStackContainer: LocalStackContainer,
+        registry: DynamicPropertyRegistry,
+    ) {
         registry.add("aws.localstack-endpoint-url") { localStackContainer.getEndpointOverride(LocalStackContainer.Service.SNS) }
         registry.add("aws.region-name") { localStackContainer.region }
     }
@@ -27,13 +30,13 @@ object LocalStackHelper {
         }
         val logConsumer = Slf4jLogConsumer(log).withPrefix("localstack")
         return LocalStackContainer(
-            DockerImageName.parse("localstack/localstack").withTag("3.0")
+            DockerImageName.parse("localstack/localstack").withTag("3.0"),
         ).apply {
             withServices(LocalStackContainer.Service.SNS, LocalStackContainer.Service.SQS, LocalStackContainer.Service.S3)
             withEnv("HOSTNAME_EXTERNAL", "localhost")
             withEnv("DEFAULT_REGION", "eu-west-2")
             waitingFor(
-                Wait.forLogMessage(".*Ready.*", 1)
+                Wait.forLogMessage(".*Ready.*", 1),
             )
             start()
             followOutput(logConsumer)

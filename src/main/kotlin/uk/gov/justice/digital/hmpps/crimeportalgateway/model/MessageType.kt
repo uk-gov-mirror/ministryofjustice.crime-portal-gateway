@@ -10,17 +10,14 @@ import javax.validation.constraints.NotNull
 
 @JacksonXmlRootElement(localName = "CSCI_Message_Type")
 data class MessageType(
-
     @field:NotNull
     @field:Valid
     @JacksonXmlProperty(namespace = CSCI_HDR_NS, localName = "MessageHeader")
     val messageHeader: MessageHeader?,
-
     @field:Valid
     @field:NotNull
     @JacksonXmlProperty(namespace = CSCI_BODY_NS, localName = "MessageBody")
     val messageBody: MessageBodyType?,
-
     @JacksonXmlProperty(namespace = CSC_STATUS_NS, localName = "MessageStatus")
-    val messageStatus: MessageStatus?
+    val messageStatus: MessageStatus?,
 )

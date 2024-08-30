@@ -18,9 +18,8 @@ import org.springframework.context.annotation.Profile
 @Configuration
 class LocalAwsConfig(
     @Value("\${aws.region-name}")
-    var regionName: String
+    var regionName: String,
 ) {
-
     @Value("\${aws.localstack-endpoint-url}")
     lateinit var endpointUrl: String
 

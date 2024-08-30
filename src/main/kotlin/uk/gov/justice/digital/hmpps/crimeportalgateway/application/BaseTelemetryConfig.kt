@@ -7,9 +7,11 @@ import org.springframework.core.type.AnnotatedTypeMetadata
 import org.springframework.lang.NonNull
 
 open class BaseTelemetryConfig {
-
     class AppInsightKeyAbsentCondition : Condition {
-        override fun matches(@NonNull context: ConditionContext, @NonNull metadata: AnnotatedTypeMetadata): Boolean {
+        override fun matches(
+            @NonNull context: ConditionContext,
+            @NonNull metadata: AnnotatedTypeMetadata,
+        ): Boolean {
             return StringUtils.isEmpty(context.environment.getProperty("application.insights.ikey"))
         }
     }

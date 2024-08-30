@@ -6,7 +6,7 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 data class DataJob(
-    var name: String? = null
+    var name: String? = null,
 ) {
     @field:Valid
     @field:NotNull

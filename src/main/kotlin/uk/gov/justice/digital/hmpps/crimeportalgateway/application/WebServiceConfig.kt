@@ -32,9 +32,8 @@ import javax.xml.validation.SchemaFactory
 class WebServiceConfig(
     @Value("\${soap.ws-location-uri}") private val wsLocationUri: String,
     @Value("\${soap.target-namespace}") private val targetNamespace: String,
-    @Value("\${soap.xsd-file-path}") private val xsdFilePath: String
+    @Value("\${soap.xsd-file-path}") private val xsdFilePath: String,
 ) {
-
     @Bean
     fun externalDocumentXsdResource(): Resource {
         return FileSystemResource(xsdFilePath)
@@ -52,7 +51,7 @@ class WebServiceConfig(
                 setApplicationContext(applicationContext)
                 isTransformWsdlLocations = true
             },
-            "$wsLocationUri*"
+            "$wsLocationUri*",
         )
     }
 
@@ -75,10 +74,11 @@ class WebServiceConfig(
 
     @Bean
     fun xsds(): XsdSchemaCollection {
-        val xsds = CommonsXsdSchemaCollection(
-            ClassPathResource("xsd/cp/external/ExternalDocumentRequest.xsd"),
-            ClassPathResource("xsd/generic/Acknowledgement/Acknowledgement.xsd")
-        )
+        val xsds =
+            CommonsXsdSchemaCollection(
+                ClassPathResource("xsd/cp/external/ExternalDocumentRequest.xsd"),
+                ClassPathResource("xsd/generic/Acknowledgement/Acknowledgement.xsd"),
+            )
         xsds.setInline(true)
         return xsds
     }

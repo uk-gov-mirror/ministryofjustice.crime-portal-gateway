@@ -7,7 +7,7 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 data class Job(
-    var name: String? = null
+    var name: String? = null,
 ) {
     constructor() : this ("")
 

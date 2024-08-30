@@ -10,11 +10,13 @@ import javax.validation.Validator
 
 class MessageParser<T>(
     @Qualifier("messageXmlMapper") private val xmlMapper: XmlMapper,
-    @Autowired private val validator: Validator
+    @Autowired private val validator: Validator,
 ) {
-
     @Throws(JsonProcessingException::class)
-    fun parseMessage(xml: String?, type: Class<T>): T {
+    fun parseMessage(
+        xml: String?,
+        type: Class<T>,
+    ): T {
         val javaType: JavaType = xmlMapper.typeFactory.constructType(type)
         val message: T = xmlMapper.readValue(xml, javaType)
         validate(message)

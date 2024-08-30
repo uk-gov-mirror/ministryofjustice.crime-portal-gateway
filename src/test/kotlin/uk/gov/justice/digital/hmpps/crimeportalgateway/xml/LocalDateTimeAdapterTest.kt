@@ -6,7 +6,6 @@ import java.time.LocalDateTime
 import java.time.Month
 
 internal class LocalDateTimeAdapterTest {
-
     private val adapter = LocalDateTimeAdapter()
 
     @Test

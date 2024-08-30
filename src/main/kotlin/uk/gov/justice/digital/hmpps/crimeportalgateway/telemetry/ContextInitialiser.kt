@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class ContextInitialiser(
-    buildProperties: BuildProperties
+    buildProperties: BuildProperties,
 ) {
     val version: String = buildProperties.version
 

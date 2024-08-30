@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.service.S3Service
 
 @TestConfiguration
 class TestMessagingConfig {
-
     @MockBean
     private lateinit var amazonSNS: AmazonSNS
 

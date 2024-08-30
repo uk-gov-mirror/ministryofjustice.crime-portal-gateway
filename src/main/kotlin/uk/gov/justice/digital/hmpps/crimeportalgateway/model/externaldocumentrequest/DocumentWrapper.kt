@@ -5,9 +5,8 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 data class DocumentWrapper(
-
     @field:Valid
     @field:NotNull
     @JacksonXmlProperty(localName = "document")
-    val document: MutableList<Document> = ArrayList()
+    val document: MutableList<Document> = ArrayList(),
 )

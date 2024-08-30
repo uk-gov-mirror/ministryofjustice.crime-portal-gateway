@@ -18,12 +18,14 @@ import java.util.Locale
 
 @Component
 class DocumentInfoDeserializer<T>(clazz: Class<Info>) : StdDeserializer<Info>(clazz) {
-
     @JsonCreator
     constructor() : this(Info::class.java)
 
     @Throws(IOException::class)
-    override fun deserialize(jp: JsonParser, context: DeserializationContext): Info {
+    override fun deserialize(
+        jp: JsonParser,
+        context: DeserializationContext,
+    ): Info {
         val jsonNode: JsonNode = jp.codec.readTree<TreeNode>(jp).get(Info.SOURCE_FILE_NAME_ELEMENT) as JsonNode
         val sourceFileName: String = jsonNode.asText("")
 
@@ -35,13 +37,14 @@ class DocumentInfoDeserializer<T>(clazz: Class<Info>) : StdDeserializer<Info>(cl
         }
         val seq = fileNameParts[0].toLong()
         val courtCode = fileNameParts[3].uppercase(Locale.getDefault())
-        val ouCode = courtCode.let { code ->
-            if (code.length >= OU_CODE_LENGTH) {
-                code.substring(0, OU_CODE_LENGTH)
-            } else {
-                courtCode
+        val ouCode =
+            courtCode.let { code ->
+                if (code.length >= OU_CODE_LENGTH) {
+                    code.substring(0, OU_CODE_LENGTH)
+                } else {
+                    courtCode
+                }
             }
-        }
 
         return try {
             Info(seq, ouCode, LocalDate.parse(fileNameParts[1], formatter))

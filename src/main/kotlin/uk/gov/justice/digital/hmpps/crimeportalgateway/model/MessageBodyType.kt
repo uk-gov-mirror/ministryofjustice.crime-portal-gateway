@@ -6,9 +6,8 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 data class MessageBodyType(
-
     @field:Valid
     @field:NotNull
     @JacksonXmlProperty(namespace = GW_MSG_SCHEMA, localName = "GatewayOperationType")
-    val gatewayOperationType: GatewayOperationType
+    val gatewayOperationType: GatewayOperationType,
 )

@@ -11,11 +11,13 @@ import java.io.IOException
 
 @Component
 class OuCodeDeserializer<T>(clazz: Class<String>) : StdDeserializer<String>(clazz) {
-
     constructor() : this(String::class.java)
 
     @Throws(IOException::class)
-    override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): String {
+    override fun deserialize(
+        jp: JsonParser,
+        ctxt: DeserializationContext,
+    ): String {
         val jsonNode = jp.codec.readTree<TreeNode>(jp) as JsonNode
         val ouCodeWithRoom: String = jsonNode.asText("")
         if (ouCodeWithRoom.length <= OU_CODE_LENGTH) {

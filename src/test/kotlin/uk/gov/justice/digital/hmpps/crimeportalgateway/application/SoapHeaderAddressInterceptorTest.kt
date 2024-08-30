@@ -23,7 +23,6 @@ import javax.xml.soap.SOAPPart
 
 @ExtendWith(MockitoExtension::class)
 class SoapHeaderAddressInterceptorTest {
-
     @Mock
     private lateinit var telemetryService: TelemetryService
 
@@ -77,7 +76,10 @@ class SoapHeaderAddressInterceptorTest {
         verify(telemetryService).trackEvent(TelemetryEventType.COURT_LIST_MESSAGE_ERROR)
     }
 
-    private fun mockForHeader(messageContext: MessageContext, response: Boolean): Any {
+    private fun mockForHeader(
+        messageContext: MessageContext,
+        response: Boolean,
+    ): Any {
         val saajSoapMessage = mock(SaajSoapMessage::class.java)
         val header: SOAPHeader = mock(SOAPHeader::class.java)
         if (response) {
@@ -90,21 +92,30 @@ class SoapHeaderAddressInterceptorTest {
         return header
     }
 
-    private fun mockHeaderChild(responseHeader: SOAPHeader, elementName: String): SOAPElement {
+    private fun mockHeaderChild(
+        responseHeader: SOAPHeader,
+        elementName: String,
+    ): SOAPElement {
         val childElement: SOAPElement = mock(SOAPElement::class.java)
         `when`(responseHeader.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
             .thenReturn(childElement)
         return childElement
     }
 
-    private fun mockElementChild(soapElement: SOAPElement, elementName: String): SOAPElement {
+    private fun mockElementChild(
+        soapElement: SOAPElement,
+        elementName: String,
+    ): SOAPElement {
         val childElement: SOAPElement = mock(SOAPElement::class.java)
         `when`(soapElement.addChildElement(elementName, "", SoapHeaderAddressInterceptor.SOAP_ENV_ADDRESS_NS))
             .thenReturn(childElement)
         return childElement
     }
 
-    private fun mockMessageContext(saajSoapMessage: SaajSoapMessage, soapHeader: SOAPHeader) {
+    private fun mockMessageContext(
+        saajSoapMessage: SaajSoapMessage,
+        soapHeader: SOAPHeader,
+    ) {
         val soapMessage = mock(SOAPMessage::class.java)
         val soapPart = mock(SOAPPart::class.java)
         val soapEnv = mock(SOAPEnvelope::class.java)

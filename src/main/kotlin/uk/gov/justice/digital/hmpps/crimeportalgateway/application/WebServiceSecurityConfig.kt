@@ -21,9 +21,8 @@ class WebServiceSecurityConfig(
     @Value("\${trusted_cert_alias_name}") private val trustedCertAliasName: String,
     @Value("\${private_key_alias_name}") private val privateKeyAliasName: String,
     @Value("\${ws-sec.keystore-file-path}") private val keystoreFilePath: String,
-    @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionAlgorithm: String
+    @Value("\${ws-sec.encryption-sym-algorithm}") private val encryptionAlgorithm: String,
 ) {
-
     @Bean
     @Throws(Exception::class)
     fun keyStoreCallbackHandler(): KeyStoreCallbackHandler {

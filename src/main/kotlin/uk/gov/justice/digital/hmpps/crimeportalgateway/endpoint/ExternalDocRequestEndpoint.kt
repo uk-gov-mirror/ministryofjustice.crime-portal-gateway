@@ -41,12 +41,13 @@ class ExternalDocRequestEndpoint(
     @Autowired private val s3Service: S3Service,
     @Autowired private val jaxbContext: JAXBContext,
     @Autowired private val validationSchema: Schema?,
-    @Autowired private val messageProcessor: MessageProcessor
+    @Autowired private val messageProcessor: MessageProcessor,
 ) {
-
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = REQUEST_LOCAL_NAME)
     @ResponsePayload
-    fun processPayloadRootRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+    fun processPayloadRootRequest(
+        @RequestPayload request: ExternalDocumentRequest,
+    ): Acknowledgement {
         log.debug("Request payload received to PayloadRoot mapped. {}", request.documents?.toString())
 
         return process(request)
@@ -54,7 +55,9 @@ class ExternalDocRequestEndpoint(
 
     @SoapAction("externalDocument")
     @ResponsePayload
-    fun processRequestExternalDocument(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+    fun processRequestExternalDocument(
+        @RequestPayload request: ExternalDocumentRequest,
+    ): Acknowledgement {
         log.debug("Request payload received to externalDocument SoapAction. {}", request.documents?.toString())
 
         return process(request)
@@ -62,7 +65,9 @@ class ExternalDocRequestEndpoint(
 
     @SoapAction("")
     @ResponsePayload
-    fun processRequest(@RequestPayload request: ExternalDocumentRequest): Acknowledgement {
+    fun processRequest(
+        @RequestPayload request: ExternalDocumentRequest,
+    ): Acknowledgement {
         log.debug("Request payload received to ExternalDocument SoapAction. {}", request.documents?.toString())
 
         return process(request)
@@ -83,30 +88,32 @@ class ExternalDocRequestEndpoint(
         }
 
         return Acknowledgement().apply {
-            ack = AckType().apply {
-                messageComment = "MessageComment"
-                messageStatus = SUCCESS_MESSAGE_STATUS
-                timeStamp = LocalDateTime.now()
-            }
+            ack =
+                AckType().apply {
+                    messageComment = "MessageComment"
+                    messageStatus = SUCCESS_MESSAGE_STATUS
+                    timeStamp = LocalDateTime.now()
+                }
         }
     }
 
     fun enqueueMessage(request: ExternalDocumentRequest) {
         val fileName = request.documents?.any?.let { DocumentUtils.getFileName(it) }
 
-        val messageDetail = request.documents?.any?.let { DocumentUtils.getMessageDetail(it, xPathForCourtCode) }
-            ?: kotlin.run {
-                log.info(IGNORED_MESSAGE_NO_COURT)
-                telemetryService.trackEvent(
-                    TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
-                    mapOf(
-                        FILENAME_LABEL to fileName
+        val messageDetail =
+            request.documents?.any?.let { DocumentUtils.getMessageDetail(it, xPathForCourtCode) }
+                ?: kotlin.run {
+                    log.info(IGNORED_MESSAGE_NO_COURT)
+                    telemetryService.trackEvent(
+                        TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
+                        mapOf(
+                            FILENAME_LABEL to fileName,
+                        ),
                     )
-                )
-                val failedFileName = fileName ?: "fail-" + DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())
-                s3Service.uploadMessage("$failedFileName.xml", marshal(request, validate = false))
-                return
-            }
+                    val failedFileName = fileName ?: "fail-" + DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())
+                    s3Service.uploadMessage("$failedFileName.xml", marshal(request, validate = false))
+                    return
+                }
 
         val messageContent = marshal(request)
         s3Service.uploadMessage(messageDetail, messageContent)
@@ -120,8 +127,8 @@ class ExternalDocRequestEndpoint(
                         COURT_CODE_LABEL to messageDetail.courtCode,
                         COURT_ROOM_LABEL to messageDetail.courtRoom.toString(),
                         HEARING_DATE_LABEL to messageDetail.hearingDate,
-                        FILENAME_LABEL to fileName
-                    )
+                        FILENAME_LABEL to fileName,
+                    ),
                 )
                 log.info(String.format(SUCCESS_MESSAGE_COMMENT, messageDetail.courtCode, messageDetail.courtRoom))
             }
@@ -132,14 +139,17 @@ class ExternalDocRequestEndpoint(
                     mapOf(
                         COURT_CODE_LABEL to messageDetail.courtCode,
                         COURT_ROOM_LABEL to messageDetail.courtRoom.toString(),
-                        FILENAME_LABEL to fileName
-                    )
+                        FILENAME_LABEL to fileName,
+                    ),
                 )
             }
         }
     }
 
-    private fun marshal(request: ExternalDocumentRequest, validate: Boolean = true): String {
+    private fun marshal(
+        request: ExternalDocumentRequest,
+        validate: Boolean = true,
+    ): String {
         val marshaller: Marshaller = jaxbContext.createMarshaller()
         if (validate) {
             validationSchema?.let { marshaller.schema = it }

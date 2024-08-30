@@ -10,23 +10,19 @@ import javax.validation.constraints.Positive
 import javax.validation.constraints.Size
 
 data class Info(
-
     @Valid
     @Positive
     @JsonIgnore
     @NotNull
     val sequence: Long,
-
     @field:NotBlank
     @field:Size(min = 5, message = "Invalid ou code")
     @JsonIgnore
     val ouCode: String,
-
     @field:NotNull
     @JsonIgnore
-    val dateOfHearing: LocalDate
+    val dateOfHearing: LocalDate,
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

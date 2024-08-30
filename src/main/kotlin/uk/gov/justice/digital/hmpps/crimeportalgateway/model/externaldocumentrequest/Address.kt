@@ -9,5 +9,5 @@ data class Address(
     val line3: String? = null,
     val line4: String? = null,
     val line5: String? = null,
-    val pcode: String? = null
+    val pcode: String? = null,
 )

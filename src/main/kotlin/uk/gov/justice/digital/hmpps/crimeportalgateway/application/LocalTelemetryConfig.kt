@@ -10,7 +10,6 @@ import java.util.UUID
 @Profile(value = ["local", "test"])
 @Configuration
 class LocalTelemetryConfig : BaseTelemetryConfig() {
-
     @Bean
     @Conditional(AppInsightKeyAbsentCondition::class)
     fun getTelemetryClient(): TelemetryClient {

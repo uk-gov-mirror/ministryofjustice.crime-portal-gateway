@@ -6,9 +6,8 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 data class ExternalDocumentRequest(
-
     @field:NotNull
     @field:Valid
     @JacksonXmlProperty(namespace = EXT_DOC_NS, localName = "documents")
-    val documentWrapper: DocumentWrapper
+    val documentWrapper: DocumentWrapper,
 )

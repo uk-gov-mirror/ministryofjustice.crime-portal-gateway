@@ -19,32 +19,25 @@ import javax.validation.constraints.NotNull
 data class Session(
     @JacksonXmlProperty(localName = "s_id")
     val id: Long?,
-
     @field:NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", lenient = OptBoolean.TRUE)
     @JsonDeserialize(using = LocalDateDeserializer::class)
     @JacksonXmlProperty(localName = "doh")
     val dateOfHearing: LocalDate?,
-
     @JacksonXmlProperty(localName = "court")
     val courtName: String?,
-
     @JacksonXmlProperty(localName = "room")
     val courtRoom: String?,
-
     @field:NotNull
     @JsonDeserialize(using = LocalTimeDeserializer::class)
     @JacksonXmlProperty(localName = "sstart")
     val start: LocalTime?,
-
     @JsonDeserialize(using = LocalTimeDeserializer::class)
     @JacksonXmlProperty(localName = "send")
     val end: LocalTime?,
-
     @JsonDeserialize(using = OuCodeDeserializer::class)
     @JacksonXmlProperty(localName = "ou_code")
-    val ouCode: String?
-
+    val ouCode: String?,
 ) {
     constructor(dateOfHearing: LocalDate, start: LocalTime) : this(null, dateOfHearing, null, null, start, null, null)
     constructor(ouCode: String) : this(null, null, null, null, null, null, ouCode)

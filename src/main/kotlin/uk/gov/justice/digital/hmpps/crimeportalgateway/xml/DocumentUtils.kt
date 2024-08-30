@@ -10,7 +10,6 @@ import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
 object DocumentUtils {
-
     // Source filename has the following format 146_27072020_2578_B01OB00_ADULT_COURT_LIST_DAILY
     // These constants relate to that string
     private const val OU_CODE_LENGTH = 5
@@ -23,7 +22,10 @@ object DocumentUtils {
 
     private val HEARING_DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy")
 
-    fun getMessageDetail(documents: Element, useXPath: Boolean): MessageDetail? {
+    fun getMessageDetail(
+        documents: Element,
+        useXPath: Boolean,
+    ): MessageDetail? {
         return if (useXPath) getMessageDetailByXPath(documents) else getMessageDetail(documents)
     }
 
