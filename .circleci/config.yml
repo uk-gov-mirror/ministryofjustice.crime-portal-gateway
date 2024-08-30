@@ -2,9 +2,8 @@ version: 2.1
 
 orbs:
   owasp: entur/owasp@0.0.10
-  hmpps: ministryofjustice/hmpps@8
+  hmpps: ministryofjustice/hmpps@10
   slack: circleci/slack@4.1.1
-  jira: circleci/jira@1.2.2
 
 jobs:
   validate:
@@ -53,25 +52,21 @@ workflows:
           filters:
             tags:
               ignore: /.*/
-          post-steps:
-              - jira/notify:
-                job_type: build
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
           context: [hmpps-common-vars]
           name: build_docker
+          jira_update: true
           filters:
             branches:
               only:
                 - main
                 - /.*deployable_branch.*/
-          post-steps:
-            - jira/notify:
-              job_type: build
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          jira_update: true
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - hmpps-common-vars
@@ -91,6 +86,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
+          jira_update: true
+          jira_env_type: "staging"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - hmpps-common-vars
@@ -104,6 +101,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          jira_update: true
+          jira_env_type: "production"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - hmpps-common-vars
