@@ -58,6 +58,8 @@ workflows:
           context: [hmpps-common-vars]
           name: build_docker
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           filters:
             branches:
               only:
@@ -67,6 +69,8 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
             - hmpps-common-vars
@@ -87,6 +91,8 @@ workflows:
           name: deploy_preprod
           env: "preprod"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           jira_env_type: "staging"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
@@ -102,6 +108,8 @@ workflows:
           name: deploy_prod
           env: "prod"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           jira_env_type: "production"
           helm_additional_args: --values ./crime-portal-gateway/values-live.yaml
           context:
