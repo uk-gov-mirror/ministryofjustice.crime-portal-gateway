@@ -1,20 +1,20 @@
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-    }
-}
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.9.0"
     kotlin("plugin.spring") version "2.0.20"
     id("org.unbroken-dome.xjc") version "2.0.0"
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    kotlin("jvm") version "2.0.20"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
-tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-    }
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 dependencyCheck {
@@ -76,6 +76,12 @@ tasks {
         from("applicationinsights.json")
         val output: Provider<Directory> = layout.buildDirectory.dir("libs")
         into(output)
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 
