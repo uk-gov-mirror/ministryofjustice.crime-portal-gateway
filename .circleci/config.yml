@@ -1,9 +1,13 @@
 version: 2.1
 
+parameters:
+  slack-channel:
+    type: string
+    default:  probation_in_court_dev
+
 orbs:
   owasp: entur/owasp@0.0.10
   hmpps: ministryofjustice/hmpps@10
-  slack: circleci/slack@4.1.1
 
 jobs:
   validate:
@@ -28,20 +32,6 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
-      - slack/notify:
-          event: fail
-          custom: |
-            {
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "Failed: $CIRCLE_USERNAME's build of \n<$CIRCLE_BUILD_URL|$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME>\n(<https://app.circleci.com/pipelines/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME?branch=$CIRCLE_BRANCH|$CIRCLE_BRANCH>) \n- <$CIRCLE_BUILD_URL|$CIRCLE_JOB> failed"
-                        }
-                    }
-                ]
-            }
 
 workflows:
   version: 2
@@ -57,9 +47,6 @@ workflows:
       - hmpps/build_docker:
           context: [hmpps-common-vars]
           name: build_docker
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           filters:
             branches:
               only:
@@ -116,7 +103,7 @@ workflows:
             - hmpps-common-vars
             - court-probation-live-prod
           slack_notification: true
-          slack_channel_name: probation_in_court_dev
+          slack_channel_name: << pipeline.parameters.slack-channel >>
           requires:
             - request-prod-approval
 
