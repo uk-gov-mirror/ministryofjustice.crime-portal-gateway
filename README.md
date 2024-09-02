@@ -63,4 +63,22 @@ This command should submit the message to the local queue and will report back t
 
 There is a SOAP-UI project in src/test/resources/soap-ui/single-case-simple.xml. Import this project to SOAP-UI and run it in the normal way.
 
+# Sending message to Crime Portal Gateway using wget
 
+Run the below command to copy content
+```cat src/test/resources/soap/sample-request.xml | pbcopy```
+
+Get into the service pod
+```kubectl exec -it <CLOUD_PLATFORM_SERVICE_POD_NAME> -n <COURT_PROBATION_DEV_NAMESPACE_NAME> -- bin/sh```
+
+Create a file for tempMessage.xml using 
+```vi /tmp/testMessage.xml```
+
+Paste the content from copied from sample-request.xml to /tmp/testMessage.xml
+
+Run the below command
+```wget --post-file=/tmp/testMessage.xml --header="Content-Type: application/soap+xml" http://crime-portal-gateway/crime-portal-gateway/ws/ -O /tmp/response.xml```
+
+Verify the content of response.xml using 
+
+```cat /tmp/response.xml```
