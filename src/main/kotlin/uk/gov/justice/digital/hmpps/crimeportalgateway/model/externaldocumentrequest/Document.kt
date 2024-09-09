@@ -2,15 +2,14 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.model.externaldocumentre
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 
 data class Document(
-
     @field:Valid
     @field:NotNull
     @JsonDeserialize(using = DocumentInfoDeserializer::class)
-    val info: Info
+    val info: Info,
 ) {
     @field:Valid
     @field:NotNull

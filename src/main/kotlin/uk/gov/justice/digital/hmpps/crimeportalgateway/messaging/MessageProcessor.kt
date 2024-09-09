@@ -18,9 +18,8 @@ class MessageProcessor(
     @Autowired
     private val messageNotifier: MessageNotifier,
     @Autowired
-    private val telemetryService: TelemetryService
+    private val telemetryService: TelemetryService,
 ) {
-
     @Throws(JsonProcessingException::class)
     fun process(message: String) {
         val externalDocumentRequest = messageParser.parseMessage(message, ExternalDocumentRequest::class.java)

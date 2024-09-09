@@ -5,7 +5,6 @@ import com.microsoft.applicationinsights.telemetry.RequestTelemetry
 import com.microsoft.applicationinsights.web.internal.RequestTelemetryContext
 import com.microsoft.applicationinsights.web.internal.ThreadContext
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.web.context.annotation.RequestScope
@@ -13,10 +12,8 @@ import java.util.Optional
 
 @Profile(value = ["dev", "preprod", "prod"])
 @Configuration
-class TelemetryConfig : BaseTelemetryConfig() {
-
+class TelemetryConfig {
     @Bean
-    @Conditional(AppInsightKeyAbsentCondition::class)
     fun getTelemetryClient(): TelemetryClient {
         return TelemetryClient()
     }

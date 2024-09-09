@@ -10,14 +10,19 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.xml.MessageDetail
 @Component
 class S3Service(
     @Value("\${aws.s3.bucket_name}") private val bucketName: String,
-    @Autowired private val amazonS3Client: AmazonS3
+    @Autowired private val amazonS3Client: AmazonS3,
 ) {
-
-    fun uploadMessage(messageDetail: MessageDetail, messageContent: String): String? {
+    fun uploadMessage(
+        messageDetail: MessageDetail,
+        messageContent: String,
+    ): String? {
         return uploadMessage(messageDetail.asFileNameStem() + ".xml", messageContent)
     }
 
-    fun uploadMessage(fileName: String, messageContent: String): String? {
+    fun uploadMessage(
+        fileName: String,
+        messageContent: String,
+    ): String? {
         return try {
             val putResult = amazonS3Client.putObject(bucketName, fileName, messageContent)
             log.info("File {} saved to S3 bucket {} with expiration date of {}, eTag {}", fileName, bucketName, putResult.expirationTime, putResult.eTag)

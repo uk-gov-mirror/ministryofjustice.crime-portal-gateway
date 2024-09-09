@@ -28,7 +28,7 @@ services:
       - DEBUG=${DEBUG- }
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "$PWD/src/test/resources/localstack/setup-s3.sh:/etc/localstack/init/ready.d/init-aws.sh"
 

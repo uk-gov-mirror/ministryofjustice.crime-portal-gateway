@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 
 data class Block(
     @field:NotNull
     @field:Valid
     @JacksonXmlProperty(localName = "sb_id")
-    val id: Long
+    val id: Long,
 ) {
-
     @field:NotNull
     @field:Valid
     @JacksonXmlElementWrapper

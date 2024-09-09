@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
+import jakarta.xml.bind.JAXBContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.web.servlet.ServletRegistrationBean
@@ -23,7 +24,6 @@ import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection
 import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocumentRequest
 import java.io.File
 import javax.xml.XMLConstants
-import javax.xml.bind.JAXBContext
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 
@@ -32,9 +32,8 @@ import javax.xml.validation.SchemaFactory
 class WebServiceConfig(
     @Value("\${soap.ws-location-uri}") private val wsLocationUri: String,
     @Value("\${soap.target-namespace}") private val targetNamespace: String,
-    @Value("\${soap.xsd-file-path}") private val xsdFilePath: String
+    @Value("\${soap.xsd-file-path}") private val xsdFilePath: String,
 ) {
-
     @Bean
     fun externalDocumentXsdResource(): Resource {
         return FileSystemResource(xsdFilePath)
@@ -52,7 +51,7 @@ class WebServiceConfig(
                 setApplicationContext(applicationContext)
                 isTransformWsdlLocations = true
             },
-            "$wsLocationUri*"
+            "$wsLocationUri*",
         )
     }
 
@@ -75,10 +74,11 @@ class WebServiceConfig(
 
     @Bean
     fun xsds(): XsdSchemaCollection {
-        val xsds = CommonsXsdSchemaCollection(
-            ClassPathResource("xsd/cp/external/ExternalDocumentRequest.xsd"),
-            ClassPathResource("xsd/generic/Acknowledgement/Acknowledgement.xsd")
-        )
+        val xsds =
+            CommonsXsdSchemaCollection(
+                ClassPathResource("xsd/cp/external/ExternalDocumentRequest.xsd"),
+                ClassPathResource("xsd/generic/Acknowledgement/Acknowledgement.xsd"),
+            )
         xsds.setInline(true)
         return xsds
     }

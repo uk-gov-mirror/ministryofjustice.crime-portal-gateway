@@ -17,7 +17,6 @@ import java.util.Date
 
 @ExtendWith(MockitoExtension::class)
 internal class S3ServiceTest {
-
     @Mock
     lateinit var amazonS3Client: AmazonS3Client
 
@@ -30,16 +29,18 @@ internal class S3ServiceTest {
 
     @Test
     fun `given normal input then message is uploaded as file`() {
-        val messageDetail = MessageDetail(
-            hearingDate = "29-08-2016",
-            courtCode = "B10JQ",
-            courtRoom = 2
-        )
+        val messageDetail =
+            MessageDetail(
+                hearingDate = "29-08-2016",
+                courtCode = "B10JQ",
+                courtRoom = 2,
+            )
 
-        val putResult: PutObjectResult = PutObjectResult().apply {
-            expirationTime = Date()
-            eTag = "ETAG"
-        }
+        val putResult: PutObjectResult =
+            PutObjectResult().apply {
+                expirationTime = Date()
+                eTag = "ETAG"
+            }
         whenever(amazonS3Client.putObject(eq("bucket-name"), any(), eq("message"))).thenReturn(putResult)
 
         val eTag = s3Service.uploadMessage(messageDetail, "message")

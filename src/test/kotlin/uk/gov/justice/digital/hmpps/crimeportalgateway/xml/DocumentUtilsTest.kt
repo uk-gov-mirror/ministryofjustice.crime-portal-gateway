@@ -21,7 +21,6 @@ fun toXml(string: StringReader): Document {
 }
 
 internal class DocumentUtilsTest {
-
     private val sourceFileName = "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
     private val sourceFileNameElement = "<source_file_name>$sourceFileName</source_file_name>"
 
@@ -93,7 +92,6 @@ internal class DocumentUtilsTest {
     }
 
     companion object {
-
         private lateinit var xmlFile: File
 
         @BeforeAll

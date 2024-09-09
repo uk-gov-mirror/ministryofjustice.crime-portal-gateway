@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint
 
+import jakarta.xml.bind.JAXBContext
+import jakarta.xml.bind.Unmarshaller
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -26,14 +28,11 @@ import uk.gov.justice.magistrates.external.externaldocumentrequest.ExternalDocum
 import java.io.File
 import java.io.StringReader
 import javax.xml.XMLConstants
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.Unmarshaller
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 
 @ExtendWith(MockitoExtension::class)
 internal class ExternalDocRequestEndpointTest {
-
     private lateinit var externalDocumentText: String
     private lateinit var externalDocument: ExternalDocumentRequest
 
@@ -48,19 +47,21 @@ internal class ExternalDocRequestEndpointTest {
 
     private lateinit var endpoint: ExternalDocRequestEndpoint
 
-    private val expectedMessageDetail: MessageDetail = MessageDetail(
-        hearingDate = "2020-10-26",
-        courtCode = "B10JQ",
-        courtRoom = 5
-    )
+    private val expectedMessageDetail: MessageDetail =
+        MessageDetail(
+            hearingDate = "2020-10-26",
+            courtCode = "B10JQ",
+            courtRoom = 5,
+        )
 
-    private val customDimensionsMap = mapOf(
-        // "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
-        "courtCode" to "B10JQ",
-        "courtRoom" to "5",
-        "hearingDate" to "2020-10-26",
-        "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
-    )
+    private val customDimensionsMap =
+        mapOf(
+            // "sqsMessageId" to "a4e9ab53-f8aa-bf2c-7291-d0293a8b0d02",
+            "courtCode" to "B10JQ",
+            "courtRoom" to "5",
+            "hearingDate" to "2020-10-26",
+            "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY",
+        )
 
     @BeforeEach
     fun beforeEach() {
@@ -94,8 +95,8 @@ internal class ExternalDocRequestEndpointTest {
             mapOf(
                 "courtCode" to "B10JQ",
                 "courtRoom" to "5",
-                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
-            )
+                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY",
+            ),
         )
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
         verifyNoMoreInteractions(telemetryService, messageProcessor, s3Service)
@@ -114,8 +115,8 @@ internal class ExternalDocRequestEndpointTest {
             mapOf(
                 "courtCode" to "B10JQ",
                 "courtRoom" to "5",
-                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY"
-            )
+                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY",
+            ),
         )
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
         verifyNoInteractions(messageProcessor)
@@ -132,8 +133,8 @@ internal class ExternalDocRequestEndpointTest {
         verify(telemetryService).trackEvent(
             TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
             mapOf(
-                "fileName" to "5_26102020_2992_B10_ADULT_COURT_LIST_DAILY"
-            )
+                "fileName" to "5_26102020_2992_B10_ADULT_COURT_LIST_DAILY",
+            ),
         )
         verify(s3Service).uploadMessage(eq("5_26102020_2992_B10_ADULT_COURT_LIST_DAILY.xml"), contains("ExternalDocumentRequest"))
         verifyNoInteractions(messageProcessor)
@@ -164,7 +165,11 @@ internal class ExternalDocRequestEndpointTest {
         return marshaller.unmarshal(StringReader(request)) as ExternalDocumentRequest
     }
 
-    private fun buildEndpoint(includedCourts: Set<String>, aSync: Boolean, minDummyCourtRoom: Int): ExternalDocRequestEndpoint {
+    private fun buildEndpoint(
+        includedCourts: Set<String>,
+        aSync: Boolean,
+        minDummyCourtRoom: Int,
+    ): ExternalDocRequestEndpoint {
         return ExternalDocRequestEndpoint(
             includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
@@ -174,12 +179,11 @@ internal class ExternalDocRequestEndpointTest {
             jaxbContext = jaxbContext,
             validationSchema = schema,
             s3Service = s3Service,
-            messageProcessor = messageProcessor
+            messageProcessor = messageProcessor,
         )
     }
 
     companion object {
-
         private const val TIMEOUT_MS: Long = 5000
         private lateinit var xmlFile: File
         private lateinit var jaxbContext: JAXBContext

@@ -6,16 +6,15 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import jakarta.validation.Validation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import uk.gov.justice.digital.hmpps.crimeportalgateway.messaging.MessageParser
 import uk.gov.justice.digital.hmpps.crimeportalgateway.model.externaldocumentrequest.ExternalDocumentRequest
-import javax.validation.Validation
 
 @Configuration
 class MessagingConfig {
-
     @Bean
     @Primary
     fun objectMapper(): ObjectMapper {

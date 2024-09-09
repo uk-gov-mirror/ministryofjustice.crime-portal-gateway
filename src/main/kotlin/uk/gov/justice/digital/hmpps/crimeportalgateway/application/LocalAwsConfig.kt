@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.application
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.internal.StaticCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.sns.AmazonSNS
@@ -18,9 +18,8 @@ import org.springframework.context.annotation.Profile
 @Configuration
 class LocalAwsConfig(
     @Value("\${aws.region-name}")
-    var regionName: String
+    var regionName: String,
 ) {
-
     @Value("\${aws.localstack-endpoint-url}")
     lateinit var endpointUrl: String
 
@@ -32,7 +31,7 @@ class LocalAwsConfig(
             .standard()
             .withEndpointConfiguration(endpointConfiguration)
             .withPathStyleAccessEnabled(true)
-            .withCredentials(StaticCredentialsProvider(BasicAWSCredentials("any", "any")))
+            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
             .build()
     }
 
@@ -42,7 +41,7 @@ class LocalAwsConfig(
 
         return AmazonSNSClientBuilder
             .standard()
-            .withCredentials(StaticCredentialsProvider(BasicAWSCredentials("any", "any")))
+            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
             .withEndpointConfiguration(endpointConfiguration)
             .build()
     }
@@ -53,7 +52,7 @@ class LocalAwsConfig(
 
         return AmazonSQSClientBuilder
             .standard()
-            .withCredentials(StaticCredentialsProvider(BasicAWSCredentials("any", "any")))
+            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
             .withEndpointConfiguration(endpointConfiguration)
             .build()
     }

@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Profile
 @Configuration
 class AwsConfig(
     @Value("\${aws.region-name}")
-    var regionName: String
+    var regionName: String,
 ) {
-
     @Bean
     fun amazonS3Client(): AmazonS3 {
         return AmazonS3ClientBuilder

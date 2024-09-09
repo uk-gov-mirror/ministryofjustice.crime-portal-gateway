@@ -10,7 +10,6 @@ import org.mockito.Mockito.verify as mockitoVerify
 
 @ExtendWith(MockitoExtension::class)
 class TelemetryServiceTest {
-
     @Mock
     private lateinit var telemetryClient: TelemetryClient
 

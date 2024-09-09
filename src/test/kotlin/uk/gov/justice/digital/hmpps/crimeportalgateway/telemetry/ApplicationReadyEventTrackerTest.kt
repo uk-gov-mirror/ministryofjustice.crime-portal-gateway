@@ -12,7 +12,6 @@ import org.springframework.boot.info.BuildProperties
 
 @ExtendWith(MockitoExtension::class)
 internal class ApplicationReadyEventTrackerTest {
-
     @Mock
     lateinit var telemetryClient: TelemetryClient
 

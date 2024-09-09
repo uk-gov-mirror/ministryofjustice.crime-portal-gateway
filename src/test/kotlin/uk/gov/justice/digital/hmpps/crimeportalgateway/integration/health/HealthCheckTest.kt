@@ -11,7 +11,6 @@ import java.util.function.Consumer
 
 @Import(TestMessagingConfig::class)
 class HealthCheckTest : IntegrationTestBase() {
-
     @Test
     fun `Health page reports ok`() {
         webTestClient.get()
@@ -33,7 +32,7 @@ class HealthCheckTest : IntegrationTestBase() {
             .value(
                 Consumer<String> {
                     assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
-                }
+                },
             )
     }
 

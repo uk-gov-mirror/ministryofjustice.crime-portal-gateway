@@ -19,7 +19,6 @@ import java.io.File
 import javax.xml.transform.Source
 
 class ExternalDocRequestEndpointNoSNSIntTest : IntegrationTestBase() {
-
     @MockBean
     private lateinit var amazonSNS: AmazonSNS
 
@@ -40,7 +39,6 @@ class ExternalDocRequestEndpointNoSNSIntTest : IntegrationTestBase() {
     fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
 
     companion object {
-
         private lateinit var xsdResource: Resource
 
         private val namespaces = HashMap<String, String>()

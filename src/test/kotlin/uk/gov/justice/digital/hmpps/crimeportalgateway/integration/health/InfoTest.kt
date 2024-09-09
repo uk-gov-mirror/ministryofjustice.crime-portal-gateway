@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter
 
 @Import(TestMessagingConfig::class)
 class InfoTest : IntegrationTestBase() {
-
     @Test
     fun `Info page is accessible`() {
         webTestClient.get()
