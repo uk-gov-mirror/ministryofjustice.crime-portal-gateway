@@ -4,6 +4,8 @@
 minReplicaCount: 2
 maxReplicaCount: 4
 
+secretName: "crime-portal-gateway-keystore-cert"
+
 image:
   repository: quay.io/hmpps/crime-portal-gateway
   tag: latest
