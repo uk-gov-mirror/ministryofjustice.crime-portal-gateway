@@ -21,7 +21,7 @@ dependencyCheck {
 }
 
 val junitJupiterVersion by extra { "5.9.0" }
-var awsSdkVersion = "1.12.543"
+var awsSdkVersion = "1.12.772"
 val springBootVersion = "3.0.2"
 
 dependencies {
