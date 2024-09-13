@@ -74,7 +74,7 @@ spec:
       volumes:
         - name: secrets
           secret:
-            secretName: {{ .Values.secretName }}
+            secretName: "crime-portal-gateway-keystore-cert"
             items:
               - key: crime-portal-gateway-jks.key
                 path: crime-portal-gateway-jks.key
