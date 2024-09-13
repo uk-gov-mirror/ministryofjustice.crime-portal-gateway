@@ -46,7 +46,9 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk-sts:$awsSdkVersion")
 
     implementation("wsdl4j:wsdl4j:1.6.3")
-    implementation("com.sun.xml.bind:jaxb-impl:4.0.5")
+    implementation("com.sun.xml.bind:jaxb-impl:4.0.5") {
+        exclude(group = "com.sun.xml.bind", module = "jaxb-core")
+    }
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:3.0.1")
 
     xjcTool("com.sun.xml.bind:jaxb-xjc:3.0.2")
