@@ -56,7 +56,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4")
 
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
-    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438")
+    runtimeOnly("org.glassfish.jaxb:jaxb-runtime:4.0.3")
 
     testImplementation("org.testcontainers:localstack:1.19.6")
     testImplementation("org.testcontainers:junit-jupiter:1.19.6")
