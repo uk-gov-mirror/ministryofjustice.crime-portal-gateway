@@ -12,16 +12,23 @@ spring:
 soap:
   xsd-file-path: src/main/resources/xsd/cp/external/ExternalDocumentRequest.xsd
 
-# Localstack settings
+hmpps.sqs:
+  enabled: true
+  provider: localstack
+  queues:
+    courtcaseeventsqueue:
+      queueName: court_case_events_queue
+      subscribeTopicId: courtcaseeventstopic
+      dlqName: cpr_court_case_events_queue_dlq
+      dlqMaxReceiveCount: 1
+  topics:
+    courtcaseeventstopic:
+      arn: "arn:aws:sns:eu-west-2:000000000000:court-case-events-topic"
+
+# Localstack settings for S3
 aws:
   localstack-endpoint-url: "http://localhost:4566"
-  sns:
-    court-case-events-topic: "arn:aws:sns:eu-west-2:000000000000:court-case-events-topic"
   region-name: eu-west-2
-  access_key: foobar
-  secret_access_key: foobar
+  endpoint-url: "http://localhost:4566"
   s3:
-    access_key: foobar
-    secret_access_key: foobar
-    access_key_id: foobar
     bucket_name: cpg-bucket

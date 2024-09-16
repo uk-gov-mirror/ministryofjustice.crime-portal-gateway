@@ -8,6 +8,12 @@ For more informations, check our [Runbook](https://dsdmoj.atlassian.net/wiki/spa
 
 # Instructions
 
+## Testing
+
+Localstack must be running to support the setup of SNS and S3 dependencies
+`docker compose up localstack -d`
+`./gradlew check`
+
 Run the application as a Spring Boot app.
 
 ```./gradlew bootRun```

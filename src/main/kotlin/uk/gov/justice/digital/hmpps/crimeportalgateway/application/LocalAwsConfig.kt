@@ -5,10 +5,6 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.sns.AmazonSNS
-import com.amazonaws.services.sns.AmazonSNSClientBuilder
-import com.amazonaws.services.sqs.AmazonSQS
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,28 +28,6 @@ class LocalAwsConfig(
             .withEndpointConfiguration(endpointConfiguration)
             .withPathStyleAccessEnabled(true)
             .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
-            .build()
-    }
-
-    @Bean
-    fun amazonSNSLocalStackClient(): AmazonSNS {
-        val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(endpointUrl, regionName)
-
-        return AmazonSNSClientBuilder
-            .standard()
-            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
-            .withEndpointConfiguration(endpointConfiguration)
-            .build()
-    }
-
-    @Bean
-    fun amazonSQSLocalStackClient(): AmazonSQS {
-        val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(endpointUrl, regionName)
-
-        return AmazonSQSClientBuilder
-            .standard()
-            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("any", "any")))
-            .withEndpointConfiguration(endpointConfiguration)
             .build()
     }
 }

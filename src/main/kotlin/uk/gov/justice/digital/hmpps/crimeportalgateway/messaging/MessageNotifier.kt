@@ -1,45 +1,39 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.messaging
 
-import com.amazonaws.services.sns.AmazonSNS
-import com.amazonaws.services.sns.model.MessageAttributeValue
-import com.amazonaws.services.sns.model.PublishRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import software.amazon.awssdk.services.sns.model.MessageAttributeValue
 import uk.gov.justice.digital.hmpps.crimeportalgateway.model.externaldocumentrequest.Case
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.MissingTopicException
+import uk.gov.justice.hmpps.sqs.publish
 
 private const val MESSAGE_TYPE = "LIBRA_COURT_CASE"
 
 @Component
 class MessageNotifier(
-    @Autowired
     private val objectMapper: ObjectMapper,
-    @Autowired
     private val telemetryService: TelemetryService,
-    @Autowired
-    private val amazonSNSClient: AmazonSNS,
-    @Value("\${aws.sns.court-case-events-topic}")
-    private val topicArn: String,
+    private val hmppsQueueService: HmppsQueueService,
 ) {
+    private val topic =
+        hmppsQueueService.findByTopicId("courtcaseeventstopic")
+            ?: throw MissingTopicException("Could not find topic ")
+
     fun send(case: Case) {
         val message = objectMapper.writeValueAsString(case)
         val subject = "Details for case " + case.caseNo + " in court " + case.courtCode + " published"
 
         val messageValue =
-            MessageAttributeValue()
-                .withDataType("String")
-                .withStringValue(MESSAGE_TYPE)
+            MessageAttributeValue.builder()
+                .dataType("String")
+                .stringValue(MESSAGE_TYPE).build()
 
-        val publishRequest =
-            PublishRequest(topicArn, message)
-                .withMessageAttributes(mapOf("messageType" to messageValue))
-
-        val publishResult = amazonSNSClient.publish(publishRequest)
-        log.info("Published message with subject {} with message Id {}", subject, publishResult.messageId)
-        telemetryService.trackCourtCaseSplitEvent(case, publishResult.messageId)
+        val publishResult = topic.publish("libra.case.received", message, mapOf("messageType" to messageValue))
+        log.info("Published message with subject {} with message Id {}", subject, publishResult.messageId())
+        telemetryService.trackCourtCaseSplitEvent(case, publishResult.messageId())
     }
 
     companion object {

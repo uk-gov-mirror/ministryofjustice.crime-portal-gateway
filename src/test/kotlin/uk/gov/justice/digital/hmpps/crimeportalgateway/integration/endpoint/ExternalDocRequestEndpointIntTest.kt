@@ -3,11 +3,6 @@ package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectListing
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import com.amazonaws.services.sns.AmazonSNS
-import com.amazonaws.services.sns.util.Topics
-import com.amazonaws.services.sqs.AmazonSQS
-import com.amazonaws.services.sqs.model.PurgeQueueRequest
-import com.amazonaws.services.sqs.model.ReceiveMessageRequest
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,10 +22,13 @@ import org.springframework.ws.test.server.ResponseMatchers.noFault
 import org.springframework.ws.test.server.ResponseMatchers.validPayload
 import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
-import org.testcontainers.containers.localstack.LocalStackContainer
+import software.amazon.awssdk.services.sqs.model.PurgeQueueRequest
+import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryEventType.COURT_LIST_MESSAGE_RECEIVED
 import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.countMessagesOnQueue
 import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -41,16 +39,13 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     private lateinit var telemetryService: TelemetryService
 
     @Autowired
-    lateinit var amazonSNS: AmazonSNS
-
-    @Autowired
-    lateinit var amazonSQS: AmazonSQS
-
-    @Autowired
     lateinit var amazonS3: AmazonS3
 
-    @Value("\${aws.sns.court-case-events-topic-name}")
-    lateinit var topicName: String
+    @Autowired
+    lateinit var hmppsQueueService: HmppsQueueService
+    val courtCaseEventsQueue by lazy {
+        hmppsQueueService.findByQueueId("courtcaseeventsqueue")
+    }
 
     @Value("\${aws.s3.bucket_name}")
     lateinit var bucketName: String
@@ -58,25 +53,9 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    lateinit var queueUrl: String
-
     @BeforeEach
     fun beforeEach() {
-        // this is all a bit horrible, using an old version of AWS SDK
-        // would be best to bring in https://github.com/ministryofjustice/hmpps-spring-boot-sqs
-        // using the spring-boot-2 branch as upgrading to Spring boot 3 brings in far-reaching changes
-        val topic = amazonSNS.createTopic(topicName)
-        val queue = amazonSQS.createQueue("court-case-events-queue")
-        val localstackUrl = localStackContainer?.getEndpointOverride(LocalStackContainer.Service.SNS).toString()
-        queueUrl = queue.queueUrl.replace("http://sqs.eu-west-2.localhost:4566", localstackUrl)
-        amazonSQS.purgeQueue(PurgeQueueRequest(queueUrl))
-
-        Topics.subscribeQueue(
-            amazonSNS,
-            amazonSQS,
-            topic.topicArn,
-            queueUrl,
-        )
+        courtCaseEventsQueue?.sqsClient?.purgeQueue(PurgeQueueRequest.builder().queueUrl(courtCaseEventsQueue!!.queueUrl).build())
         amazonS3.createBucket(bucketName, "eu-west-2")
     }
 
@@ -180,13 +159,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     }
 
     private fun checkMessagesOnQueue(count: Int) {
-        val numberOfMessagesOnQueue = amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages")).attributes["ApproximateNumberOfMessages"]
-        assertThat(numberOfMessagesOnQueue).isEqualTo("$count")
+        val numberOfMessagesOnQueue = courtCaseEventsQueue?.sqsClient?.countMessagesOnQueue(courtCaseEventsQueue?.queueUrl!!)?.get()!!
+        assertThat(numberOfMessagesOnQueue).isEqualTo(count)
     }
 
-    private fun countMessagesOnQueue() =
-        amazonSQS.getQueueAttributes(queueUrl, listOf("ApproximateNumberOfMessages"))
-            .attributes["ApproximateNumberOfMessages"]?.toInt()!!
+    private fun countMessagesOnQueue() = courtCaseEventsQueue?.sqsClient?.countMessagesOnQueue(courtCaseEventsQueue?.queueUrl!!)!!.get()
 
     private fun checkS3Upload(fileNameStart: String) {
         val items = amazonS3.listObjects(bucketName).objectSummaries
@@ -208,9 +185,10 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     private fun checkMessage(expectedCases: List<CaseDetails>) {
         var cases = mutableListOf<CaseDetails>()
         while (countMessagesOnQueue() > 0) {
-            val message = amazonSQS.receiveMessage(ReceiveMessageRequest(queueUrl)).messages[0]
-            val messageBody = objectMapper.readValue(message.body, SQSMessage::class.java)
-            cases.add(objectMapper.readValue(messageBody.message, CaseDetails::class.java))
+            val message = courtCaseEventsQueue?.sqsClient?.receiveMessage(ReceiveMessageRequest.builder().queueUrl(courtCaseEventsQueue?.queueUrl!!).build())!!.get()
+            val sqsMessage: SQSMessage = objectMapper.readValue(message.messages()[0].body(), SQSMessage::class.java)
+
+            cases.add(objectMapper.readValue(sqsMessage.message, CaseDetails::class.java))
         }
         assertThat(cases).containsAll(expectedCases)
     }

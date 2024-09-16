@@ -20,12 +20,11 @@ dependencyCheck {
     suppressionFiles.add("cpg-suppressions.xml")
 }
 
-val junitJupiterVersion by extra { "5.9.0" }
 var awsSdkVersion = "1.12.772"
-val springBootVersion = "3.0.2"
 
 dependencies {
 
+    implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:4.4.2")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.ws:spring-ws-security:4.0.1") {
@@ -42,7 +41,7 @@ dependencies {
     implementation("com.microsoft.azure:applicationinsights-web:3.5.4")
 
     implementation("com.amazonaws:aws-java-sdk-s3:$awsSdkVersion")
-    implementation("com.amazonaws:aws-java-sdk-sns:$awsSdkVersion")
+
     implementation("com.amazonaws:aws-java-sdk-sts:$awsSdkVersion")
 
     implementation("wsdl4j:wsdl4j:1.6.3")
@@ -60,8 +59,6 @@ dependencies {
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:4.0.3")
 
-    testImplementation("org.testcontainers:localstack:1.19.6")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.6")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.ws:spring-ws-test:4.0.5")
