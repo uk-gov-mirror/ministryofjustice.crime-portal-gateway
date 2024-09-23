@@ -15,7 +15,7 @@ generic-service:
       - app-hostname.local    # override per environment
     path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
     annotations:
-      rewrite_target: /crime-portal-gateway/ws/$2
+      nginx.ingress.kubernetes.io/rewrite_target: /crime-portal-gateway/ws/$2
 
   autoscaling:
     enabled: true
