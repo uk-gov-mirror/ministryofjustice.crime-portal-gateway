@@ -1,0 +1,56 @@
+generic-service:
+  nameOverride: crime-portal-gateway
+
+  serviceAccountName: "court-case-service"
+
+  image:
+    repository: quay.io/hmpps/crime-portal-gateway
+    tag: app_version # override at deployment time
+    port: 8081
+
+  ingress:
+    enabled: true
+    modsecurity_enabled: false
+    hosts:
+      - app-hostname.local    # override per environment
+    path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
+    annotations:
+      rewrite_target: /crime-portal-gateway/ws/$2
+
+  autoscaling:
+    enabled: true
+    targetCPUUtilizationPercentage: 100
+
+  # Environment variables to load into the deployment
+  env:
+    JAVA_OPTS: "-Xmx512m"
+    SERVER_PORT: "8081"
+    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+    APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+
+  namespace_secrets:
+    crime-portal-gateway:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+    court-case-events-topic:
+      HMPPS_SQS_TOPICS_COURTCASEEVENTSTOPIC_ARN: topic_arn
+    crime-portal-gateway-s3-credentials:
+      aws_s3_bucket_name: bucket_name
+    crime-portal-gateway-secrets:
+      keystore-password: KEYSTORE_PASSWORD
+      private-key-password: PRIVATE_KEY_PASSWORD
+      trusted-cert-alias-name: TRUSTED_CERT_ALIAS_NAME
+      private-key-alias-name: PRIVATE_KEY_ALIAS_NAME
+
+  namespace_secrets_to_file:
+    crime-portal-gateway-keystore-cert:
+      /mnt/secrets:
+        - crime-portal-gateway-jks.key
+
+  allowlist:
+    groups:
+      - internal
