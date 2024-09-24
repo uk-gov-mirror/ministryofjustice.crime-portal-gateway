@@ -13,9 +13,12 @@ generic-service:
     modsecurity_enabled: false
     hosts:
       - app-hostname.local    # override per environment
-    path: /mirrorgateway/service/cpmgwextdocapi(/|$)(.*)
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite_target: /crime-portal-gateway/ws/$2
+    path: /
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location = /mirrorgateway/service/cpmgwextdocapi(/|$)(.*) {
+        rewrite ^/mirrorgateway/service/cpmgwextdocapi(/|$)(.*) /crime-portal-gateway/ws/$2 permanent;
+        break;
+      }
 
   autoscaling:
     enabled: true
