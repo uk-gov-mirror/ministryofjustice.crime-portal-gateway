@@ -14,12 +14,6 @@ generic-service:
     hosts:
       - app-hostname.local    # override per environment
     path: /
-    annotations:
-      nginx.ingress.kubernetes.io/server-snippet: |
-        location ~* /mirrorgateway/service/cpmgwextdocapi(/|$)(.*) {
-          rewrite ^/mirrorgateway/service/cpmgwextdocapi(/|$)(.*) /crime-portal-gateway/ws/$2 permanent;
-          break;
-        }
 
   autoscaling:
     enabled: true

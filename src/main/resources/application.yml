@@ -54,7 +54,7 @@ aws:
   region-name: eu-west-2
 
 soap:
-  ws-location-uri: /crime-portal-gateway/ws/
+  ws-location-uri: /mirrorgateway/service/cpmgwextdocapi/
   target-namespace: http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest
   xsd-file-path: /app/ExternalDocumentRequest.xsd
   # The existing feed doesn't validate so we will continue with same approach

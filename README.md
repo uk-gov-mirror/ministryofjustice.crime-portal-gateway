@@ -23,7 +23,7 @@ Run the application as a Spring Boot app.
 
 | Syntax           | Description | Example |
 | ---------------- | ----------- |---------
-| soap-default-uri | The WS endpoint to call | http://localhost:8080/crime-portal-gateway/ws|
+| soap-default-uri | The WS endpoint to call | http://localhost:8080/mirrorgateway/service/cpmgwextdocapi|
 | keystore-password | Password used for the JKS | changeit |
 | trusted-cert-alias-name | Alias for the trusted certicate in the JKS | client-public |
 | private-key-alias-name | Password used for the JKS | server |
@@ -43,7 +43,7 @@ There is also a "ping" endpoint available at
 
 The generated WSDL will be available at the following location
 
-```http://localhost:8080/crime-portal-gateway/ws/ExternalDocumentRequest.wsdl```
+```http://localhost:8080/mirrorgateway/service/cpmgwextdocapi/ExternalDocumentRequest.wsdl```
 
 # Testing - CURL 
 
@@ -59,7 +59,7 @@ The application requires an Amazon SQS queue and S3 bucket to be configured. It 
 
 3. It is possible to execute the following command from the project root to call the SOAP endpoint.
 
-```curl --header "content-type: application/soap+xml" -d @src/test/resources/soap/sample-request.xml http://localhost:8080/crime-portal-gateway/ws```
+```curl --header "content-type: application/soap+xml" -d @src/test/resources/soap/sample-request.xml http://localhost:8080/mirrorgateway/service/cpmgwextdocapi```
 
 This command should submit the message to the local queue and will report back the message ID. The message can be retrieved from the queue with the AWS CLI with a command with this form. Note that the queue URL may well be the same but will have been reported back from the create-queue command in part 3.
 
@@ -83,7 +83,7 @@ Create a file for tempMessage.xml using
 Paste the content from copied from sample-request.xml to /tmp/testMessage.xml
 
 Run the below command
-```wget --post-file=/tmp/testMessage.xml --header="Content-Type: application/soap+xml" http://crime-portal-gateway/crime-portal-gateway/ws/ -O /tmp/response.xml```
+```wget --post-file=/tmp/testMessage.xml --header="Content-Type: application/soap+xml" http://crime-portal-gateway/mirrorgateway/service/cpmgwextdocapi/ -O /tmp/response.xml```
 
 Verify the content of response.xml using 
 
