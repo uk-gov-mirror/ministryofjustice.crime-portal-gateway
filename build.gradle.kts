@@ -20,7 +20,7 @@ dependencyCheck {
     suppressionFiles.add("cpg-suppressions.xml")
 }
 
-var awsSdkVersion = "1.12.772"
+var awsSdkVersion = "2.28.4"
 
 dependencies {
 
@@ -40,10 +40,7 @@ dependencies {
 
     implementation("com.microsoft.azure:applicationinsights-web:3.5.4")
 
-    implementation("com.amazonaws:aws-java-sdk-s3:$awsSdkVersion")
-
-    implementation("com.amazonaws:aws-java-sdk-sts:$awsSdkVersion")
-
+    api("software.amazon.awssdk:s3")
     implementation("wsdl4j:wsdl4j:1.6.3")
     implementation("com.sun.xml.bind:jaxb-impl:4.0.5") {
         exclude(group = "com.sun.xml.bind", module = "jaxb-core")
@@ -64,7 +61,6 @@ dependencies {
     testImplementation("org.springframework.ws:spring-ws-test:4.0.11")
 
     testImplementation("org.mockito:mockito-core:5.1.1")
-    testImplementation("com.amazonaws:aws-java-sdk-sqs:$awsSdkVersion")
 }
 
 xjc {

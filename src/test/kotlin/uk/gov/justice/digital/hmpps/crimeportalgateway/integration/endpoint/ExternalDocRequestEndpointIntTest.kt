@@ -1,8 +1,5 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.integration.endpoint
 
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.model.ObjectListing
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -22,6 +19,13 @@ import org.springframework.ws.test.server.ResponseMatchers.noFault
 import org.springframework.ws.test.server.ResponseMatchers.validPayload
 import org.springframework.ws.test.server.ResponseMatchers.xpath
 import org.springframework.xml.transform.StringSource
+import software.amazon.awssdk.core.sync.ResponseTransformer
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest
 import software.amazon.awssdk.services.sqs.model.PurgeQueueRequest
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import uk.gov.justice.digital.hmpps.crimeportalgateway.integration.IntegrationTestBase
@@ -39,7 +43,7 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     private lateinit var telemetryService: TelemetryService
 
     @Autowired
-    lateinit var amazonS3: AmazonS3
+    lateinit var amazonS3: S3Client
 
     @Autowired
     lateinit var hmppsQueueService: HmppsQueueService
@@ -56,27 +60,17 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     @BeforeEach
     fun beforeEach() {
         courtCaseEventsQueue?.sqsClient?.purgeQueue(PurgeQueueRequest.builder().queueUrl(courtCaseEventsQueue!!.queueUrl).build())
-        amazonS3.createBucket(bucketName, "eu-west-2")
+        amazonS3.createBucket(CreateBucketRequest.builder().bucket(bucketName).build())
     }
 
     @AfterEach
     fun afterEach() {
-        // :-( deleting everything in the S3 bucket
-        // is the s3 upload even required? Nothing appears to read it
-        var objectListing: ObjectListing = amazonS3.listObjects(bucketName)
-        while (true) {
-            val objIter: Iterator<S3ObjectSummary> = objectListing.objectSummaries.iterator()
-            while (objIter.hasNext()) {
-                amazonS3.deleteObject(bucketName, objIter.next().key)
-            }
-
-            if (objectListing.isTruncated) {
-                objectListing = amazonS3.listNextBatchOfObjects(objectListing)
-            } else {
-                break
-            }
+        val objectListing = amazonS3.listObjects(ListObjectsRequest.builder().bucket(bucketName).build())
+        objectListing.contents()?.forEach {
+            amazonS3.deleteObject(DeleteObjectRequest.builder().bucket(bucketName).key(it.key()).build())
         }
-        amazonS3.deleteBucket(bucketName)
+
+        amazonS3.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build())
     }
 
     @Test
@@ -166,12 +160,12 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     private fun countMessagesOnQueue() = courtCaseEventsQueue?.sqsClient?.countMessagesOnQueue(courtCaseEventsQueue?.queueUrl!!)!!.get()
 
     private fun checkS3Upload(fileNameStart: String) {
-        val items = amazonS3.listObjects(bucketName).objectSummaries
+        val items = amazonS3.listObjects(ListObjectsRequest.builder().bucket(bucketName).build()).contents()
         assertThat(items.size).isEqualTo(1)
-        assertThat(items[0].key.startsWith(fileNameStart)).isTrue()
-        val s3Object = amazonS3.getObject(bucketName, items[0].key)
-        val startOfDoc = s3Object.objectContent.readNBytes(1000).toString(Charsets.UTF_8)
-        println(startOfDoc)
+        assertThat(items[0].key().startsWith(fileNameStart)).isTrue()
+        val s3Object = amazonS3.getObject(GetObjectRequest.builder().bucket(bucketName).key(items[0].key()).build(), ResponseTransformer.toBytes())
+        val startOfDoc = s3Object.asUtf8String()
+
         assertThat(
             @Suppress("ktlint:standard:max-line-length")
             startOfDoc.startsWith(
