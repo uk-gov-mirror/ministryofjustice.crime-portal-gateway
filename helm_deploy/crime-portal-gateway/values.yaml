@@ -60,3 +60,6 @@ generic-service:
   allowlist:
     groups:
       - internal
+
+  generic-prometheus-alerts:
+    targetApplication: crime-portal-gateway

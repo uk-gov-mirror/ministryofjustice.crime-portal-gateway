@@ -14,3 +14,6 @@ generic-service:
   allowlist:
     bsi-1: "54.37.241.156/30"
     bsi-2: "167.71.136.237/32"
+
+  generic-prometheus-alerts:
+    alertSeverity: probation_in_court_alerts_dev
