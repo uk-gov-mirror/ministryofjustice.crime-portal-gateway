@@ -25,5 +25,5 @@ generic-service:
       cpu: 100m
       memory: 500Mi
 
-  generic-prometheus-alerts:
-    alertSeverity: probation_in_court_alerts_prod
+generic-prometheus-alerts:
+  alertSeverity: probation_in_court_alerts_prod

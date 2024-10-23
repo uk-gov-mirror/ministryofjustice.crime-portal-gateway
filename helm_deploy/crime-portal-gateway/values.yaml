@@ -61,5 +61,5 @@ generic-service:
     groups:
       - internal
 
-  generic-prometheus-alerts:
-    targetApplication: crime-portal-gateway
+generic-prometheus-alerts:
+  targetApplication: crime-portal-gateway
