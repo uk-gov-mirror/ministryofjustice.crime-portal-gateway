@@ -20,8 +20,6 @@ dependencyCheck {
     suppressionFiles.add("cpg-suppressions.xml")
 }
 
-var awsSdkVersion = "2.28.4"
-
 dependencies {
 
     implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:4.4.2")

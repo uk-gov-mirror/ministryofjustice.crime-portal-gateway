@@ -16,7 +16,7 @@ Localstack must be running to support the setup of SNS and S3 dependencies
 
 Run the application as a Spring Boot app.
 
-```./gradlew bootRun```
+```SPRING_PROFILES_ACTIVE=local ./gradlew bootRun```
 
 # Environment variables
 
