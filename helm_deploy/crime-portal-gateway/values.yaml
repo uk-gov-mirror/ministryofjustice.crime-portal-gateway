@@ -1,7 +1,7 @@
 generic-service:
   nameOverride: crime-portal-gateway
 
-  serviceAccountName: "court-case-service"
+  serviceAccountName: "court-facing-api"
 
   image:
     repository: quay.io/hmpps/crime-portal-gateway
