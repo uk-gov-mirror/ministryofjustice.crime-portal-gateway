@@ -48,7 +48,6 @@ dependencies {
     xjcTool("com.sun.xml.bind:jaxb-xjc:3.0.2")
     xjcTool("com.sun.xml.bind:jaxb-impl:3.0.2")
 
-    // Spring uses 2.11.4 - using 2.12.3 breaks Spring.
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4")
 
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
@@ -57,8 +56,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.ws:spring-ws-test:4.0.11")
-
-    testImplementation("org.mockito:mockito-core:5.1.1")
 }
 
 xjc {
