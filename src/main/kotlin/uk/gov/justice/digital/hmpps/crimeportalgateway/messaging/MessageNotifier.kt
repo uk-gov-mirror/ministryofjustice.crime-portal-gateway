@@ -11,6 +11,7 @@ import uk.gov.justice.hmpps.sqs.MissingTopicException
 import uk.gov.justice.hmpps.sqs.publish
 
 private const val MESSAGE_TYPE = "LIBRA_COURT_CASE"
+private const val MESSAGE_GROUP_ID = "CRIME_PORTAL_GATEWAY"
 
 @Component
 class MessageNotifier(
@@ -19,7 +20,7 @@ class MessageNotifier(
     private val hmppsQueueService: HmppsQueueService,
 ) {
     private val topic =
-        hmppsQueueService.findByTopicId("courtcaseeventstopic")
+        hmppsQueueService.findByTopicId("courtcasestopic")
             ?: throw MissingTopicException("Could not find topic ")
 
     fun send(case: Case) {
@@ -31,7 +32,7 @@ class MessageNotifier(
                 .dataType("String")
                 .stringValue(MESSAGE_TYPE).build()
 
-        val publishResult = topic.publish("libra.case.received", message, mapOf("messageType" to messageValue))
+        val publishResult = topic.publish("libra.case.received", message, attributes = mapOf("messageType" to messageValue), messageGroupId = MESSAGE_GROUP_ID)
         log.info("Published message with subject {} with message Id {}", subject, publishResult.messageId())
         telemetryService.trackCourtCaseSplitEvent(case, publishResult.messageId())
     }
