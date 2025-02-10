@@ -40,6 +40,7 @@ class MessageProcessor(
             }
             .forEach {
                 log.debug("Sending {}", it.caseNo)
+                it.cId = it.caseId
                 messageNotifier.send(it)
             }
     }

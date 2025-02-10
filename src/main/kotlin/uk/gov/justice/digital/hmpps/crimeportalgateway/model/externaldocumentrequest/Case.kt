@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonGetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.OptBoolean
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
@@ -61,6 +62,9 @@ data class Case(
     @JacksonXmlElementWrapper
     val offences: List<Offence> = ArrayList(),
 ) {
+    @get:JsonProperty("cId")
+    var cId: Long? = null
+
     @field:Valid
     @field:NotNull
     @JsonBackReference
