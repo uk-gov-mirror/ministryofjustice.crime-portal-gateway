@@ -20,7 +20,8 @@ import java.time.LocalDateTime
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Case(
     @JacksonXmlProperty(localName = "c_id")
-    val caseId: Long? = null,
+    @get:JsonProperty("cId")
+    val cId: Long? = null,
     @field:NotBlank
     @JacksonXmlProperty(localName = "caseno")
     val caseNo: String?,
@@ -62,9 +63,6 @@ data class Case(
     @JacksonXmlElementWrapper
     val offences: List<Offence> = ArrayList(),
 ) {
-    @get:JsonProperty("cId")
-    var cId: Long? = null
-
     @field:Valid
     @field:NotNull
     @JsonBackReference
