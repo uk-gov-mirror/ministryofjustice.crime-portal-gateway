@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 data class Case(
     @JacksonXmlProperty(localName = "c_id")
     @get:JsonProperty("cId")
-    val cId: Long? = null,
+    val cId: String? = null,
     @field:NotBlank
     @JacksonXmlProperty(localName = "caseno")
     val caseNo: String?,
