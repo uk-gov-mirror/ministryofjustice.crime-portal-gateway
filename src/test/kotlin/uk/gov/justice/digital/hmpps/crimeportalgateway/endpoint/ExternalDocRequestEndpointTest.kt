@@ -65,7 +65,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false, 10)
+        endpoint = buildEndpoint(setOf("B10JQ"), false)
         externalDocumentText = xmlFile.readText().replace(NEWLINE, "")
         externalDocument = marshal(externalDocumentText)
     }
@@ -83,8 +83,8 @@ internal class ExternalDocRequestEndpointTest {
     }
 
     @Test
-    fun `given a valid message with dummy court room then should not enqueue the message and return the correct acknowledgement`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false, 5)
+    fun `given a valid message then should not enqueue the message and return the correct acknowledgement`() {
+        endpoint = buildEndpoint(setOf("B10JQ"), false)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -100,26 +100,6 @@ internal class ExternalDocRequestEndpointTest {
         )
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
         verifyNoMoreInteractions(telemetryService, messageProcessor, s3Service)
-    }
-
-    @Test
-    fun `given a message for a court which is not in the include list then should not enqueue message`() {
-        endpoint = buildEndpoint(setOf("XXXXX"), false, 5)
-
-        val ack = endpoint.processRequest(externalDocument)
-
-        assertAck(ack)
-
-        verify(telemetryService).trackEvent(
-            TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
-            mapOf(
-                "courtCode" to "B10JQ",
-                "courtRoom" to "5",
-                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY",
-            ),
-        )
-        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
-        verifyNoInteractions(messageProcessor)
     }
 
     @Test
@@ -142,7 +122,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given async then success should the correct acknowledgement message`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), true, 50)
+        endpoint = buildEndpoint(setOf("B10JQ"), true)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -168,13 +148,11 @@ internal class ExternalDocRequestEndpointTest {
     private fun buildEndpoint(
         includedCourts: Set<String>,
         aSync: Boolean,
-        minDummyCourtRoom: Int,
     ): ExternalDocRequestEndpoint {
         return ExternalDocRequestEndpoint(
             includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
             xPathForCourtCode = true,
-            minDummyCourtRoom = minDummyCourtRoom,
             telemetryService = telemetryService,
             jaxbContext = jaxbContext,
             validationSchema = schema,

@@ -33,10 +33,8 @@ private const val FILENAME_LABEL = "fileName"
 
 @Endpoint
 class ExternalDocRequestEndpoint(
-    @Value("#{'\${included-court-codes}'.split(',')}") private val includedCourts: Set<String>,
     @Value("\${enqueue-msg-async:true}") private val enqueueMsgAsync: Boolean,
     @Value("\${use-xpath-for-court-code:true}") private val xPathForCourtCode: Boolean,
-    @Value("\${min-dummy-court-room:50}") private val minDummyCourtRoom: Int,
     @Autowired private val telemetryService: TelemetryService,
     @Autowired private val s3Service: S3Service,
     @Autowired private val jaxbContext: JAXBContext,
@@ -110,7 +108,7 @@ class ExternalDocRequestEndpoint(
                             FILENAME_LABEL to fileName,
                         ),
                     )
-                    val failedFileName = fileName ?: "fail-" + DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())
+                    val failedFileName = fileName ?: ("fail-" + DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()))
                     s3Service.uploadMessage("$failedFileName.xml", marshal(request, validate = false))
                     return
                 }
@@ -118,32 +116,17 @@ class ExternalDocRequestEndpoint(
         val messageContent = marshal(request)
         s3Service.uploadMessage(messageDetail, messageContent)
 
-        when (includedCourts.contains(messageDetail.courtCode) && messageDetail.courtRoom < minDummyCourtRoom) {
-            true -> {
-                messageProcessor.process(messageContent)
-                telemetryService.trackEvent(
-                    COURT_LIST_MESSAGE_RECEIVED,
-                    mapOf(
-                        COURT_CODE_LABEL to messageDetail.courtCode,
-                        COURT_ROOM_LABEL to messageDetail.courtRoom.toString(),
-                        HEARING_DATE_LABEL to messageDetail.hearingDate,
-                        FILENAME_LABEL to fileName,
-                    ),
-                )
-                log.info(String.format(SUCCESS_MESSAGE_COMMENT, messageDetail.courtCode, messageDetail.courtRoom))
-            }
-            false -> {
-                log.info(String.format(IGNORED_MESSAGE_UNKNOWN_COURT, messageDetail.courtCode, messageDetail.courtRoom))
-                telemetryService.trackEvent(
-                    TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
-                    mapOf(
-                        COURT_CODE_LABEL to messageDetail.courtCode,
-                        COURT_ROOM_LABEL to messageDetail.courtRoom.toString(),
-                        FILENAME_LABEL to fileName,
-                    ),
-                )
-            }
-        }
+        messageProcessor.process(messageContent)
+        telemetryService.trackEvent(
+            COURT_LIST_MESSAGE_RECEIVED,
+            mapOf(
+                COURT_CODE_LABEL to messageDetail.courtCode,
+                COURT_ROOM_LABEL to messageDetail.courtRoom.toString(),
+                HEARING_DATE_LABEL to messageDetail.hearingDate,
+                FILENAME_LABEL to fileName,
+            ),
+        )
+        log.info(String.format(SUCCESS_MESSAGE_COMMENT, messageDetail.courtCode, messageDetail.courtRoom))
     }
 
     private fun marshal(
@@ -159,11 +142,6 @@ class ExternalDocRequestEndpoint(
         val msg = sw.toString()
         log.trace(msg)
         return msg
-    }
-
-    @PostConstruct
-    private fun initialise() {
-        log.info("Included courts {}", includedCourts)
     }
 
     companion object {
