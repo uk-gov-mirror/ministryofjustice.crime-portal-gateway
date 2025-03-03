@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint
 
-import jakarta.annotation.PostConstruct
 import jakarta.xml.bind.JAXBContext
 import jakarta.xml.bind.Marshaller
 import org.slf4j.LoggerFactory
@@ -147,7 +146,6 @@ class ExternalDocRequestEndpoint(
     companion object {
         const val SUCCESS_MESSAGE_STATUS = "Success"
         const val SUCCESS_MESSAGE_COMMENT = "Message successfully enqueued for court %s / room %s"
-        const val IGNORED_MESSAGE_UNKNOWN_COURT = "Message ignored - the court %s / room %s values in the message is not processed"
         const val IGNORED_MESSAGE_NO_COURT = "Message ignored - no court code found in the message"
         const val NAMESPACE_URI = "http://www.justice.gov.uk/magistrates/external/ExternalDocumentRequest"
         const val REQUEST_LOCAL_NAME = "ExternalDocumentRequest"

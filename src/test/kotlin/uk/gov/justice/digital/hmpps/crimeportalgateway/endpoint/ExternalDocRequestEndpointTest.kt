@@ -65,7 +65,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false)
+        endpoint = buildEndpoint(false)
         externalDocumentText = xmlFile.readText().replace(NEWLINE, "")
         externalDocument = marshal(externalDocumentText)
     }
@@ -80,26 +80,6 @@ internal class ExternalDocRequestEndpointTest {
         verify(messageProcessor).process(anyString())
         verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
         verifyNoMoreInteractions(telemetryService, s3Service)
-    }
-
-    @Test
-    fun `given a valid message then should not enqueue the message and return the correct acknowledgement`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false)
-
-        val ack = endpoint.processRequest(externalDocument)
-
-        assertAck(ack)
-
-        verify(telemetryService).trackEvent(
-            TelemetryEventType.COURT_LIST_MESSAGE_IGNORED,
-            mapOf(
-                "courtCode" to "B10JQ",
-                "courtRoom" to "5",
-                "fileName" to "5_26102020_2992_B10JQ05_ADULT_COURT_LIST_DAILY",
-            ),
-        )
-        verify(s3Service).uploadMessage(eq(expectedMessageDetail), contains("ExternalDocumentRequest"))
-        verifyNoMoreInteractions(telemetryService, messageProcessor, s3Service)
     }
 
     @Test
@@ -122,7 +102,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given async then success should the correct acknowledgement message`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), true)
+        endpoint = buildEndpoint(true)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -146,11 +126,9 @@ internal class ExternalDocRequestEndpointTest {
     }
 
     private fun buildEndpoint(
-        includedCourts: Set<String>,
         aSync: Boolean,
     ): ExternalDocRequestEndpoint {
         return ExternalDocRequestEndpoint(
-            includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
             xPathForCourtCode = true,
             telemetryService = telemetryService,
