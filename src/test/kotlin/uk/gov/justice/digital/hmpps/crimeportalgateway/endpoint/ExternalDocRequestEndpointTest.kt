@@ -65,7 +65,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = buildEndpoint( false, 10)
+        endpoint = buildEndpoint(false, 10)
         externalDocumentText = xmlFile.readText().replace(NEWLINE, "")
         externalDocument = marshal(externalDocumentText)
     }
@@ -84,7 +84,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a valid message with dummy court room then should not enqueue the message and return the correct acknowledgement`() {
-        endpoint = buildEndpoint( false, 5)
+        endpoint = buildEndpoint(false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
 
