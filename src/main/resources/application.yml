@@ -70,3 +70,4 @@ ws-sec:
 
 enqueue-msg-async: true
 use-xpath-for-court-code: true
+min-dummy-court-room: 50
