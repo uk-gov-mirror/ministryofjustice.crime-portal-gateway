@@ -85,6 +85,6 @@ Paste the content from copied from sample-request.xml to /tmp/testMessage.xml
 Run the below command
 ```wget --post-file=/tmp/testMessage.xml --header="Content-Type: application/soap+xml" http://crime-portal-gateway/mirrorgateway/service/cpmgwextdocapi/ -O /tmp/response.xml```
 
-Verify the content of response.xml using 
+Verify the content of response.xml using: 
 
 ```cat /tmp/response.xml```
