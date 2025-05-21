@@ -23,7 +23,6 @@ dependencyCheck {
 dependencies {
 
     implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.2.1")
-    implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.ws:spring-ws-security:4.0.1") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
@@ -34,7 +33,6 @@ dependencies {
             .because("OWASP found security Issues")
         implementation("org.apache.santuario:xmlsec:3.0.0")
     }
-    implementation("org.springframework.boot:spring-boot-starter-web-services")
 
     implementation("com.microsoft.azure:applicationinsights-web:3.5.4")
 
@@ -54,7 +52,7 @@ dependencies {
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:4.0.5")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+
     testImplementation("org.springframework.ws:spring-ws-test:4.0.11")
 }
 
