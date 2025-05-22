@@ -17,7 +17,9 @@ import java.time.format.DateTimeParseException
 import java.util.Locale
 
 @Component
-class DocumentInfoDeserializer<T>(clazz: Class<Info>) : StdDeserializer<Info>(clazz) {
+class DocumentInfoDeserializer<T>(
+    clazz: Class<Info>,
+) : StdDeserializer<Info>(clazz) {
     @JsonCreator
     constructor() : this(Info::class.java)
 

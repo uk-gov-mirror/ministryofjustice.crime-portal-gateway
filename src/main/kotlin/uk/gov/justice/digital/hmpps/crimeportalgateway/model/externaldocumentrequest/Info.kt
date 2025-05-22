@@ -34,9 +34,7 @@ data class Info(
         return ouCode == that.ouCode && Objects.equals(dateOfHearing, that.dateOfHearing)
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(ouCode, dateOfHearing)
-    }
+    override fun hashCode(): Int = Objects.hash(ouCode, dateOfHearing)
 
     companion object {
         const val SOURCE_FILE_NAME_ELEMENT = "source_file_name"

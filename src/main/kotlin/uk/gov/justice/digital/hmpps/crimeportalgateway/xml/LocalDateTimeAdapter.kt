@@ -7,11 +7,7 @@ import java.time.format.DateTimeFormatter
 class LocalDateTimeAdapter : XmlAdapter<String, LocalDateTime>() {
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd'T'HH:mm:ss")
 
-    override fun unmarshal(value: String?): LocalDateTime {
-        return LocalDateTime.parse(value)
-    }
+    override fun unmarshal(value: String?): LocalDateTime = LocalDateTime.parse(value)
 
-    override fun marshal(value: LocalDateTime?): String? {
-        return value?.format(this.dateTimeFormatter)
-    }
+    override fun marshal(value: LocalDateTime?): String? = value?.format(this.dateTimeFormatter)
 }

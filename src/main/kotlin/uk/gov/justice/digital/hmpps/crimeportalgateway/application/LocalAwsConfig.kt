@@ -20,12 +20,12 @@ class LocalAwsConfig(
     lateinit var endpointUrl: String
 
     @Bean
-    fun amazonS3LocalStackClient(): S3Client {
-        return S3Client.builder()
+    fun amazonS3LocalStackClient(): S3Client =
+        S3Client
+            .builder()
             .endpointOverride(URI.create(endpointUrl))
             .forcePathStyle(true)
             .region(Region.of(regionName))
             .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("any", "any")))
             .build()
-    }
 }

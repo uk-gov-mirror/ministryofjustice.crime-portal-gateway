@@ -15,26 +15,24 @@ data class Name(
     val surname: String? = null,
 ) {
     @JsonIgnore
-    fun getForenames(): String {
-        return Stream.of(forename1, forename2, forename3)
+    fun getForenames(): String =
+        Stream
+            .of(forename1, forename2, forename3)
             .filter { obj: String? ->
                 Objects.nonNull(
                     obj,
                 )
-            }
-            .collect(Collectors.joining(" "))
+            }.collect(Collectors.joining(" "))
             .trim { it <= ' ' }
-    }
 
     @JsonIgnore
-    fun getFullName(): String {
-        return Stream.of(title, forename1, forename2, forename3, surname)
+    fun getFullName(): String =
+        Stream
+            .of(title, forename1, forename2, forename3, surname)
             .filter { obj: String? ->
                 Objects.nonNull(
                     obj,
                 )
-            }
-            .collect(Collectors.joining(" "))
+            }.collect(Collectors.joining(" "))
             .trim { it <= ' ' }
-    }
 }

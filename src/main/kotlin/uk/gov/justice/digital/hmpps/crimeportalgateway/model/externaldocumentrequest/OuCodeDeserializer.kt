@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component
 import java.io.IOException
 
 @Component
-class OuCodeDeserializer<T>(clazz: Class<String>) : StdDeserializer<String>(clazz) {
+class OuCodeDeserializer<T>(
+    clazz: Class<String>,
+) : StdDeserializer<String>(clazz) {
     constructor() : this(String::class.java)
 
     @Throws(IOException::class)

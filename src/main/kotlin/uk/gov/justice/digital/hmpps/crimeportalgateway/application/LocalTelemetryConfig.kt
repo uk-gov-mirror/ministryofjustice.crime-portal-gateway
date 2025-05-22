@@ -10,12 +10,8 @@ import java.util.UUID
 @Configuration
 class LocalTelemetryConfig {
     @Bean
-    fun getTelemetryClient(): TelemetryClient {
-        return TelemetryClient()
-    }
+    fun getTelemetryClient(): TelemetryClient = TelemetryClient()
 
     @Bean
-    fun getOperationId(): () -> String? {
-        return { UUID.randomUUID().toString() }
-    }
+    fun getOperationId(): () -> String? = { UUID.randomUUID().toString() }
 }

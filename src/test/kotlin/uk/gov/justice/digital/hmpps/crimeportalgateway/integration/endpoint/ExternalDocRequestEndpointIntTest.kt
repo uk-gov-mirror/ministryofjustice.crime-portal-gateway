@@ -70,7 +70,13 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun afterEach() {
         val objectListing = amazonS3.listObjects(ListObjectsRequest.builder().bucket(bucketName).build())
         objectListing.contents()?.forEach {
-            amazonS3.deleteObject(DeleteObjectRequest.builder().bucket(bucketName).key(it.key()).build())
+            amazonS3.deleteObject(
+                DeleteObjectRequest
+                    .builder()
+                    .bucket(bucketName)
+                    .key(it.key())
+                    .build(),
+            )
         }
 
         amazonS3.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build())
@@ -80,17 +86,16 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun `should send SQS message for each case`() {
         val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
         val requestEnvelope: Source = StringSource(externalDoc1)
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+        mockClient
+            .sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment"),
-            )
-            .andExpect(
+            ).andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success"),
-            )
-            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            ).andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         verify(telemetryService).trackEvent(
@@ -115,30 +120,28 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun `when two duplicate messages received containing two cases_only one message per case ends up on the queue`() {
         val externalDoc1 = readFile("src/test/resources/soap/sample-request.xml")
         val requestEnvelope: Source = StringSource(externalDoc1)
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+        mockClient
+            .sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment"),
-            )
-            .andExpect(
+            ).andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success"),
-            )
-            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            ).andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
         // send duplicate message
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+        mockClient
+            .sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment"),
-            )
-            .andExpect(
+            ).andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success"),
-            )
-            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            ).andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         verify(telemetryService, times(2)).trackEvent(
@@ -166,17 +169,16 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
         val externalDoc1 = readFile("src/test/resources/soap/ignored-courts.xml")
         val requestEnvelope: Source = StringSource(externalDoc1)
 
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+        mockClient
+            .sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment"),
-            )
-            .andExpect(
+            ).andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success"),
-            )
-            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            ).andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         checkQueueIsEmpty()
@@ -187,17 +189,16 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     fun `given no court present`() {
         val requestEnvelope: Source = StringSource(readFile("src/test/resources/soap/sample-request-invalid-xml.xml"))
 
-        mockClient.sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
+        mockClient
+            .sendRequest(RequestCreators.withSoapEnvelope(requestEnvelope))
             .andExpect(validPayload(xsdResource))
             .andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageComment", namespaces)
                     .evaluatesTo("MessageComment"),
-            )
-            .andExpect(
+            ).andExpect(
                 xpath("//ns3:Acknowledgement/Ack/MessageStatus", namespaces)
                     .evaluatesTo("Success"),
-            )
-            .andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
+            ).andExpect(xpath("//ns3:Acknowledgement/Ack/TimeStamp", namespaces).exists())
             .andExpect(noFault())
 
         checkQueueIsEmpty()
@@ -216,7 +217,15 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
     private fun checkS3Upload(fileNameStart: String) {
         val items = amazonS3.listObjects(ListObjectsRequest.builder().bucket(bucketName).build()).contents()
         assertThat(items[0].key().startsWith(fileNameStart)).isTrue()
-        val s3Object = amazonS3.getObject(GetObjectRequest.builder().bucket(bucketName).key(items[0].key()).build(), ResponseTransformer.toBytes())
+        val s3Object =
+            amazonS3.getObject(
+                GetObjectRequest
+                    .builder()
+                    .bucket(bucketName)
+                    .key(items[0].key())
+                    .build(),
+                ResponseTransformer.toBytes(),
+            )
         val startOfDoc = s3Object.asUtf8String()
 
         assertThat(
@@ -238,7 +247,11 @@ class ExternalDocRequestEndpointIntTest : IntegrationTestBase() {
 
             cases.add(objectMapper.readValue(sqsMessage.message, CaseDetails::class.java))
             courtCasesQueue?.sqsClient?.deleteMessage(
-                DeleteMessageRequest.builder().queueUrl(courtCasesQueue?.queueUrl!!).receiptHandle(message.messages()[0].receiptHandle()).build(),
+                DeleteMessageRequest
+                    .builder()
+                    .queueUrl(courtCasesQueue?.queueUrl!!)
+                    .receiptHandle(message.messages()[0].receiptHandle())
+                    .build(),
             )
         }
         assertThat(cases).containsAll(expectedCases)

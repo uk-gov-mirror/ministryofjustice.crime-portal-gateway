@@ -12,21 +12,28 @@ import java.time.format.DateTimeFormatter
 class InfoTest : IntegrationTestBase() {
     @Test
     fun `Info page is accessible`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/info")
             .exchange()
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("build.name").isEqualTo("crime-portal-gateway")
+            .jsonPath("build.name")
+            .isEqualTo("crime-portal-gateway")
     }
 
     @Test
     fun `Info page reports version`() {
-        webTestClient.get().uri("/info")
+        webTestClient
+            .get()
+            .uri("/info")
             .exchange()
-            .expectStatus().isOk
-            .expectBody().jsonPath("build.version").value<String> {
+            .expectStatus()
+            .isOk
+            .expectBody()
+            .jsonPath("build.version")
+            .value<String> {
                 assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
             }
     }

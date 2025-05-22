@@ -11,8 +11,7 @@ import uk.gov.justice.digital.hmpps.crimeportalgateway.service.TelemetryService
 class InterceptorConfig(
     @Autowired private val securityInterceptor: Wss4jSecurityInterceptor?,
     @Autowired private val telemetryService: TelemetryService,
-) :
-    WsConfigurerAdapter() {
+) : WsConfigurerAdapter() {
     override fun addInterceptors(interceptors: MutableList<EndpointInterceptor>) {
         interceptors.add(SoapHeaderAddressInterceptor(telemetryService))
         if (securityInterceptor != null) {

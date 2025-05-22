@@ -13,20 +13,25 @@ import java.util.function.Consumer
 class HealthCheckTest : IntegrationTestBase() {
     @Test
     fun `Health page reports ok`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/health")
             .exchange()
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("status").isEqualTo("UP")
+            .jsonPath("status")
+            .isEqualTo("UP")
     }
 
     @Test
     fun `Health info reports version`() {
-        webTestClient.get().uri("/health")
+        webTestClient
+            .get()
+            .uri("/health")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .jsonPath("components.healthInfo.details.version")
             .value(
@@ -38,34 +43,40 @@ class HealthCheckTest : IntegrationTestBase() {
 
     @Test
     fun `Health ping page is accessible`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/health/ping")
             .exchange()
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("status").isEqualTo("UP")
+            .jsonPath("status")
+            .isEqualTo("UP")
     }
 
     @Test
     fun `readiness reports ok`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/health/readiness")
             .exchange()
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("status").isEqualTo("UP")
+            .jsonPath("status")
+            .isEqualTo("UP")
     }
 
     @Test
     fun `liveness reports ok`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/health/liveness")
             .exchange()
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("status").isEqualTo("UP")
+            .jsonPath("status")
+            .isEqualTo("UP")
     }
 }

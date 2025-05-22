@@ -14,9 +14,9 @@ class AwsConfig(
     var regionName: String,
 ) {
     @Bean
-    fun amazonS3Client(): S3Client {
-        return S3Client.builder()
+    fun amazonS3Client(): S3Client =
+        S3Client
+            .builder()
             .region(Region.of(regionName))
             .build()
-    }
 }

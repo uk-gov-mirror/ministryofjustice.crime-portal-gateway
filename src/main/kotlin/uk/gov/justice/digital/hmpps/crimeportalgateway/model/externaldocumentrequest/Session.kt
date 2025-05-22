@@ -59,9 +59,7 @@ data class Session(
         return job.dataJob.document.info.ouCode
     }
 
-    fun getSessionStartTime(): LocalDateTime {
-        return LocalDateTime.of(dateOfHearing, start)
-    }
+    fun getSessionStartTime(): LocalDateTime = LocalDateTime.of(dateOfHearing, start)
 
     companion object {
         private val log = LoggerFactory.getLogger(this::class.java)

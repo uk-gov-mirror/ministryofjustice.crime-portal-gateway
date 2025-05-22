@@ -30,22 +30,21 @@ class MessageProcessor(
         return documents
             .stream()
             .flatMap { document: Document ->
-                document.data.job.sessions.stream()
-            }
-            .flatMap { session: Session ->
+                document.data.job.sessions
+                    .stream()
+            }.flatMap { session: Session ->
                 session.blocks.stream()
-            }
-            .flatMap { block: Block ->
+            }.flatMap { block: Block ->
                 block.cases.stream()
-            }
-            .forEach {
+            }.forEach {
                 log.debug("Sending {}", it.caseNo)
                 messageNotifier.send(it)
             }
     }
 
     private fun trackCourtListReceipt(documents: List<Document>) {
-        documents.stream()
+        documents
+            .stream()
             .map { it.info }
             .distinct()
             .forEach { info: Info ->

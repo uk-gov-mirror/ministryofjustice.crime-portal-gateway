@@ -28,9 +28,11 @@ class MessageNotifier(
         val subject = "Details for case " + case.caseNo + " in court " + case.courtCode + " published"
 
         val messageValue =
-            MessageAttributeValue.builder()
+            MessageAttributeValue
+                .builder()
                 .dataType("String")
-                .stringValue(MESSAGE_TYPE).build()
+                .stringValue(MESSAGE_TYPE)
+                .build()
 
         val publishResult = topic.publish("libra.case.received", message, attributes = mapOf("messageType" to messageValue), messageGroupId = MESSAGE_GROUP_ID)
         log.info("Published message with subject {} with message Id {}", subject, publishResult.messageId())

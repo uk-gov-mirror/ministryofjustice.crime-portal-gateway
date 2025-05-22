@@ -169,8 +169,8 @@ internal class ExternalDocRequestEndpointTest {
         includedCourts: Set<String>,
         aSync: Boolean,
         minDummyCourtRoom: Int,
-    ): ExternalDocRequestEndpoint {
-        return ExternalDocRequestEndpoint(
+    ): ExternalDocRequestEndpoint =
+        ExternalDocRequestEndpoint(
             includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
             xPathForCourtCode = true,
@@ -181,7 +181,6 @@ internal class ExternalDocRequestEndpointTest {
             s3Service = s3Service,
             messageProcessor = messageProcessor,
         )
-    }
 
     companion object {
         private const val TIMEOUT_MS: Long = 5000

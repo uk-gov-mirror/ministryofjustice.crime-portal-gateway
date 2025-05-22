@@ -25,9 +25,7 @@ object DocumentUtils {
     fun getMessageDetail(
         documents: Element,
         useXPath: Boolean,
-    ): MessageDetail? {
-        return if (useXPath) getMessageDetailByXPath(documents) else getMessageDetail(documents)
-    }
+    ): MessageDetail? = if (useXPath) getMessageDetailByXPath(documents) else getMessageDetail(documents)
 
     private fun getMessageDetailByXPath(documents: Element): MessageDetail? {
         // XPathFactory not thread safe so make one each time
@@ -35,8 +33,7 @@ object DocumentUtils {
         val exp = xPath.compile(SOURCE_FILE_NAME_EXPR)
         val nodeList = exp.evaluate(documents, XPathConstants.NODESET) as NodeList
         for (i in 0 until nodeList.length) {
-            getMessageDetail(nodeList.item(i))?.let {
-                    messageDetail ->
+            getMessageDetail(nodeList.item(i))?.let { messageDetail ->
                 return messageDetail
             }
         }

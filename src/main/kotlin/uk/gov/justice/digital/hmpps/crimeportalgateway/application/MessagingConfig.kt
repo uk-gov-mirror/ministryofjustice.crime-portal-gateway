@@ -36,7 +36,5 @@ class MessagingConfig {
     }
 
     @Bean
-    fun messageParser(xmlMapper: XmlMapper): MessageParser<ExternalDocumentRequest> {
-        return MessageParser(xmlMapper, Validation.buildDefaultValidatorFactory().validator)
-    }
+    fun messageParser(xmlMapper: XmlMapper): MessageParser<ExternalDocumentRequest> = MessageParser(xmlMapper, Validation.buildDefaultValidatorFactory().validator)
 }

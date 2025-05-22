@@ -35,42 +35,35 @@ class WebServiceConfig(
     @Value("\${soap.xsd-file-path}") private val xsdFilePath: String,
 ) {
     @Bean
-    fun externalDocumentXsdResource(): Resource {
-        return FileSystemResource(xsdFilePath)
-    }
+    fun externalDocumentXsdResource(): Resource = FileSystemResource(xsdFilePath)
 
     @Bean
-    fun externalDocumentRequestWsdl(externalDocumentXsdResource: Resource): SimpleWsdl11Definition {
-        return SimpleWsdl11Definition(externalDocumentXsdResource)
-    }
+    fun externalDocumentRequestWsdl(externalDocumentXsdResource: Resource): SimpleWsdl11Definition = SimpleWsdl11Definition(externalDocumentXsdResource)
 
     @Bean
-    fun messageDispatcherServlet(applicationContext: ApplicationContext): ServletRegistrationBean<*>? {
-        return ServletRegistrationBean(
+    fun messageDispatcherServlet(applicationContext: ApplicationContext): ServletRegistrationBean<*>? =
+        ServletRegistrationBean(
             MessageDispatcherServlet(applicationContext as WebApplicationContext).apply {
                 setApplicationContext(applicationContext)
                 isTransformWsdlLocations = true
             },
             "$wsLocationUri*",
         )
-    }
 
     @Bean
-    fun messageFactory(): SaajSoapMessageFactory {
-        return SaajSoapMessageFactory().apply {
+    fun messageFactory(): SaajSoapMessageFactory =
+        SaajSoapMessageFactory().apply {
             setSoapVersion(SoapVersion.SOAP_12)
         }
-    }
 
     @Bean(name = ["ExternalDocumentRequest"])
-    fun wsdl11Definition(requestSchema: XsdSchema): DefaultWsdl11Definition {
-        return DefaultWsdl11Definition().apply {
+    fun wsdl11Definition(requestSchema: XsdSchema): DefaultWsdl11Definition =
+        DefaultWsdl11Definition().apply {
             setPortTypeName("WebServicePort")
             setLocationUri(wsLocationUri)
             setTargetNamespace(targetNamespace)
             setSchemaCollection(xsds())
         }
-    }
 
     @Bean
     fun xsds(): XsdSchemaCollection {
@@ -84,9 +77,7 @@ class WebServiceConfig(
     }
 
     @Bean
-    fun requestSchema(externalDocumentXsdResource: Resource): XsdSchema {
-        return SimpleXsdSchema(externalDocumentXsdResource)
-    }
+    fun requestSchema(externalDocumentXsdResource: Resource): XsdSchema = SimpleXsdSchema(externalDocumentXsdResource)
 
     @ConditionalOnProperty(value = ["soap.validate-payload"], havingValue = "true")
     @Bean
@@ -96,7 +87,5 @@ class WebServiceConfig(
     }
 
     @Bean
-    fun jaxbContext(): JAXBContext {
-        return JAXBContext.newInstance(ExternalDocumentRequest::class.java)
-    }
+    fun jaxbContext(): JAXBContext = JAXBContext.newInstance(ExternalDocumentRequest::class.java)
 }

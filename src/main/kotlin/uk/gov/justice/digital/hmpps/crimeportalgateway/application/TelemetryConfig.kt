@@ -14,21 +14,25 @@ import java.util.Optional
 @Configuration
 class TelemetryConfig {
     @Bean
-    fun getTelemetryClient(): TelemetryClient {
-        return TelemetryClient()
-    }
+    fun getTelemetryClient(): TelemetryClient = TelemetryClient()
 
     @Bean
     @RequestScope
-    fun requestProperties(): Map<String, String> {
-        return Optional.ofNullable(ThreadContext.getRequestTelemetryContext())
+    fun requestProperties(): Map<String, String> =
+        Optional
+            .ofNullable(ThreadContext.getRequestTelemetryContext())
             .map { obj: RequestTelemetryContext -> obj.httpRequestTelemetry }
             .map { obj: RequestTelemetry -> obj.properties }
             .orElse(emptyMap())
-    }
 
     @Bean
-    fun getOperationId(): () -> String? {
-        return { ThreadContext.getRequestTelemetryContext()?.httpRequestTelemetry?.context?.operation?.id }
-    }
+    fun getOperationId(): () -> String? =
+        {
+            ThreadContext
+                .getRequestTelemetryContext()
+                ?.httpRequestTelemetry
+                ?.context
+                ?.operation
+                ?.id
+        }
 }

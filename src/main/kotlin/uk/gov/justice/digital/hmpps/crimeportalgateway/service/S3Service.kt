@@ -17,16 +17,22 @@ class S3Service(
     fun uploadMessage(
         messageDetail: MessageDetail,
         messageContent: String,
-    ): String? {
-        return uploadMessage(messageDetail.asFileNameStem() + ".xml", messageContent)
-    }
+    ): String? = uploadMessage(messageDetail.asFileNameStem() + ".xml", messageContent)
 
     fun uploadMessage(
         fileName: String,
         messageContent: String,
-    ): String? {
-        return try {
-            val putResult = amazonS3Client.putObject(PutObjectRequest.builder().bucket(bucketName).key(fileName).build(), RequestBody.fromString(messageContent))
+    ): String? =
+        try {
+            val putResult =
+                amazonS3Client.putObject(
+                    PutObjectRequest
+                        .builder()
+                        .bucket(bucketName)
+                        .key(fileName)
+                        .build(),
+                    RequestBody.fromString(messageContent),
+                )
             log.info("File {} saved to S3 bucket {} with expiration date of {}, eTag {}", fileName, bucketName, putResult.expiration(), putResult.eTag())
             putResult.eTag()
         } catch (ex: RuntimeException) {
@@ -34,7 +40,6 @@ class S3Service(
             log.error("Failed to back up file {} saved to S3 bucket {}", fileName, bucketName, ex)
             null
         }
-    }
 
     companion object {
         private val log = LoggerFactory.getLogger(this::class.java)

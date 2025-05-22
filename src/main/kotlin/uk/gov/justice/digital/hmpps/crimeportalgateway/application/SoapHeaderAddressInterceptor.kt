@@ -16,13 +16,13 @@ import java.util.Collections
 import java.util.HashMap
 import java.util.UUID
 
-class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryService) : EndpointInterceptor {
+class SoapHeaderAddressInterceptor(
+    private val telemetryService: TelemetryService,
+) : EndpointInterceptor {
     override fun handleRequest(
         p0: MessageContext?,
         p1: Any?,
-    ): Boolean {
-        return true
-    }
+    ): Boolean = true
 
     override fun handleResponse(
         messageContext: MessageContext,
@@ -33,10 +33,19 @@ class SoapHeaderAddressInterceptor(private val telemetryService: TelemetryServic
 
         log.trace("Processing response ", soapResponseMessage.soapAction?.toString())
 
-        val soapResponseHeader = soapResponseMessage.saajMessage?.soapPart?.envelope?.header
+        val soapResponseHeader =
+            soapResponseMessage.saajMessage
+                ?.soapPart
+                ?.envelope
+                ?.header
         if (soapResponseHeader != null) {
             val requestHeaders: Map<String, String> =
-                getHeaderMap(soapRequestMessage.saajMessage?.soapPart?.envelope?.header)
+                getHeaderMap(
+                    soapRequestMessage.saajMessage
+                        ?.soapPart
+                        ?.envelope
+                        ?.header,
+                )
             addTextNodeToNewElement(
                 soapResponseHeader,
                 "Action",
