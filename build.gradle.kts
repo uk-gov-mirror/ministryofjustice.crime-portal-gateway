@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.1.0"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.2.0"
     kotlin("plugin.spring") version "2.1.21"
     id("org.unbroken-dome.xjc") version "2.0.0"
     kotlin("jvm") version "2.1.21"
@@ -10,6 +10,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://build.shibboleth.net/maven/releases/")
+    }
 }
 
 java {
@@ -24,16 +27,9 @@ dependencies {
 
     implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.2.1")
 
-    implementation("org.springframework.ws:spring-ws-security:4.0.14") {
-        exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
-            .because("OWASP found security Issues")
-        exclude(group = "org.cryptacular", module = "cryptacular")
-            .because("OWASP found security Issues")
-        exclude(group = "org.apache.santuario", module = "xmlsec")
-            .because("OWASP found security Issues")
-        implementation("org.apache.santuario:xmlsec:3.0.0")
+    implementation("org.springframework.ws:spring-ws-security:4.1.0") {
+        exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
     }
-
     implementation("com.microsoft.azure:applicationinsights-web:3.5.4")
 
     api("software.amazon.awssdk:s3")
@@ -51,7 +47,7 @@ dependencies {
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.2.5")
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:4.0.5")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.2")
 
     testImplementation("org.springframework.ws:spring-ws-test:4.0.11")
 }
