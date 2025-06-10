@@ -8,18 +8,17 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 class SecurityConfig {
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        return http
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
+        http
             .csrf { it.disable() }
             .authorizeHttpRequests { http ->
-                http.requestMatchers(
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/info/**",
-                    "/health/**",
-                    "/api-docs/**",
-                ).permitAll()
-            }
-            .build()
-    }
+                http
+                    .requestMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/info/**",
+                        "/health/**",
+                        "/api-docs/**",
+                    ).permitAll()
+            }.build()
 }
