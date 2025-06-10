@@ -8,13 +8,8 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 class SecurityConfig {
     @Bean
-<<<<<<< HEAD
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
-        http
-=======
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
->>>>>>> aceada2 (Add swagger to crime-portal-gateway)
             .csrf { it.disable() }
             .authorizeHttpRequests { http ->
                 http.requestMatchers(
@@ -26,14 +21,5 @@ class SecurityConfig {
                 ).permitAll()
             }
             .build()
-<<<<<<< HEAD
-<<<<<<< HEAD:src/main/kotlin/uk/gov/justice/digital/hmpps/crimeportalgateway/application/InfoSecurityConfig.kt
-}
-=======
     }
 }
->>>>>>> aceada2 (Add swagger to crime-portal-gateway):src/main/kotlin/uk/gov/justice/digital/hmpps/crimeportalgateway/application/SecurityConfig.kt
-=======
-    }
-}
->>>>>>> aceada2 (Add swagger to crime-portal-gateway)
