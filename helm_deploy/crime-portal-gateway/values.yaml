@@ -4,7 +4,7 @@ generic-service:
   serviceAccountName: "court-facing-api"
 
   image:
-    repository: quay.io/hmpps/crime-portal-gateway
+    repository: ghcr.io/ministryofjustice/crime-portal-gateway
     tag: app_version # override at deployment time
     port: 8081
 
@@ -14,10 +14,9 @@ generic-service:
     hosts:
       - app-hostname.local    # override per environment
     path: /
-
-  autoscaling:
-    enabled: true
-    targetCPUUtilizationPercentage: 100
+    contextColour: green
+    annotations:
+      external-dns.alpha.kubernetes.io/aws-weight: "100"
 
   # Environment variables to load into the deployment
   env:
