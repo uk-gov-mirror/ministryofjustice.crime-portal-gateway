@@ -25,7 +25,7 @@ dependencyCheck {
 
 dependencies {
 
-    implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.4.7")
+    implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.4.9")
 
     implementation("org.springframework.ws:spring-ws-security:4.1.0") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
