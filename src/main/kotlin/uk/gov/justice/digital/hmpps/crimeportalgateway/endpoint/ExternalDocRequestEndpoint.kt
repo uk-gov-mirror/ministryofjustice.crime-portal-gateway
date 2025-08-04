@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.crimeportalgateway.endpoint
 
-import jakarta.annotation.PostConstruct
 import jakarta.xml.bind.JAXBContext
 import jakarta.xml.bind.Marshaller
 import org.slf4j.LoggerFactory
@@ -33,7 +32,6 @@ private const val FILENAME_LABEL = "fileName"
 
 @Endpoint
 class ExternalDocRequestEndpoint(
-    @Value("#{'\${included-court-codes}'.split(',')}") private val includedCourts: Set<String>,
     @Value("\${enqueue-msg-async:true}") private val enqueueMsgAsync: Boolean,
     @Value("\${use-xpath-for-court-code:true}") private val xPathForCourtCode: Boolean,
     @Value("\${min-dummy-court-room:50}") private val minDummyCourtRoom: Int,
@@ -118,7 +116,7 @@ class ExternalDocRequestEndpoint(
         val messageContent = marshal(request)
         s3Service.uploadMessage(messageDetail, messageContent)
 
-        when (includedCourts.contains(messageDetail.courtCode) && messageDetail.courtRoom < minDummyCourtRoom) {
+        when (messageDetail.courtRoom < minDummyCourtRoom) {
             true -> {
                 messageProcessor.process(messageContent)
                 telemetryService.trackEvent(
@@ -159,11 +157,6 @@ class ExternalDocRequestEndpoint(
         val msg = sw.toString()
         log.trace(msg)
         return msg
-    }
-
-    @PostConstruct
-    private fun initialise() {
-        log.info("Included courts {}", includedCourts)
     }
 
     companion object {

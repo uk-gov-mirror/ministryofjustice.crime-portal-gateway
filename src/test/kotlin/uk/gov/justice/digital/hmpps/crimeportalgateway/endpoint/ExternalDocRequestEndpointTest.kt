@@ -65,7 +65,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @BeforeEach
     fun beforeEach() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false, 10)
+        endpoint = buildEndpoint(false, 10)
         externalDocumentText = xmlFile.readText().replace(NEWLINE, "")
         externalDocument = marshal(externalDocumentText)
     }
@@ -84,7 +84,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a valid message with dummy court room then should not enqueue the message and return the correct acknowledgement`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), false, 5)
+        endpoint = buildEndpoint(false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -104,7 +104,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given a message for a court which is not in the include list then should not enqueue message`() {
-        endpoint = buildEndpoint(setOf("XXXXX"), false, 5)
+        endpoint = buildEndpoint(false, 5)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -142,7 +142,7 @@ internal class ExternalDocRequestEndpointTest {
 
     @Test
     fun `given async then success should the correct acknowledgement message`() {
-        endpoint = buildEndpoint(setOf("B10JQ"), true, 50)
+        endpoint = buildEndpoint(true, 50)
 
         val ack = endpoint.processRequest(externalDocument)
 
@@ -166,12 +166,10 @@ internal class ExternalDocRequestEndpointTest {
     }
 
     private fun buildEndpoint(
-        includedCourts: Set<String>,
         aSync: Boolean,
         minDummyCourtRoom: Int,
     ): ExternalDocRequestEndpoint =
         ExternalDocRequestEndpoint(
-            includedCourts = includedCourts,
             enqueueMsgAsync = aSync,
             xPathForCourtCode = true,
             minDummyCourtRoom = minDummyCourtRoom,
