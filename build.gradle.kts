@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.3.3"
+    id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.3.4"
     kotlin("plugin.spring") version "2.2.0"
     id("org.unbroken-dome.xjc") version "2.0.0"
     kotlin("jvm") version "2.2.0"
@@ -25,7 +25,7 @@ dependencyCheck {
 
 dependencies {
 
-    implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.4.9")
+    implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.4.10")
 
     implementation("org.springframework.ws:spring-ws-security:4.1.1") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
@@ -47,7 +47,7 @@ dependencies {
     runtimeOnly("org.apache.ws.xmlschema", "xmlschema-core", "2.3.1")
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:4.0.5")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
 
     testImplementation("org.springframework.ws:spring-ws-test:4.1.1")
 }
