@@ -39,7 +39,7 @@ dependencies {
     }
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
 
-    xjcTool("com.sun.xml.bind:jaxb-xjc:3.0.2")
+    xjcTool("com.sun.xml.bind:jaxb-xjc:4.0.6")
     xjcTool("com.sun.xml.bind:jaxb-impl:4.0.5")
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.19.2")
