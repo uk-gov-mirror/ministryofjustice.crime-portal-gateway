@@ -30,7 +30,7 @@ dependencies {
     implementation("org.springframework.ws:spring-ws-security:4.1.1") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
     }
-    implementation("com.microsoft.azure:applicationinsights-web:3.7.3")
+    implementation("com.microsoft.azure:applicationinsights-web:3.7.6")
 
     api("software.amazon.awssdk:s3")
     implementation("wsdl4j:wsdl4j:1.6.3")
