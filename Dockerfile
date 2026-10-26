@@ -7,7 +7,7 @@ WORKDIR /app
 ADD . .
 RUN ./gradlew clean assemble -Dorg.gradle.daemon=false
 
-FROM eclipse-temurin:25-jre-jammy
+FROM ghcr.io/ministryofjustice/hmpps-eclipse-temurin:25-jre-jammy
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 RUN apt-get update && \
